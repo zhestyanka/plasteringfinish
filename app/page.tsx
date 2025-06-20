@@ -1,6 +1,5 @@
 import Header from "@/components/Header"
 import HeroSection from "@/components/HeroSection"
-import CalculatorSection from "@/components/CalculatorSection"
 import BenefitsSection from "@/components/BenefitsSection"
 import StepsSection from "@/components/StepsSection"
 import PricingSection from "@/components/PricingSection"
@@ -21,7 +20,6 @@ export default function Home() {
       <Header />
       <main>
         <HeroSection />
-        <CalculatorSection />
         <BenefitsSection />
         <StepsSection />
         <PricingSection />

@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Check, Star, Phone, Mail, MapPin, Clock, ArrowRight, Shield, Award, Target, CheckCircle, Wallet } from "lucide-react"
+
+import { Check, Star, Phone, Mail, MapPin, Clock, ArrowRight, Zap, Shield, Award, Target, Calculator, CheckCircle, Wallet } from "lucide-react"
 
 export default function PricingSection() {
   const [formData, setFormData] = useState({
@@ -16,7 +17,11 @@ export default function PricingSection() {
     message: ""
   })
 
+
+
   const [selectedPlan, setSelectedPlan] = useState("standard")
+  const [area, setArea] = useState(70)
+  const [rooms, setRooms] = useState(2)
 
   const plans = [
     {
@@ -93,6 +98,9 @@ export default function PricingSection() {
     }
   ]
 
+  const selectedPlanData = plans.find(plan => plan.id === selectedPlan)
+  const totalCost = area * (selectedPlanData?.price || 450)
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log('Consultation form submitted:', formData)
@@ -113,7 +121,7 @@ export default function PricingSection() {
             <span>Прозрачные цены</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Тарифы и цены
+            Тарифы на механизированную штукатурку
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto px-4">
             Выберите подходящий тариф для вашего проекта
@@ -175,6 +183,8 @@ export default function PricingSection() {
           ))}
         </div>
 
+
+
         {/* Payment Methods */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16">
           {paymentMethods.map((method, index) => (
@@ -196,7 +206,7 @@ export default function PricingSection() {
         </div>
 
         {/* Trust Indicators */}
-        <div className="bg-white rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100 mb-12 md:mb-16">
+        <div className="bg-white rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-center">
             <div className="flex flex-col items-center">
               <div className="w-12 h-12 md:w-16 md:h-16 bg-coffee-100 rounded-xl md:rounded-2xl flex items-center justify-center mb-3 md:mb-4">
