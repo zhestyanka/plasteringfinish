@@ -142,28 +142,28 @@ export default function HeroSection() {
               <CardContent className="p-6 md:p-8 text-center">
                 <div className="flex items-center justify-center space-x-3 mb-6 md:mb-8">
                   <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-coffee-500 to-coffee-600 rounded-xl flex items-center justify-center">
-                    <Calculator className="w-6 h-6 md:w-8 md:h-8 text-black" />
+                    <Phone className="w-6 h-6 md:w-8 md:h-8 text-black" />
                   </div>
                 </div>
                 
                 <div className="space-y-4 md:space-y-6">
-                  <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Бесплатный расчет</h2>
+                  <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Получите консультацию</h2>
                   <p className="text-sm md:text-base text-gray-700">
-                    Получите точную смету на механизированную штукатурку с выездом инженера
+                    Свяжитесь с нами для получения профессиональной консультации по механизированной штукатурке
                   </p>
                   
                   <div className="space-y-3">
                     <div className="flex items-center justify-center space-x-2">
                       <div className="w-2 h-2 bg-coffee-500 rounded-full"></div>
-                      <span className="text-sm text-gray-600">Выезд в день обращения</span>
+                      <span className="text-sm text-gray-600">Бесплатная консультация</span>
                     </div>
                     <div className="flex items-center justify-center space-x-2">
                       <div className="w-2 h-2 bg-coffee-500 rounded-full"></div>
-                      <span className="text-sm text-gray-600">Фиксация цен в договоре</span>
+                      <span className="text-sm text-gray-600">Ответ в течение часа</span>
                     </div>
                     <div className="flex items-center justify-center space-x-2">
                       <div className="w-2 h-2 bg-coffee-500 rounded-full"></div>
-                      <span className="text-sm text-gray-600">Гарантия до 5 лет</span>
+                      <span className="text-sm text-gray-600">Профессиональный подход</span>
                     </div>
                   </div>
 
@@ -171,7 +171,7 @@ export default function HeroSection() {
                     onClick={() => setIsModalOpen(true)}
                     className="w-full bg-gradient-to-r from-coffee-600 to-coffee-500 hover:from-coffee-700 hover:to-coffee-600 text-black py-3 md:py-4 text-base md:text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
                   >
-                    Получить расчет бесплатно
+                    Получить консультацию
                   </Button>
                   
                   <p className="text-xs text-gray-700 text-center">
@@ -189,7 +189,7 @@ export default function HeroSection() {
         <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-gray-900 text-center">
-              Получить расчет бесплатно
+              Получить консультацию
             </DialogTitle>
           </DialogHeader>
           
