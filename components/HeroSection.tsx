@@ -227,11 +227,11 @@ export default function HeroSection() {
                 <div className="space-y-6 md:space-y-8">
                   {/* Цены работы */}
                   <div className="bg-coffee-50 rounded-xl p-4 md:p-6">
-                    <h4 className="text-lg font-bold text-gray-900 mb-4">Укажите цены, по которым работаете:</h4>
+                    <h4 className="text-lg font-bold text-gray-900 mb-4">Укажите цены:</h4>
                     <div className="space-y-4">
                       <div>
                         <label className="block text-gray-800 font-semibold mb-2 text-sm">
-                          Сколько ₽ Вам заплатил клиент: за м²
+                          Сколько ₽ за м²
                         </label>
                         <Input
                           type="number"
