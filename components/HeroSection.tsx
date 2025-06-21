@@ -208,17 +208,17 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Калькулятор расхода смеси и дохода */}
+        {/* Калькулятор стоимости работ */}
         <div className="mt-16 md:mt-20">
           <Card className="bg-white border-0 shadow-2xl rounded-2xl md:rounded-3xl overflow-hidden">
             <CardContent className="p-6 md:p-12">
               <div className="text-center mb-8 md:mb-12">
                 <div className="inline-flex items-center space-x-2 bg-coffee-100 text-coffee-800 px-3 md:px-4 py-2 rounded-full font-medium mb-4 text-sm">
                   <Calculator className="w-3 h-3 md:w-4 md:h-4" />
-                  <span>Калькулятор расхода смеси и дохода</span>
+                  <span>Калькулятор стоимости работ</span>
                 </div>
                 <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
-                  Рассчитайте прибыль с объекта
+                  Стоимость работ
                 </h3>
               </div>
 
