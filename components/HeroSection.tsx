@@ -20,14 +20,14 @@ export default function HeroSection() {
     message: ''
   })
 
-  // Калькулятор состояние - ИЗМЕНЕНО НА ПУСТЫЕ СТРОКИ
-  const [clientPrice, setClientPrice] = useState('') // Пустая строка вместо 450
-  const [areaToPlaster, setAreaToPlaster] = useState('') // Пустая строка вместо 150
-  const [layerThickness, setLayerThickness] = useState('') // Пустая строка вместо 1.5
-  const [areaPerShift, setAreaPerShift] = useState('') // Пустая строка вместо 50
+  // Калькулятор состояние - с примерными значениями для демонстрации
+  const [clientPrice, setClientPrice] = useState('450') // цена за м²
+  const [areaToPlaster, setAreaToPlaster] = useState('100') // площадь для штукатурки
+  const [layerThickness, setLayerThickness] = useState('1.5') // толщина слоя в см
+  const [areaPerShift, setAreaPerShift] = useState('40') // площадь за смену
   const [mixType, setMixType] = useState("knauf") // тип смеси
-  const [bagWeight, setBagWeight] = useState('') // Пустая строка вместо 30
-  const [bagPrice, setBagPrice] = useState('') // Пустая строка вместо 350
+  const [bagWeight, setBagWeight] = useState('30') // вес мешка в кг
+  const [bagPrice, setBagPrice] = useState('350') // цена мешка
 
   const mixTypes = [
     { id: "knauf", name: "Knauf MP 75", consumption: 8.5 }, // кг/м² при толщине 1см
@@ -37,12 +37,12 @@ export default function HeroSection() {
 
   // Расчеты калькулятора - БЕЗОПАСНОЕ ПРЕОБРАЗОВАНИЕ
   const selectedMixData = mixTypes.find(mix => mix.id === mixType)
-  const clientPriceNum = parseFloat(clientPrice) || 0
-  const areaToPlasterNum = parseFloat(areaToPlaster) || 0
-  const layerThicknessNum = parseFloat(layerThickness) || 0
-  const areaPerShiftNum = parseFloat(areaPerShift) || 0
-  const bagWeightNum = parseFloat(bagWeight) || 0
-  const bagPriceNum = parseFloat(bagPrice) || 0
+  const clientPriceNum = Number(clientPrice) || 0
+  const areaToPlasterNum = Number(areaToPlaster) || 0
+  const layerThicknessNum = Number(layerThickness) || 0
+  const areaPerShiftNum = Number(areaPerShift) || 0
+  const bagWeightNum = Number(bagWeight) || 0
+  const bagPriceNum = Number(bagPrice) || 0
   
   const totalWorkCost = areaToPlasterNum * clientPriceNum
   const totalMixConsumption = areaToPlasterNum * (selectedMixData?.consumption || 8.5) * layerThicknessNum
@@ -51,13 +51,15 @@ export default function HeroSection() {
   const shiftsNeeded = areaPerShiftNum > 0 ? Math.ceil(areaToPlasterNum / areaPerShiftNum) : 0
   const profit = totalWorkCost - mixCost
 
+
+
   // ФУНКЦИИ ДЛЯ БЕЗОПАСНОГО ФОРМАТИРОВАНИЯ
   const formatNumber = (num: number) => {
-    return isNaN(num) || !isFinite(num) || num === 0 ? '0' : num.toLocaleString('ru-RU')
+    return isNaN(num) || !isFinite(num) ? '0' : num.toLocaleString('ru-RU')
   }
 
   const formatCount = (num: number) => {
-    return isNaN(num) || !isFinite(num) || num === 0 ? '0' : num.toString()
+    return isNaN(num) || !isFinite(num) ? '0' : num.toString()
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -248,7 +250,7 @@ export default function HeroSection() {
                 <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
                   Стоимость работ
                 </h3>
-              </div>
+                </div>
 
               <div className="grid lg:grid-cols-2 gap-8 lg:gap-16">
                 {/* Левая колонка - Ввод данных */}
@@ -257,7 +259,7 @@ export default function HeroSection() {
                   <div className="bg-coffee-50 rounded-xl p-4 md:p-6">
                     <h4 className="text-lg font-bold text-gray-900 mb-4">Укажите цены:</h4>
                     <div className="space-y-4">
-                      <div>
+                  <div>
                         <label className="block text-gray-800 font-semibold mb-2 text-sm">
                           Сколько ₽ за м²
                         </label>
@@ -288,7 +290,7 @@ export default function HeroSection() {
                           placeholder=""
                         />
                       </div>
-                      <div>
+                  <div>
                         <label className="block text-gray-800 font-semibold mb-2 text-sm">
                           Укажите толщину наносимого слоя: см
                         </label>
@@ -300,7 +302,7 @@ export default function HeroSection() {
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
                           placeholder=""
                         />
-                      </div>
+                          </div>
                       <div>
                         <label className="block text-gray-800 font-semibold mb-2 text-sm">
                           Сколько м² отштукатуриваете в смену:
@@ -336,7 +338,7 @@ export default function HeroSection() {
                           ))}
                         </select>
                       </div>
-                      <div>
+                  <div>
                         <label className="block text-gray-800 font-semibold mb-2 text-sm">
                           Укажите сколько кг в 1 мешке:
                         </label>
@@ -406,7 +408,7 @@ export default function HeroSection() {
                       </div>
 
                       <div className="bg-gradient-to-r from-coffee-600 to-coffee-500 rounded-xl p-4 shadow-lg">
-                        <div className="text-center">
+                    <div className="text-center">
                           <div className="text-sm text-yellow-100/50 mb-1">Доход с объекта составит:</div>
                           <div className="text-3xl font-bold text-yellow-100/50">
                             {formatNumber(profit)} ₽
@@ -420,9 +422,9 @@ export default function HeroSection() {
                     </div>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+                </div>
+              </CardContent>
+            </Card>
         </div>
       </div>
 
