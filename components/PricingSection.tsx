@@ -335,7 +335,7 @@ export default function PricingSection() {
                     className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl h-11 md:h-14 text-sm md:text-base"
                   />
                 </div>
-                <div>
+          <div>
                   <Textarea
                     placeholder="Дополнительная информация о проекте"
                     value={formData.message}
@@ -350,7 +350,7 @@ export default function PricingSection() {
                 >
                   ПОЛУЧИТЬ РАСЧЕТ БЕСПЛАТНО
                   <ArrowRight className="w-4 h-4 md:w-5 md:h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                </Button>
+                  </Button>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 text-xs md:text-sm text-gray-600">
                   <div className="flex items-center space-x-2">
@@ -375,8 +375,8 @@ export default function PricingSection() {
                   Нажимая кнопку, вы соглашаетесь с обработкой персональных данных
                 </p>
               </form>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
         </div>
       </div>
     </section>

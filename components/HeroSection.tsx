@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+
 import { Calculator, Clock, Shield, RussianRubleIcon as Ruble, Star, Trophy, Users, Phone, Mail, User } from "lucide-react"
 
 export default function HeroSection() {
@@ -20,14 +20,14 @@ export default function HeroSection() {
     message: ''
   })
 
-  // Калькулятор состояние
-  const [clientPrice, setClientPrice] = useState(450) // Цена для клиента за м²
-  const [areaToPlaster, setAreaToPlaster] = useState(150) // м² для штукатурки
-  const [layerThickness, setLayerThickness] = useState(1.5) // толщина слоя в см
-  const [areaPerShift, setAreaPerShift] = useState(50) // м² за смену
+  // Калькулятор состояние - ИЗМЕНЕНО НА ПУСТЫЕ СТРОКИ
+  const [clientPrice, setClientPrice] = useState('') // Пустая строка вместо 450
+  const [areaToPlaster, setAreaToPlaster] = useState('') // Пустая строка вместо 150
+  const [layerThickness, setLayerThickness] = useState('') // Пустая строка вместо 1.5
+  const [areaPerShift, setAreaPerShift] = useState('') // Пустая строка вместо 50
   const [mixType, setMixType] = useState("knauf") // тип смеси
-  const [bagWeight, setBagWeight] = useState(30) // кг в мешке
-  const [bagPrice, setBagPrice] = useState(350) // цена за мешок
+  const [bagWeight, setBagWeight] = useState('') // Пустая строка вместо 30
+  const [bagPrice, setBagPrice] = useState('') // Пустая строка вместо 350
 
   const mixTypes = [
     { id: "knauf", name: "Knauf MP 75", consumption: 8.5 }, // кг/м² при толщине 1см
@@ -35,14 +35,30 @@ export default function HeroSection() {
     { id: "kreisel", name: "Kreisel 501", consumption: 8.8 }
   ]
 
-  // Расчеты калькулятора
+  // Расчеты калькулятора - БЕЗОПАСНОЕ ПРЕОБРАЗОВАНИЕ
   const selectedMixData = mixTypes.find(mix => mix.id === mixType)
-  const totalWorkCost = areaToPlaster * clientPrice // Общая стоимость работ
-  const totalMixConsumption = areaToPlaster * (selectedMixData?.consumption || 8.5) * layerThickness // кг смеси
-  const bagsNeeded = Math.ceil(totalMixConsumption / bagWeight) // количество мешков
-  const mixCost = bagsNeeded * bagPrice // стоимость смеси
-  const shiftsNeeded = Math.ceil(areaToPlaster / areaPerShift) // количество смен
-  const profit = totalWorkCost - mixCost // доход с объекта (без учета работы бригады)
+  const clientPriceNum = parseFloat(clientPrice) || 0
+  const areaToPlasterNum = parseFloat(areaToPlaster) || 0
+  const layerThicknessNum = parseFloat(layerThickness) || 0
+  const areaPerShiftNum = parseFloat(areaPerShift) || 0
+  const bagWeightNum = parseFloat(bagWeight) || 0
+  const bagPriceNum = parseFloat(bagPrice) || 0
+  
+  const totalWorkCost = areaToPlasterNum * clientPriceNum
+  const totalMixConsumption = areaToPlasterNum * (selectedMixData?.consumption || 8.5) * layerThicknessNum
+  const bagsNeeded = bagWeightNum > 0 ? Math.ceil(totalMixConsumption / bagWeightNum) : 0
+  const mixCost = bagsNeeded * bagPriceNum
+  const shiftsNeeded = areaPerShiftNum > 0 ? Math.ceil(areaToPlasterNum / areaPerShiftNum) : 0
+  const profit = totalWorkCost - mixCost
+
+  // ФУНКЦИИ ДЛЯ БЕЗОПАСНОГО ФОРМАТИРОВАНИЯ
+  const formatNumber = (num: number) => {
+    return isNaN(num) || !isFinite(num) || num === 0 ? '0' : num.toLocaleString('ru-RU')
+  }
+
+  const formatCount = (num: number) => {
+    return isNaN(num) || !isFinite(num) || num === 0 ? '0' : num.toString()
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -71,21 +87,33 @@ export default function HeroSection() {
       id="hero"
       className="pt-16 pb-12 md:pt-20 md:pb-20 relative overflow-hidden min-h-screen flex items-center"
       style={{
-        background: `linear-gradient(135deg, rgba(139, 69, 19, 0.1) 0%, rgba(160, 82, 45, 0.1) 100%), 
-                     url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'scroll'
+        background: `linear-gradient(135deg, #F5DEB3 0%, #DEB887 25%, #D2B48C 50%, #CD853F 75%, #A0522D 100%)`
       }}
     >
       {/* Overlay */}
-      <div className="absolute inset-0 coffee-light-gradient opacity-95"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-coffee-50/60 to-coffee-100/80"></div>
       
-      {/* Floating elements - скрыты на мобильных */}
-      <div className="absolute inset-0 overflow-hidden hidden md:block">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-coffee-300/30 to-coffee-400/30 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-br from-coffee-400/30 to-coffee-300/30 rounded-full blur-3xl animate-float-delayed"></div>
-        <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-gradient-to-br from-coffee-400/20 to-coffee-500/20 rounded-full blur-2xl animate-float"></div>
+      {/* Декоративные элементы */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Геометрические фигуры */}
+        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-coffee-300/20 to-coffee-400/20 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-br from-coffee-400/20 to-coffee-300/20 rounded-full blur-3xl animate-float-delayed"></div>
+        <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-gradient-to-br from-coffee-400/15 to-coffee-500/15 rounded-full blur-2xl animate-float"></div>
+        
+        {/* Строительные элементы */}
+        <div className="absolute top-32 right-1/4 w-2 h-20 bg-coffee-400/30 rotate-45"></div>
+        <div className="absolute top-32 right-1/4 w-20 h-2 bg-coffee-400/30 rotate-45"></div>
+        <div className="absolute bottom-32 left-1/4 w-2 h-16 bg-coffee-300/40 -rotate-12"></div>
+        <div className="absolute bottom-32 left-1/4 w-16 h-2 bg-coffee-300/40 -rotate-12"></div>
+        
+        {/* Сетка */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="grid grid-cols-12 h-full">
+            {Array.from({length: 12}).map((_, i) => (
+              <div key={i} className="border-r border-coffee-600"></div>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
@@ -103,7 +131,7 @@ export default function HeroSection() {
               </div>
               
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-black text-gray-900 leading-tight lg:pr-8">
-                <span className="bg-gradient-to-r from-coffee-600 to-coffee-500 bg-clip-text text-transparent">
+                <span className="text-gray-800">
                   Механизированная
                 </span>
                 <br />
@@ -236,9 +264,9 @@ export default function HeroSection() {
                         <Input
                           type="number"
                           value={clientPrice}
-                          onChange={(e) => setClientPrice(Number(e.target.value))}
+                          onChange={(e) => setClientPrice(e.target.value)}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
-                          placeholder="450"
+                          placeholder=""
                         />
                       </div>
                     </div>
@@ -255,9 +283,9 @@ export default function HeroSection() {
                         <Input
                           type="number"
                           value={areaToPlaster}
-                          onChange={(e) => setAreaToPlaster(Number(e.target.value))}
+                          onChange={(e) => setAreaToPlaster(e.target.value)}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
-                          placeholder="150"
+                          placeholder=""
                         />
                       </div>
                       <div>
@@ -268,9 +296,9 @@ export default function HeroSection() {
                           type="number"
                           step="0.1"
                           value={layerThickness}
-                          onChange={(e) => setLayerThickness(Number(e.target.value))}
+                          onChange={(e) => setLayerThickness(e.target.value)}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
-                          placeholder="1.5"
+                          placeholder=""
                         />
                       </div>
                       <div>
@@ -280,9 +308,9 @@ export default function HeroSection() {
                         <Input
                           type="number"
                           value={areaPerShift}
-                          onChange={(e) => setAreaPerShift(Number(e.target.value))}
+                          onChange={(e) => setAreaPerShift(e.target.value)}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
-                          placeholder="50"
+                          placeholder=""
                         />
                       </div>
                     </div>
@@ -296,18 +324,17 @@ export default function HeroSection() {
                         <label className="block text-gray-800 font-semibold mb-2 text-sm">
                           Выберите, какой смесью работать:
                         </label>
-                        <Select value={mixType} onValueChange={setMixType}>
-                          <SelectTrigger className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl">
-                            <SelectValue placeholder="Выберите смесь" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {mixTypes.map((mix) => (
-                              <SelectItem key={mix.id} value={mix.id}>
-                                {mix.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <select
+                          value={mixType}
+                          onChange={(e) => setMixType(e.target.value)}
+                          className="w-full border-2 border-gray-200 focus:border-coffee-400 rounded-xl bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-400/20"
+                        >
+                          {mixTypes.map((mix) => (
+                            <option key={mix.id} value={mix.id}>
+                              {mix.name}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                       <div>
                         <label className="block text-gray-800 font-semibold mb-2 text-sm">
@@ -316,9 +343,9 @@ export default function HeroSection() {
                         <Input
                           type="number"
                           value={bagWeight}
-                          onChange={(e) => setBagWeight(Number(e.target.value))}
+                          onChange={(e) => setBagWeight(e.target.value)}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
-                          placeholder="30"
+                          placeholder=""
                         />
                       </div>
                       <div>
@@ -328,9 +355,9 @@ export default function HeroSection() {
                         <Input
                           type="number"
                           value={bagPrice}
-                          onChange={(e) => setBagPrice(Number(e.target.value))}
+                          onChange={(e) => setBagPrice(e.target.value)}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
-                          placeholder="350"
+                          placeholder=""
                         />
                       </div>
                     </div>
@@ -347,7 +374,7 @@ export default function HeroSection() {
                         <div className="text-center">
                           <div className="text-sm text-gray-600 mb-1">Общая стоимость работ на объекте:</div>
                           <div className="text-2xl font-bold text-coffee-600">
-                            {totalWorkCost.toLocaleString('ru-RU')} ₽
+                            {formatNumber(totalWorkCost)} ₽
                           </div>
                           <div className="text-xs text-gray-700">Без учёта смеси</div>
                         </div>
@@ -357,7 +384,7 @@ export default function HeroSection() {
                         <div className="text-center">
                           <div className="text-sm text-gray-600 mb-1">Стоимость смеси составит:</div>
                           <div className="text-2xl font-bold text-coffee-600">
-                            {mixCost.toLocaleString('ru-RU')} ₽
+                            {formatNumber(mixCost)} ₽
                           </div>
                         </div>
                       </div>
@@ -365,7 +392,7 @@ export default function HeroSection() {
                       <div className="bg-white rounded-xl p-4 shadow-sm">
                         <div className="text-center">
                           <div className="text-sm text-gray-600 mb-1">Вам понадобится ориентировочно:</div>
-                          <div className="text-3xl font-bold text-coffee-600 mb-1">{bagsNeeded}</div>
+                          <div className="text-3xl font-bold text-coffee-600 mb-1">{formatCount(bagsNeeded)}</div>
                           <div className="text-sm text-gray-600">мешков смеси</div>
                         </div>
                       </div>
@@ -373,7 +400,7 @@ export default function HeroSection() {
                       <div className="bg-white rounded-xl p-4 shadow-sm">
                         <div className="text-center">
                           <div className="text-sm text-gray-600 mb-1">Объект будет выполнен за:</div>
-                          <div className="text-3xl font-bold text-coffee-600 mb-1">{shiftsNeeded}</div>
+                          <div className="text-3xl font-bold text-coffee-600 mb-1">{formatCount(shiftsNeeded)}</div>
                           <div className="text-sm text-gray-600">рабочих смен</div>
                         </div>
                       </div>
@@ -382,7 +409,7 @@ export default function HeroSection() {
                         <div className="text-center">
                           <div className="text-sm text-yellow-100/50 mb-1">Доход с объекта составит:</div>
                           <div className="text-3xl font-bold text-yellow-100/50">
-                            {profit.toLocaleString('ru-RU')} ₽
+                            {formatNumber(profit)} ₽
                           </div>
                         </div>
                       </div>
