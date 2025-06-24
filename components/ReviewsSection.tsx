@@ -171,15 +171,15 @@ export default function ReviewsSection() {
 
             {/* Show More Button */}
             {activeTextReviews.length > 3 && (
-              <div className="text-center">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowMore(!showMore)}
-                  className="border-amber-300 text-amber-800 hover:bg-amber-50"
-                >
-                  {showMore ? "Скрыть отзывы" : "Показать еще"}
-                </Button>
-              </div>
+            <div className="text-center">
+              <Button
+                variant="outline"
+                onClick={() => setShowMore(!showMore)}
+                className="border-amber-300 text-amber-800 hover:bg-amber-50"
+              >
+                {showMore ? "Скрыть отзывы" : "Показать еще"}
+              </Button>
+            </div>
             )}
           </div>
         )}

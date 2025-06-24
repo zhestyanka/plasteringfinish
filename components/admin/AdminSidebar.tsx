@@ -39,8 +39,7 @@ const menuItems = [
   { title: "Команда", href: "/admin/team", icon: Users },
   { title: "Отзывы", href: "/admin/reviews", icon: Star },
   { title: "Оборудование", href: "/admin/equipment", icon: Wrench },
-  { title: "Медиа", href: "/admin/media", icon: Camera },
-  { title: "Настройки", href: "/admin/settings", icon: Settings },
+  { title: "Пароль", href: "/admin/settings", icon: Settings },
 ]
 
 interface AdminSidebarProps {

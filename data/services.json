@@ -64,6 +64,17 @@
       "image": "/placeholder.jpg",
       "popular": true,
       "active": true
+    },
+    {
+      "id": "1750788982162",
+      "icon": "Hammer",
+      "title": "test",
+      "description": "test",
+      "price": "111",
+      "features": [],
+      "image": "",
+      "popular": false,
+      "active": true
     }
   ]
 }

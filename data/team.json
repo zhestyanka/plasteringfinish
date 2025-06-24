@@ -35,6 +35,15 @@
       "certificate": "Сертификат KNAUF",
       "image": "/placeholder-user.jpg",
       "active": true
+    },
+    {
+      "id": "1750787980913",
+      "name": "test",
+      "role": "test",
+      "experience": "12",
+      "certificate": "test",
+      "image": "",
+      "active": true
     }
   ]
 }

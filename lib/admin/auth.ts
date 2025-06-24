@@ -17,7 +17,9 @@ export class AuthService {
     return new Promise((resolve) => {
       // Имитация асинхронного запроса
       setTimeout(() => {
-        if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+        const currentPassword = this.getStoredPassword()
+        
+        if (username === ADMIN_CREDENTIALS.username && password === currentPassword) {
           const user: User = {
             id: '1',
             username: ADMIN_CREDENTIALS.username,
@@ -99,6 +101,42 @@ export class AuthService {
   static async validateToken(token: string): Promise<boolean> {
     const session = this.getCurrentSession()
     return session?.token === token && Date.now() < session.expiresAt
+  }
+
+  static validatePassword(password: string): boolean {
+    const currentPassword = this.getStoredPassword()
+    return password === currentPassword
+  }
+
+  static changePassword(currentPassword: string, newPassword: string): boolean {
+    try {
+      // Проверяем текущий пароль
+      const storedPassword = this.getStoredPassword()
+      if (currentPassword !== storedPassword) {
+        return false
+      }
+
+      // В реальном приложении здесь был бы запрос к серверу для смены пароля
+      // Для демо просто обновляем локальную переменную
+      // ВАЖНО: В продакшене пароли должны храниться в зашифрованном виде на сервере!
+      
+      // Временно сохраняем новый пароль в localStorage для демо
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('admin_password', newPassword)
+      }
+
+      return true
+    } catch (error) {
+      console.error('Ошибка смены пароля:', error)
+      return false
+    }
+  }
+
+  private static getStoredPassword(): string {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('admin_password') || ADMIN_CREDENTIALS.password
+    }
+    return ADMIN_CREDENTIALS.password
   }
 }
 

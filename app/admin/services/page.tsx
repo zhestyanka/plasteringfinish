@@ -57,28 +57,6 @@ export default function ServicesPage() {
     }
   }
 
-  const saveServices = async () => {
-    try {
-      const response = await fetch('/api/data/services', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          services: services
-        })
-      })
-      
-      if (response.ok) {
-        console.log('Услуги сохранены')
-      } else {
-        throw new Error('Failed to save services')
-      }
-    } catch (error) {
-      console.error('Ошибка сохранения услуг:', error)
-    }
-  }
-
   const handleOpenDialog = (service?: Service) => {
     if (service) {
       setEditingService(service)
@@ -117,13 +95,16 @@ export default function ServicesPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
+    let updatedServices: Service[]
+    
     if (editingService) {
       // Обновление существующей услуги
-      setServices(prev => prev.map(service => 
+      updatedServices = services.map(service => 
         service.id === editingService.id 
           ? { ...service, ...formData }
           : service
-      ))
+      )
+      setServices(updatedServices)
     } else {
       // Создание новой услуги
       const newService: Service = {
@@ -137,39 +118,90 @@ export default function ServicesPage() {
         popular: formData.popular || false,
         active: formData.active !== false
       }
-      setServices(prev => [...prev, newService])
+      updatedServices = [...services, newService]
+      setServices(updatedServices)
     }
     
     handleCloseDialog()
     
-    // Автоматически сохраняем изменения
-    setTimeout(async () => {
-      await saveServices()
-    }, 100)
+    // Сохраняем обновленные данные
+    try {
+      const response = await fetch('/api/data/services', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          services: updatedServices
+        })
+      })
+      
+      if (response.ok) {
+        console.log('Услуги сохранены')
+      } else {
+        throw new Error('Failed to save services')
+      }
+    } catch (error) {
+      console.error('Ошибка сохранения услуг:', error)
+    }
   }
 
   const handleDelete = async (id: string) => {
     if (confirm('Вы уверены, что хотите удалить эту услугу?')) {
-      setServices(prev => prev.filter(service => service.id !== id))
+      const updatedServices = services.filter(service => service.id !== id)
+      setServices(updatedServices)
       
-      // Автоматически сохраняем изменения
-      setTimeout(async () => {
-        await saveServices()
-      }, 100)
+      // Сохраняем обновленные данные
+      try {
+        const response = await fetch('/api/data/services', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            services: updatedServices
+          })
+        })
+        
+        if (response.ok) {
+          console.log('Услуги сохранены')
+        } else {
+          throw new Error('Failed to save services')
+        }
+      } catch (error) {
+        console.error('Ошибка сохранения услуг:', error)
+      }
     }
   }
 
   const toggleActive = async (id: string) => {
-    setServices(prev => prev.map(service => 
+    const updatedServices = services.map(service => 
       service.id === id 
         ? { ...service, active: !service.active }
         : service
-    ))
+    )
+    setServices(updatedServices)
     
-    // Автоматически сохраняем изменения
-    setTimeout(async () => {
-      await saveServices()
-    }, 100)
+    // Сохраняем обновленные данные
+    try {
+      const response = await fetch('/api/data/services', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          services: updatedServices
+        })
+      })
+      
+      if (response.ok) {
+        console.log('Услуги сохранены')
+      } else {
+        throw new Error('Failed to save services')
+      }
+    } catch (error) {
+      console.error('Ошибка сохранения услуг:', error)
+    }
   }
 
   const addFeature = () => {

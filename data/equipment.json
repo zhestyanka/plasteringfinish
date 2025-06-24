@@ -2,15 +2,15 @@
   "equipment": [
     {
       "id": "pft-g4",
-      "name": "PFT G4",
+      "name": "test",
       "type": "Штукатурная станция",
       "description": "Профессиональная штукатурная станция для механизированного нанесения",
       "specifications": {
-        "power": "5.5 кВт",
-        "productivity": "до 3 м³/ч",
-        "pressure": "до 30 бар"
+        "quantity": 1,
+        "model": "Штукатурная станция",
+        "power": "N/A",
+        "productivity": "N/A"
       },
-      "image": "/images/pft-g4.jpg",
       "active": true,
       "order": 1
     },
@@ -20,11 +20,11 @@
       "type": "Штукатурная станция",
       "description": "Немецкое оборудование высокого класса для штукатурных работ",
       "specifications": {
-        "power": "7.5 кВт",
-        "productivity": "до 5 м³/ч",
-        "pressure": "до 40 бар"
+        "quantity": 1,
+        "model": "Штукатурная станция",
+        "power": "N/A",
+        "productivity": "N/A"
       },
-      "image": "/images/putzmeister.jpg",
       "active": true,
       "order": 2
     },
@@ -34,13 +34,13 @@
       "type": "Миксер",
       "description": "Автоматический смесительный узел для приготовления растворов",
       "specifications": {
-        "capacity": "200 л",
-        "mixing_time": "3-5 мин",
-        "power": "3 кВт"
+        "quantity": 1,
+        "model": "Миксер",
+        "power": "N/A",
+        "productivity": "N/A"
       },
-      "image": "/images/mixer.jpg",
       "active": true,
       "order": 3
     }
   ]
-} 
+}
