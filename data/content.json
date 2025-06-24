@@ -41,13 +41,16 @@
     }
   },
   "contacts": {
-    "phones": [
-      "+7 (812) 123-45-67",
-      "+7 (963) 329-65-63"
-    ],
-    "email": "test",
+    "phone": "+7 (812) 123-45-67",
+    "email": "info@plasteringfinish.ru",
     "address": "Санкт-Петербург, улица Бабушкина, 2",
-    "workingHours": "Пн-Вс: 8:00-20:00"
+    "workingHours": "Пн-Вс: 8:00-20:00",
+    "socialMedia": {
+      "telegram": "@plasteringfinish",
+      "whatsapp": "+7 (812) 123-45-67",
+      "vk": "https://vk.com/plasteringfinish"
+    },
+    "description": "Профессиональная механизированная штукатурка в Санкт-Петербурге. Работаем с объектами любой сложности."
   },
   "company": {
     "name": "test",

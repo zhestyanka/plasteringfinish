@@ -50,7 +50,19 @@ export default function ContactsPage() {
       if (response.ok) {
         const data = await response.json()
         if (data.contacts) {
-          setContactsData(data.contacts)
+          // Обеспечиваем, что все поля имеют значения по умолчанию
+          setContactsData({
+            phone: data.contacts.phone || '',
+            email: data.contacts.email || '',
+            address: data.contacts.address || '',
+            workingHours: data.contacts.workingHours || '',
+            socialMedia: {
+              telegram: data.contacts.socialMedia?.telegram || '',
+              whatsapp: data.contacts.socialMedia?.whatsapp || '',
+              vk: data.contacts.socialMedia?.vk || ''
+            },
+            description: data.contacts.description || ''
+          })
         }
       } else {
         throw new Error('Failed to load contacts')
@@ -212,10 +224,15 @@ export default function ContactsPage() {
               <Label htmlFor="telegram">Telegram</Label>
               <Input
                 id="telegram"
-                value={contactsData.socialMedia.telegram}
+                value={contactsData.socialMedia?.telegram || ''}
                 onChange={(e) => setContactsData(prev => ({
                   ...prev,
-                  socialMedia: { ...prev.socialMedia, telegram: e.target.value }
+                  socialMedia: { 
+                    ...prev.socialMedia, 
+                    telegram: e.target.value,
+                    whatsapp: prev.socialMedia?.whatsapp || '',
+                    vk: prev.socialMedia?.vk || ''
+                  }
                 }))}
                 placeholder="@your_telegram"
               />
@@ -225,10 +242,15 @@ export default function ContactsPage() {
               <Label htmlFor="whatsapp">WhatsApp</Label>
               <Input
                 id="whatsapp"
-                value={contactsData.socialMedia.whatsapp}
+                value={contactsData.socialMedia?.whatsapp || ''}
                 onChange={(e) => setContactsData(prev => ({
                   ...prev,
-                  socialMedia: { ...prev.socialMedia, whatsapp: e.target.value }
+                  socialMedia: { 
+                    ...prev.socialMedia, 
+                    whatsapp: e.target.value,
+                    telegram: prev.socialMedia?.telegram || '',
+                    vk: prev.socialMedia?.vk || ''
+                  }
                 }))}
                 placeholder="+7 (999) 123-45-67"
               />
@@ -238,10 +260,15 @@ export default function ContactsPage() {
               <Label htmlFor="vk">ВКонтакте</Label>
               <Input
                 id="vk"
-                value={contactsData.socialMedia.vk}
+                value={contactsData.socialMedia?.vk || ''}
                 onChange={(e) => setContactsData(prev => ({
                   ...prev,
-                  socialMedia: { ...prev.socialMedia, vk: e.target.value }
+                  socialMedia: { 
+                    ...prev.socialMedia, 
+                    vk: e.target.value,
+                    telegram: prev.socialMedia?.telegram || '',
+                    whatsapp: prev.socialMedia?.whatsapp || ''
+                  }
                 }))}
                 placeholder="https://vk.com/your_page"
               />
