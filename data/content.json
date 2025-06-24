@@ -1,0 +1,61 @@
+{
+  "hero": {
+    "title": "test",
+    "subtitle": "в Санкт-Петербурге",
+    "description": "Профессиональная штукатурка стен и потолков с использованием современного оборудования. Быстро, качественно, с гарантией 5 лет.",
+    "stats": [
+      {
+        "icon": "Ruble",
+        "label": "Стоимость м²",
+        "value": "от 350₽"
+      },
+      {
+        "icon": "Clock",
+        "label": "Скорость работы",
+        "value": "100 м²/день"
+      },
+      {
+        "icon": "Shield",
+        "label": "Гарантия",
+        "value": "5 лет"
+      }
+    ],
+    "calculator": {
+      "mixTypes": [
+        {
+          "id": "knauf",
+          "name": "Knauf MP 75",
+          "consumption": 8.5
+        },
+        {
+          "id": "volma",
+          "name": "Волма Гипс-Актив Экстра",
+          "consumption": 9
+        },
+        {
+          "id": "kreisel",
+          "name": "Kreisel 501",
+          "consumption": 8.8
+        }
+      ]
+    }
+  },
+  "contacts": {
+    "phones": [
+      "+7 (812) 123-45-67",
+      "+7 (963) 329-65-63"
+    ],
+    "email": "test",
+    "address": "Санкт-Петербург, улица Бабушкина, 2",
+    "workingHours": "Пн-Вс: 8:00-20:00"
+  },
+  "company": {
+    "name": "test",
+    "subtitle": "Механизированная отделка",
+    "rating": 4.9,
+    "reviewsCount": 157,
+    "clientsCount": 500,
+    "experienceYears": 8,
+    "warrantyYears": 5
+  }
+}

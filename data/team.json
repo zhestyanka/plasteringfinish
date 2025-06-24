@@ -1,0 +1,40 @@
+{
+  "team": [
+    {
+      "id": "sergey",
+      "name": "test",
+      "role": "Оператор машины",
+      "experience": "Опыт работы 5 лет",
+      "certificate": "Сертификат KNAUF",
+      "image": "/placeholder-user.jpg",
+      "active": true
+    },
+    {
+      "id": "dmitry",
+      "name": "Дмитрий Гореев",
+      "role": "Прораб",
+      "experience": "Опыт работы 6 лет",
+      "certificate": "Сертификат KNAUF",
+      "image": "/placeholder-user.jpg",
+      "active": true
+    },
+    {
+      "id": "semen",
+      "name": "Семен Власов",
+      "role": "Штукатур 5 разряда",
+      "experience": "Опыт работы 6 лет",
+      "certificate": "Сертификат KNAUF",
+      "image": "/placeholder-user.jpg",
+      "active": true
+    },
+    {
+      "id": "boris",
+      "name": "Борис Романов",
+      "role": "Штукатур 6 разряда",
+      "experience": "Опыт работы 10 лет",
+      "certificate": "Сертификат KNAUF",
+      "image": "/placeholder-user.jpg",
+      "active": true
+    }
+  ]
+}

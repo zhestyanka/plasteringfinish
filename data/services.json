@@ -1,0 +1,75 @@
+{
+  "services": [
+    {
+      "id": "demolition",
+      "icon": "Hammer",
+      "title": "test",
+      "description": "Снос стен, демонтаж старых покрытий, подготовка поверхностей",
+      "price": "от 150₽/м²",
+      "features": [
+        "Вывоз мусора",
+        "Защита мебели",
+        "Уборка"
+      ],
+      "image": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      "popular": false,
+      "active": true
+    },
+    {
+      "id": "finishing",
+      "icon": "Paintbrush",
+      "title": "Финишная отделка",
+      "description": "Покраска, поклейка обоев, декоративная штукатурка",
+      "price": "от 400₽/м²",
+      "features": [
+        "Материалы в подарок",
+        "Дизайн проект",
+        "Гарантия цвета"
+      ],
+      "image": "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      "popular": true,
+      "active": true
+    },
+    {
+      "id": "electrical",
+      "icon": "Zap",
+      "title": "Электромонтажные работы",
+      "description": "Прокладка проводки, установка розеток и выключателей",
+      "price": "от 300₽/точка",
+      "features": [
+        "Схема электрики",
+        "Сертификат",
+        "Тестирование"
+      ],
+      "image": "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      "popular": false,
+      "active": true
+    },
+    {
+      "id": "plumbing",
+      "icon": "Wrench",
+      "title": "Сантехнические работы",
+      "description": "Разводка труб, установка сантехники, отопление",
+      "price": "от 500₽/точка",
+      "features": [
+        "Гидроизоляция",
+        "Опрессовка",
+        "Гарантия"
+      ],
+      "image": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      "popular": false,
+      "active": true
+    },
+    {
+      "id": "1750776947130",
+      "icon": "Hammer",
+      "title": "tst",
+      "description": "test",
+      "price": "111",
+      "features": [],
+      "image": "",
+      "popular": true,
+      "active": false
+    }
+  ]
+}

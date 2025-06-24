@@ -1,45 +1,81 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { User, Award, Clock } from "lucide-react"
 
+interface TeamMember {
+  id: string
+  name: string
+  role: string
+  experience: string
+  certificate: string
+  image: string
+  active: boolean
+}
+
+interface TeamData {
+  team: TeamMember[]
+}
+
 export default function TeamSection() {
   const [activeTeamMember, setActiveTeamMember] = useState(0)
+  const [teamData, setTeamData] = useState<TeamMember[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
-  const teamMembers = [
-    {
-      name: "Сергей Иванов",
-      role: "Оператор машины",
-      experience: "Опыт работы 5 лет",
-      certificate: "Сертификат KNAUF",
-      image: "/placeholder.svg?height=400&width=300",
-    },
-    {
-      name: "Дмитрий Гореев",
-      role: "Прораб",
-      experience: "Опыт работы 6 лет",
-      certificate: "Сертификат KNAUF",
-      image: "/placeholder.svg?height=400&width=300",
-    },
-    {
-      name: "Семен Власов",
-      role: "Штукатур 5 разряда",
-      experience: "Опыт работы 6 лет",
-      certificate: "Сертификат KNAUF",
-      image: "/placeholder.svg?height=400&width=300",
-    },
-    {
-      name: "Борис Романов",
-      role: "Штукатур 6 разряда",
-      experience: "Опыт работы 10 лет",
-      certificate: "Сертификат KNAUF",
-      image: "/placeholder.svg?height=400&width=300",
-    },
-  ]
+  useEffect(() => {
+    const loadTeam = async () => {
+      try {
+        const response = await fetch('/api/data/team')
+        if (response.ok) {
+          const data: TeamData = await response.json()
+          // Фильтруем только активных сотрудников
+          const activeTeam = data.team?.filter(member => member.active) || []
+          setTeamData(activeTeam)
+        } else {
+          console.error('Failed to load team')
+        }
+      } catch (error) {
+        console.error('Error loading team:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
 
-  const currentMember = teamMembers[activeTeamMember]
+    loadTeam()
+  }, [])
+
+  // Если данные загружаются или команда пуста
+  if (isLoading || teamData.length === 0) {
+    return (
+      <section className="py-16 bg-gradient-to-br from-amber-900 to-orange-900 text-gray-100">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            {isLoading ? (
+              <div className="animate-pulse">
+                <div className="h-8 bg-amber-800 rounded w-64 mx-auto mb-8"></div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="h-32 bg-amber-800 rounded-lg"></div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div>
+                <h2 className="text-4xl font-bold mb-4">
+                  <span className="text-amber-300">Наша</span> команда
+                </h2>
+                <p className="text-amber-100">Команда находится в процессе формирования</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  const currentMember = teamData[activeTeamMember]
 
   return (
     <section className="py-16 bg-gradient-to-br from-amber-900 to-orange-900 text-gray-100">
@@ -59,10 +95,10 @@ export default function TeamSection() {
         </div>
 
         {/* Team Member Tabs */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {teamMembers.map((member, index) => (
+        <div className={`grid gap-4 mb-8 ${teamData.length <= 2 ? 'grid-cols-2' : teamData.length === 3 ? 'grid-cols-3' : 'grid-cols-2 md:grid-cols-4'}`}>
+          {teamData.map((member, index) => (
             <div
-              key={index}
+              key={member.id}
               className={`cursor-pointer transition-all duration-300 ${
                 activeTeamMember === index ? "transform scale-105" : ""
               }`}
@@ -75,7 +111,7 @@ export default function TeamSection() {
                   }`}
                 >
                   <img
-                    src={member.image || "/placeholder.svg"}
+                    src={member.image || "/placeholder-user.jpg"}
                     alt={member.name}
                     className="w-full h-full object-cover"
                   />
@@ -93,7 +129,7 @@ export default function TeamSection() {
           {/* Large Photo */}
           <div className="aspect-[3/4] bg-amber-800 rounded-lg overflow-hidden">
             <img
-              src={currentMember.image || "/placeholder.svg"}
+              src={currentMember.image || "/placeholder-user.jpg"}
               alt={currentMember.name}
               className="w-full h-full object-cover"
             />

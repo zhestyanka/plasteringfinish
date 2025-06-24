@@ -1,0 +1,142 @@
+"use client"
+
+import { User, AuthSession } from './types'
+
+const ADMIN_CREDENTIALS = {
+  username: 'admin',
+  password: 'admin123', // В реальном проекте должен быть хешированный пароль
+  email: 'admin@plasteringfinish.ru',
+  role: 'admin' as const
+}
+
+const SESSION_KEY = 'admin_session'
+const SESSION_DURATION = 24 * 60 * 60 * 1000 // 24 часа
+
+export class AuthService {
+  static login(username: string, password: string): Promise<AuthSession | null> {
+    return new Promise((resolve) => {
+      // Имитация асинхронного запроса
+      setTimeout(() => {
+        if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+          const user: User = {
+            id: '1',
+            username: ADMIN_CREDENTIALS.username,
+            email: ADMIN_CREDENTIALS.email,
+            role: ADMIN_CREDENTIALS.role
+          }
+
+          const session: AuthSession = {
+            user,
+            token: this.generateToken(),
+            expiresAt: Date.now() + SESSION_DURATION
+          }
+
+          // Сохраняем сессию в localStorage
+          if (typeof window !== 'undefined') {
+            localStorage.setItem(SESSION_KEY, JSON.stringify(session))
+          }
+
+          resolve(session)
+        } else {
+          resolve(null)
+        }
+      }, 500)
+    })
+  }
+
+  static logout(): void {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(SESSION_KEY)
+    }
+  }
+
+  static getCurrentSession(): AuthSession | null {
+    if (typeof window === 'undefined') return null
+
+    try {
+      const sessionData = localStorage.getItem(SESSION_KEY)
+      if (!sessionData) return null
+
+      const session: AuthSession = JSON.parse(sessionData)
+      
+      // Проверяем, не истекла ли сессия
+      if (Date.now() > session.expiresAt) {
+        this.logout()
+        return null
+      }
+
+      return session
+    } catch (error) {
+      console.error('Ошибка при получении сессии:', error)
+      this.logout()
+      return null
+    }
+  }
+
+  static isAuthenticated(): boolean {
+    return this.getCurrentSession() !== null
+  }
+
+  static getCurrentUser(): User | null {
+    const session = this.getCurrentSession()
+    return session?.user || null
+  }
+
+  static extendSession(): void {
+    const session = this.getCurrentSession()
+    if (session) {
+      session.expiresAt = Date.now() + SESSION_DURATION
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(SESSION_KEY, JSON.stringify(session))
+      }
+    }
+  }
+
+  private static generateToken(): string {
+    return btoa(Date.now().toString() + Math.random().toString()).replace(/[^a-zA-Z0-9]/g, '')
+  }
+
+  static async validateToken(token: string): Promise<boolean> {
+    const session = this.getCurrentSession()
+    return session?.token === token && Date.now() < session.expiresAt
+  }
+}
+
+// Хук для использования в компонентах
+export function useAuth() {
+  const session = AuthService.getCurrentSession()
+  
+  return {
+    user: session?.user || null,
+    isAuthenticated: !!session,
+    login: AuthService.login,
+    logout: AuthService.logout,
+    extendSession: AuthService.extendSession
+  }
+}
+
+// Middleware для защищенных маршрутов
+export function requireAuth(): boolean {
+  const isAuth = AuthService.isAuthenticated()
+  
+  if (!isAuth && typeof window !== 'undefined') {
+    // Перенаправляем на страницу входа
+    window.location.href = '/admin/login'
+    return false
+  }
+  
+  return isAuth
+}
+
+// HOC для защищенных компонентов
+export function withAuth<P extends object>(Component: React.ComponentType<P>) {
+  return function AuthenticatedComponent(props: P) {
+    const { isAuthenticated } = useAuth()
+    
+    if (!isAuthenticated) {
+      return null
+    }
+    
+    return null
+  }
+} 

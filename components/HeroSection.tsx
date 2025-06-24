@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -9,6 +9,34 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 
 import { Calculator, Clock, Shield, RussianRubleIcon as Ruble, Star, Trophy, Users, Phone, Mail, User } from "lucide-react"
+
+interface HeroData {
+  title: string
+  subtitle: string
+  description: string
+  stats: Array<{
+    icon: string
+    label: string
+    value: string
+  }>
+  calculator: {
+    mixTypes: Array<{
+      id: string
+      name: string
+      consumption: number
+    }>
+  }
+}
+
+interface CompanyData {
+  name: string
+  subtitle: string
+  rating: number
+  reviewsCount: number
+  clientsCount: number
+  experienceYears: number
+  warrantyYears: number
+}
 
 export default function HeroSection() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -20,6 +48,51 @@ export default function HeroSection() {
     message: ''
   })
 
+  // Данные из API
+  const [heroData, setHeroData] = useState<HeroData>({
+    title: "Механизированная штукатурка",
+    subtitle: "в Санкт-Петербурге",
+    description: "Профессиональная штукатурка стен и потолков с использованием современного оборудования. Быстро, качественно, с гарантией 5 лет.",
+    stats: [
+      { icon: "Ruble", label: "Стоимость м²", value: "от 350₽" },
+      { icon: "Clock", label: "Скорость работы", value: "100 м²/день" },
+      { icon: "Shield", label: "Гарантия", value: "5 лет" }
+    ],
+    calculator: { mixTypes: [] }
+  })
+
+  const [companyData, setCompanyData] = useState<CompanyData>({
+    name: "СПБ Штукатурка",
+    subtitle: "Механизированная отделка",
+    rating: 4.9,
+    reviewsCount: 157,
+    clientsCount: 500,
+    experienceYears: 8,
+    warrantyYears: 5
+  })
+
+  // Загрузка данных из API
+  useEffect(() => {
+    const loadContent = async () => {
+      try {
+        const response = await fetch('/api/data/content')
+        if (response.ok) {
+          const data = await response.json()
+          if (data.hero) {
+            setHeroData(data.hero)
+          }
+          if (data.company) {
+            setCompanyData(data.company)
+          }
+        }
+      } catch (error) {
+        console.error('Error loading hero content:', error)
+      }
+    }
+
+    loadContent()
+  }, [])
+
   // Калькулятор состояние - с примерными значениями для демонстрации
   const [clientPrice, setClientPrice] = useState('450') // цена за м²
   const [areaToPlaster, setAreaToPlaster] = useState('100') // площадь для штукатурки
@@ -29,11 +102,14 @@ export default function HeroSection() {
   const [bagWeight, setBagWeight] = useState('30') // вес мешка в кг
   const [bagPrice, setBagPrice] = useState('350') // цена мешка
 
-  const mixTypes = [
-    { id: "knauf", name: "Knauf MP 75", consumption: 8.5 }, // кг/м² при толщине 1см
-    { id: "volma", name: "Волма Гипс-Актив Экстра", consumption: 9.0 },
-    { id: "kreisel", name: "Kreisel 501", consumption: 8.8 }
-  ]
+  // Используем данные из API или дефолтные значения
+  const mixTypes = heroData.calculator?.mixTypes?.length > 0 
+    ? heroData.calculator.mixTypes 
+    : [
+        { id: "knauf", name: "Knauf MP 75", consumption: 8.5 },
+        { id: "volma", name: "Волма Гипс-Актив Экстра", consumption: 9.0 },
+        { id: "kreisel", name: "Kreisel 501", consumption: 8.8 }
+      ]
 
   // Расчеты калькулятора - БЕЗОПАСНОЕ ПРЕОБРАЗОВАНИЕ
   const selectedMixData = mixTypes.find(mix => mix.id === mixType)
@@ -50,8 +126,6 @@ export default function HeroSection() {
   const mixCost = bagsNeeded * bagPriceNum
   const shiftsNeeded = areaPerShiftNum > 0 ? Math.ceil(areaToPlasterNum / areaPerShiftNum) : 0
   const profit = totalWorkCost - mixCost
-
-
 
   // ФУНКЦИИ ДЛЯ БЕЗОПАСНОГО ФОРМАТИРОВАНИЯ
   const formatNumber = (num: number) => {
@@ -126,66 +200,64 @@ export default function HeroSection() {
               <div className="flex items-center justify-center lg:justify-start space-x-2 mb-4">
                 <div className="flex items-center space-x-1">
                   {[1,2,3,4,5].map((star) => (
-                    <Star key={star} className="w-4 h-4 md:w-5 md:h-5 text-coffee-500 fill-current" />
+                    <Star key={star} className={`w-4 h-4 md:w-5 md:h-5 text-coffee-500 ${star <= companyData.rating ? 'fill-current' : ''}`} />
                   ))}
                 </div>
-                <span className="text-coffee-700 font-medium text-sm md:text-base">4.9 из 5 • 157 отзывов</span>
+                <span className="text-coffee-700 font-medium text-sm md:text-base">
+                  {companyData.rating} из 5 • {companyData.reviewsCount} отзывов
+                </span>
               </div>
               
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-black text-gray-900 leading-tight lg:pr-8">
                 <span className="text-gray-800">
-                  Механизированная
+                  {heroData.title}
                 </span>
                 <br />
-                <span className="text-gray-800">штукатурка</span>
-                <br />
                 <span className="text-xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-4xl font-bold text-coffee-700">
-                  в Санкт-Петербурге
+                  {heroData.subtitle}
                 </span>
               </h1>
               
               <p className="text-base md:text-xl text-gray-600 max-w-md mx-auto lg:mx-0 leading-relaxed lg:pr-8">
-                Профессиональная штукатурка стен и потолков с использованием современного оборудования. 
-                Быстро, качественно, с гарантией 5 лет.
+                {heroData.description}
               </p>
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-              <div className="glass-effect rounded-xl p-4 md:p-6 text-center hover:shadow-glow transition-all duration-300">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-coffee-500 to-coffee-600 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <Ruble className="w-5 h-5 md:w-6 md:h-6 text-black" />
-                </div>
-                <div className="text-gray-800 text-xs md:text-sm font-medium">Стоимость м²</div>
-                <div className="text-xl md:text-2xl font-bold text-gray-900">от 350₽</div>
-              </div>
-
-              <div className="glass-effect rounded-xl p-4 md:p-6 text-center hover:shadow-glow transition-all duration-300">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-coffee-500 to-coffee-600 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <Clock className="w-5 h-5 md:w-6 md:h-6 text-black" />
-                </div>
-                <div className="text-gray-800 text-xs md:text-sm font-medium">Скорость работы</div>
-                <div className="text-xl md:text-2xl font-bold text-gray-900">100 м²/день</div>
-              </div>
-
-              <div className="glass-effect rounded-xl p-4 md:p-6 text-center hover:shadow-glow transition-all duration-300">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-coffee-500 to-coffee-600 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <Shield className="w-5 h-5 md:w-6 md:h-6 text-black" />
-                </div>
-                <div className="text-gray-800 text-xs md:text-sm font-medium">Гарантия</div>
-                <div className="text-xl md:text-2xl font-bold text-gray-900">5 лет</div>
-              </div>
+            <div className={`grid gap-4 md:gap-6 ${
+              heroData.stats.length === 1 ? 'grid-cols-1 max-w-xs mx-auto lg:mx-0' :
+              heroData.stats.length === 2 ? 'grid-cols-1 sm:grid-cols-2' :
+              'grid-cols-1 sm:grid-cols-3'
+            }`}>
+              {heroData.stats.map((stat, index) => {
+                // Функция для получения иконки по названию
+                const getIcon = (iconName: string) => {
+                  const icons: { [key: string]: any } = { Ruble, Clock, Shield }
+                  return icons[iconName] || Clock
+                }
+                const IconComponent = getIcon(stat.icon)
+                
+                return (
+                  <div key={index} className="glass-effect rounded-xl p-4 md:p-6 text-center hover:shadow-glow transition-all duration-300">
+                    <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-coffee-500 to-coffee-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                      <IconComponent className="w-5 h-5 md:w-6 md:h-6 text-black" />
+                    </div>
+                    <div className="text-gray-800 text-xs md:text-sm font-medium">{stat.label}</div>
+                    <div className="text-xl md:text-2xl font-bold text-gray-900">{stat.value}</div>
+                  </div>
+                )
+              })}
             </div>
 
             {/* Trust indicators */}
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 md:gap-6 pt-4">
               <div className="flex items-center space-x-2">
                 <Trophy className="w-4 h-4 md:w-5 md:h-5 text-coffee-600" />
-                <span className="text-xs md:text-sm text-gray-600">8+ лет на рынке</span>
+                <span className="text-xs md:text-sm text-gray-600">{companyData.experienceYears}+ лет на рынке</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Users className="w-4 h-4 md:w-5 md:h-5 text-coffee-600" />
-                <span className="text-xs md:text-sm text-gray-600">500+ довольных клиентов</span>
+                <span className="text-xs md:text-sm text-gray-600">{companyData.clientsCount}+ довольных клиентов</span>
               </div>
             </div>
           </div>
@@ -425,8 +497,8 @@ export default function HeroSection() {
                 </div>
               </CardContent>
             </Card>
+          </div>
         </div>
-      </div>
 
       {/* Модальное окно с формой обратной связи */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -534,7 +606,7 @@ export default function HeroSection() {
               >
                 Отправить заявку
               </Button>
-            </div>
+      </div>
 
             <p className="text-xs text-gray-500 text-center mt-4">
               Нажимая "Отправить заявку", вы соглашаетесь с обработкой персональных данных

@@ -1,67 +1,87 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Star, Play, User } from "lucide-react"
 
+interface TextReview {
+  id: string
+  name: string
+  role: string
+  title: string
+  text: string
+  rating: number
+  active: boolean
+  featured?: boolean
+}
+
+interface VideoReview {
+  id: string
+  title: string
+  thumbnail: string
+  videoUrl: string
+  active: boolean
+}
+
+interface ReviewsData {
+  textReviews: TextReview[]
+  videoReviews: VideoReview[]
+}
+
 export default function ReviewsSection() {
   const [activeTab, setActiveTab] = useState("video")
   const [showMore, setShowMore] = useState(false)
+  const [reviewsData, setReviewsData] = useState<ReviewsData>({
+    textReviews: [],
+    videoReviews: []
+  })
+  const [isLoading, setIsLoading] = useState(true)
 
-  const videoReviews = [
-    {
-      id: 1,
-      thumbnail: "/placeholder.svg?height=300&width=400",
-      title: "Отзыв о штукатурке квартиры",
-    },
-    {
-      id: 2,
-      thumbnail: "/placeholder.svg?height=300&width=400",
-      title: "Отзыв о работе в коттедже",
-    },
-  ]
+  useEffect(() => {
+    const loadReviews = async () => {
+      try {
+        const response = await fetch('/api/data/reviews')
+        if (response.ok) {
+          const data = await response.json()
+          setReviewsData(data)
+        } else {
+          console.error('Failed to load reviews')
+        }
+      } catch (error) {
+        console.error('Error loading reviews:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
 
-  const textReviews = [
-    {
-      name: "Мария Власова",
-      role: "заказчица",
-      title: "10 из 10",
-      text: "Большое спасибо! Выбрала вас за профессиональный подход к работе. На замере сметчик наглядно показал отклонение стен, показал какой слой штукатурки будет, подробно объяснил всю технологию. Организация работ на 10 из 10. Прораб в Whatsapp присылал фотоотчеты о ходе ремонта. Все сделали даже раньше срока по договору!",
-    },
-    {
-      name: "Игорь Емельянов",
-      role: "заказчик",
-      title: "Отличное качество",
-      text: "Мы с женой приобрели квартиру в новом доме в начале ноября. Очень хотели въехать до праздников, но тут нам сказали, сколько по времени займет черновая отделка. Стал искать варианты, наткнулся на вас. Спасибо, отличное качество работы, сделали штукатурку с глянцеванием, поверх можно сразу клеить обои.",
-    },
-    {
-      name: "Валерий Денисов",
-      role: "заказчик",
-      title: "Быстрее, чем ожидали",
-      text: "Я считаю, что в 21 веке нужно следить за технологиями, потому что они серьезно облегчают жизнь. Когда готовился к ремонту, увидел видео на Ютубе про механизированную штукатурку. Коттедж 520 метров по стенам за 7 дней - это фантастика! Сделали ровно и аккуратно. Спасибо!",
-    },
-    {
-      name: "Ольга Мельникова",
-      role: "заказчица",
-      title: "Черновая отделка под ключ",
-      text: "Срок аренды квартиры уже подходил к концу, и я начинала нервничать. Решила, что надо ускоряться, и выбрала вас. Я и не ожидала, что можно так быстро сделать всю черновую отделку. Штукатурка стен заняла 3 дня, электрика 5 дней, а стяжку пола сделали за день.",
-    },
-    {
-      name: "Кирилл Жданов",
-      role: "заказчик",
-      title: "Быстро и недорого",
-      text: "Я давно слышал о механизированной штукатурке, но думал, что это очень дорого. Потом, когда купил свою квартиру, задумался о таком варианте для ремонта. Просмотрел цены и понял, что это даже дешевле чем обычная ручная штукатурка.",
-    },
-    {
-      name: "Максим Стаханов",
-      role: "заказчик",
-      title: "Фиксированная стоимость",
-      text: "Огромное вам спасибо! Стоимость как и обещал сметчик Сергей не изменилась в ходе работ. Качество и организация работ на высшем уровне. Обязательно буду вас рекомендовать всем друзьям и соседям!",
-    },
-  ]
+    loadReviews()
+  }, [])
 
-  const visibleReviews = showMore ? textReviews : textReviews.slice(0, 3)
+  // Фильтруем только активные отзывы
+  const activeTextReviews = reviewsData.textReviews?.filter(review => review.active) || []
+  const activeVideoReviews = reviewsData.videoReviews?.filter(review => review.active) || []
+
+  const visibleReviews = showMore ? activeTextReviews : activeTextReviews.slice(0, 3)
+
+  if (isLoading) {
+    return (
+      <section className="py-16 bg-gradient-to-b from-orange-50 to-amber-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="animate-pulse">
+              <div className="h-8 bg-amber-200 rounded w-64 mx-auto mb-8"></div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="h-48 bg-amber-100 rounded-lg"></div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="py-16 bg-gradient-to-b from-orange-50 to-amber-50">
@@ -82,7 +102,7 @@ export default function ReviewsSection() {
                   : "border-amber-300 text-amber-800 hover:bg-amber-50"
               }
             >
-              ВИДЕООТЗЫВЫ
+              ВИДЕООТЗЫВЫ ({activeVideoReviews.length})
             </Button>
             <Button
               variant={activeTab === "text" ? "default" : "outline"}
@@ -93,7 +113,7 @@ export default function ReviewsSection() {
                   : "border-amber-300 text-amber-800 hover:bg-amber-50"
               }
             >
-              ТЕКСТОВЫЕ
+              ТЕКСТОВЫЕ ({activeTextReviews.length})
             </Button>
           </div>
         </div>
@@ -101,7 +121,7 @@ export default function ReviewsSection() {
         {/* Video Reviews */}
         {activeTab === "video" && (
           <div className="grid md:grid-cols-2 gap-8">
-            {videoReviews.map((video) => (
+            {activeVideoReviews.map((video) => (
               <div key={video.id} className="relative group cursor-pointer">
                 <div className="aspect-video bg-amber-100 rounded-lg overflow-hidden border border-amber-200">
                   <img
@@ -115,6 +135,7 @@ export default function ReviewsSection() {
                     </div>
                   </div>
                 </div>
+                <h3 className="text-lg font-semibold text-amber-900 mt-3 text-center">{video.title}</h3>
               </div>
             ))}
           </div>
@@ -124,11 +145,11 @@ export default function ReviewsSection() {
         {activeTab === "text" && (
           <div className="space-y-8">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {visibleReviews.map((review, index) => (
-                <Card key={index} className="bg-white border-amber-200 hover:shadow-lg transition-shadow">
+              {visibleReviews.map((review) => (
+                <Card key={review.id} className="bg-white border-amber-200 hover:shadow-lg transition-shadow">
                   <CardContent className="p-6">
                     <div className="flex items-center space-x-1 mb-3">
-                      {[...Array(5)].map((_, i) => (
+                      {[...Array(review.rating || 5)].map((_, i) => (
                         <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
                       ))}
                     </div>
@@ -149,15 +170,17 @@ export default function ReviewsSection() {
             </div>
 
             {/* Show More Button */}
-            <div className="text-center">
-              <Button
-                variant="outline"
-                onClick={() => setShowMore(!showMore)}
-                className="border-amber-300 text-amber-800 hover:bg-amber-50"
-              >
-                {showMore ? "Скрыть отзывы" : "Показать еще"}
-              </Button>
-            </div>
+            {activeTextReviews.length > 3 && (
+              <div className="text-center">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowMore(!showMore)}
+                  className="border-amber-300 text-amber-800 hover:bg-amber-50"
+                >
+                  {showMore ? "Скрыть отзывы" : "Показать еще"}
+                </Button>
+              </div>
+            )}
           </div>
         )}
       </div>

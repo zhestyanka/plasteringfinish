@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -19,6 +19,33 @@ import {
   ArrowRight
 } from "lucide-react"
 
+interface Service {
+  id: string
+  icon: string
+  title: string
+  description: string
+  price: string
+  features: string[]
+  image: string
+  popular: boolean
+  active: boolean
+}
+
+interface ServicesData {
+  services: Service[]
+}
+
+// Функция для получения иконки по названию
+const getIcon = (iconName: string) => {
+  const icons: { [key: string]: any } = {
+    Hammer,
+    Paintbrush,
+    Zap,
+    Wrench
+  }
+  return icons[iconName] || Hammer
+}
+
 export default function ServicesSection() {
   const [formData, setFormData] = useState({
     name: '',
@@ -26,50 +53,54 @@ export default function ServicesSection() {
     service: '',
     message: ''
   })
+  const [services, setServices] = useState<Service[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const loadServices = async () => {
+      try {
+        const response = await fetch('/api/data/services')
+        if (response.ok) {
+          const data: ServicesData = await response.json()
+          // Фильтруем только активные услуги
+          const activeServices = data.services?.filter(service => service.active) || []
+          setServices(activeServices)
+        } else {
+          console.error('Failed to load services')
+        }
+      } catch (error) {
+        console.error('Error loading services:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadServices()
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log('Form submitted:', formData)
   }
 
-  const services = [
-    {
-      icon: Hammer,
-      title: "Демонтажные работы",
-      description: "Снос стен, демонтаж старых покрытий, подготовка поверхностей",
-      price: "от 150₽/м²",
-      features: ["Вывоз мусора", "Защита мебели", "Уборка"],
-      image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      popular: false
-    },
-    {
-      icon: Paintbrush,
-      title: "Финишная отделка",
-      description: "Покраска, поклейка обоев, декоративная штукатурка",
-      price: "от 400₽/м²",
-      features: ["Материалы в подарок", "Дизайн проект", "Гарантия цвета"],
-      image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      popular: true
-    },
-    {
-      icon: Zap,
-      title: "Электромонтажные работы",
-      description: "Прокладка проводки, установка розеток и выключателей",
-      price: "от 300₽/точка",
-      features: ["Схема электрики", "Сертификат", "Тестирование"],
-      image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      popular: false
-    },
-    {
-      icon: Wrench,
-      title: "Сантехнические работы",
-      description: "Разводка труб, установка сантехники, отопление",
-      price: "от 500₽/точка",
-      features: ["Гидроизоляция", "Опрессовка", "Гарантия"],
-      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      popular: false
-    }
-  ]
+  if (isLoading) {
+    return (
+      <section id="services" className="py-12 md:py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-coffee-900 relative overflow-hidden">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="animate-pulse">
+              <div className="h-8 bg-coffee-800 rounded w-64 mx-auto mb-8"></div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="h-96 bg-coffee-800 rounded-2xl"></div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section id="services" className="py-12 md:py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-coffee-900 relative overflow-hidden">
@@ -95,58 +126,66 @@ export default function ServicesSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12 md:mb-16">
-          {services.map((service, index) => (
-            <Card key={index} className="group bg-white/10 backdrop-blur-sm border border-white/20 hover:border-coffee-400/50 transition-all duration-500 overflow-hidden rounded-2xl hover:-translate-y-2 hover:bg-white/15">
-              <div className="relative h-40 md:h-48 overflow-hidden">
-                {service.popular && (
-                  <Badge className="absolute top-3 md:top-4 right-3 md:right-4 z-10 bg-coffee-600 text-white border-0 text-xs">
-                    Популярно
-                  </Badge>
-                )}
-                <img 
-                  src={service.image} 
-                  alt={service.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-                <div className="absolute bottom-3 md:bottom-4 left-3 md:left-4">
-                  <div className="w-10 h-10 md:w-12 md:h-12 bg-coffee-600/90 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg border border-coffee-400/30">
-                    <service.icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
+        <div className={`grid gap-6 md:gap-8 mb-12 md:mb-16 ${
+          services.length === 1 ? 'grid-cols-1 max-w-md mx-auto' :
+          services.length === 2 ? 'grid-cols-1 sm:grid-cols-2 max-w-2xl mx-auto' :
+          services.length === 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' :
+          'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+        }`}>
+          {services.map((service) => {
+            const IconComponent = getIcon(service.icon)
+            return (
+              <Card key={service.id} className="group bg-white/10 backdrop-blur-sm border border-white/20 hover:border-coffee-400/50 transition-all duration-500 overflow-hidden rounded-2xl hover:-translate-y-2 hover:bg-white/15">
+                <div className="relative h-40 md:h-48 overflow-hidden">
+                  {service.popular && (
+                    <Badge className="absolute top-3 md:top-4 right-3 md:right-4 z-10 bg-coffee-600 text-white border-0 text-xs">
+                      Популярно
+                    </Badge>
+                  )}
+                  <img 
+                    src={service.image} 
+                    alt={service.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                  <div className="absolute bottom-3 md:bottom-4 left-3 md:left-4">
+                    <div className="w-10 h-10 md:w-12 md:h-12 bg-coffee-600/90 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg border border-coffee-400/30">
+                      <IconComponent className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                    </div>
                   </div>
                 </div>
-              </div>
-              
-              <CardContent className="p-6 md:p-8">
-                <div className="flex items-center justify-between mb-3 md:mb-4">
-                  <h3 className="text-lg md:text-xl font-bold text-gray-100 group-hover:text-coffee-300 transition-colors duration-300">
-                    {service.title}
-                  </h3>
-                  <span className="text-coffee-400 font-bold text-sm md:text-base">
-                    {service.price}
-                  </span>
-                </div>
                 
-                <p className="text-gray-300 mb-4 md:mb-6 text-sm md:text-sm leading-relaxed">
-                  {service.description}
-                </p>
-                
-                <div className="space-y-2 mb-6">
-                  {service.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-center text-xs md:text-sm text-gray-300">
-                      <CheckCircle className="w-3 h-3 md:w-4 md:h-4 text-coffee-400 mr-2 flex-shrink-0" />
-                      {feature}
-                    </div>
-                  ))}
-                </div>
-                
-                <Button className="w-full bg-coffee-600 hover:bg-coffee-500 text-gray-100 border-0 transition-all duration-300 group-hover:shadow-lg text-sm md:text-base">
-                  Заказать услугу
-                  <ArrowRight className="w-3 h-3 md:w-4 md:h-4 ml-2" />
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+                <CardContent className="p-6 md:p-8">
+                  <div className="flex items-center justify-between mb-3 md:mb-4">
+                    <h3 className="text-lg md:text-xl font-bold text-gray-100 group-hover:text-coffee-300 transition-colors duration-300">
+                      {service.title}
+                    </h3>
+                    <span className="text-coffee-400 font-bold text-sm md:text-base">
+                      {service.price}
+                    </span>
+                  </div>
+                  
+                  <p className="text-gray-300 mb-4 md:mb-6 text-sm md:text-sm leading-relaxed">
+                    {service.description}
+                  </p>
+                  
+                  <div className="space-y-2 mb-6">
+                    {service.features.map((feature, idx) => (
+                      <div key={idx} className="flex items-center text-xs md:text-sm text-gray-300">
+                        <CheckCircle className="w-3 h-3 md:w-4 md:h-4 text-coffee-400 mr-2 flex-shrink-0" />
+                        {feature}
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <Button className="w-full bg-coffee-600 hover:bg-coffee-500 text-gray-100 border-0 transition-all duration-300 group-hover:shadow-lg text-sm md:text-base">
+                    Заказать услугу
+                    <ArrowRight className="w-3 h-3 md:w-4 md:h-4 ml-2" />
+                  </Button>
+                </CardContent>
+              </Card>
+            )
+          })}
         </div>
 
         {/* Consultation Form */}

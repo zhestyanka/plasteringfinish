@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -8,6 +8,22 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 
 import { Check, Star, Phone, Mail, MapPin, Clock, ArrowRight, Zap, Shield, Award, Target, Calculator, CheckCircle, Wallet } from "lucide-react"
+
+interface PricingPlan {
+  id: string
+  name: string
+  price: string
+  unit: string
+  description: string
+  features: string[]
+  popular: boolean
+  active: boolean
+  order: number
+}
+
+interface PricingData {
+  pricing: PricingPlan[]
+}
 
 export default function PricingSection() {
   const [formData, setFormData] = useState({
@@ -17,65 +33,42 @@ export default function PricingSection() {
     message: ""
   })
 
-
-
+  const [plans, setPlans] = useState<PricingPlan[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [selectedPlan, setSelectedPlan] = useState("standard")
   const [area, setArea] = useState(70)
   const [rooms, setRooms] = useState(2)
 
-  const plans = [
-    {
-      id: "basic",
-      name: "Базовый",
-      price: 350,
-      description: "Механизированная штукатурка без дополнительных услуг",
-      features: [
-        "Механизированная штукатурка",
-        "Подготовка поверхности",
-        "Уборка после работ",
-        "Базовая гарантия 2 года"
-      ],
-      popular: false,
-      color: "gray"
-    },
-    {
-      id: "standard",
-      name: "Стандарт",
-      price: 450,
-      description: "Оптимальное соотношение цены и качества",
-      features: [
-        "Механизированная штукатурка",
-        "Подготовка поверхности",
-        "Грунтовка в 2 слоя",
-        "Защита мебели",
-        "Финишная шпаклевка",
-        "Уборка после работ",
-        "Гарантия 3 года"
-      ],
-      popular: true,
-      color: "coffee"
-    },
-    {
-      id: "premium",
-      name: "Премиум",
-      price: 650,
-      description: "Максимальное качество и полный сервис",
-      features: [
-        "Механизированная штукатурка",
-        "Подготовка поверхности",
-        "Грунтовка в 3 слоя",
-        "Защита всей мебели",
-        "Финишная шпаклевка",
-        "Покраска в 2 слоя",
-        "Ежедневная уборка",
-        "Дизайн-консультация",
-        "Гарантия 5 лет",
-        "Страхование работ"
-      ],
-      popular: false,
-      color: "coffee"
+  useEffect(() => {
+    const loadPricing = async () => {
+      try {
+        const response = await fetch('/api/data/pricing')
+        if (response.ok) {
+          const data: PricingData = await response.json()
+          // Фильтруем только активные тарифы и сортируем по порядку
+          const activePlans = data.pricing?.filter(plan => plan.active) || []
+          activePlans.sort((a, b) => (a.order || 0) - (b.order || 0))
+          setPlans(activePlans)
+          
+          // Устанавливаем популярный план как выбранный по умолчанию
+          const popularPlan = activePlans.find(plan => plan.popular)
+          if (popularPlan) {
+            setSelectedPlan(popularPlan.id)
+          } else if (activePlans.length > 0) {
+            setSelectedPlan(activePlans[0].id)
+          }
+        } else {
+          console.error('Failed to load pricing')
+        }
+      } catch (error) {
+        console.error('Error loading pricing:', error)
+      } finally {
+        setIsLoading(false)
+      }
     }
-  ]
+
+    loadPricing()
+  }, [])
 
   const paymentMethods = [
     {
@@ -99,11 +92,30 @@ export default function PricingSection() {
   ]
 
   const selectedPlanData = plans.find(plan => plan.id === selectedPlan)
-  const totalCost = area * (selectedPlanData?.price || 450)
+  const totalCost = area * (selectedPlanData?.price ? parseInt(selectedPlanData.price) : 450)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log('Consultation form submitted:', formData)
+  }
+
+  if (isLoading) {
+    return (
+      <section id="pricing" className="py-12 md:py-20 bg-gradient-to-br from-coffee-50/30 via-white to-gray-50 relative overflow-hidden">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="animate-pulse">
+              <div className="h-8 bg-coffee-200 rounded w-64 mx-auto mb-8"></div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="h-96 bg-coffee-100 rounded-2xl"></div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
   }
 
   return (
@@ -129,7 +141,11 @@ export default function PricingSection() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16">
+        <div className={`grid gap-6 md:gap-8 mb-12 md:mb-16 ${
+          plans.length === 1 ? 'grid-cols-1 max-w-md mx-auto' :
+          plans.length === 2 ? 'grid-cols-1 md:grid-cols-2 max-w-2xl mx-auto' :
+          'grid-cols-1 md:grid-cols-3'
+        }`}>
           {plans.map((plan) => (
             <Card 
               key={plan.id}
@@ -153,7 +169,7 @@ export default function PricingSection() {
                   <h3 className="text-xl md:text-2xl font-bold text-gray-900">{plan.name}</h3>
                   <div className="flex items-baseline justify-center">
                     <span className="text-3xl md:text-4xl font-bold text-coffee-600">{plan.price}₽</span>
-                    <span className="text-gray-600 ml-1">/м²</span>
+                    <span className="text-gray-600 ml-1">/{plan.unit}</span>
                   </div>
                   <p className="text-sm md:text-base text-gray-600 px-2">{plan.description}</p>
                 </div>
@@ -182,8 +198,6 @@ export default function PricingSection() {
             </Card>
           ))}
         </div>
-
-
 
         {/* Payment Methods */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16">
@@ -335,7 +349,7 @@ export default function PricingSection() {
                     className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl h-11 md:h-14 text-sm md:text-base"
                   />
                 </div>
-          <div>
+                <div>
                   <Textarea
                     placeholder="Дополнительная информация о проекте"
                     value={formData.message}
@@ -350,7 +364,7 @@ export default function PricingSection() {
                 >
                   ПОЛУЧИТЬ РАСЧЕТ БЕСПЛАТНО
                   <ArrowRight className="w-4 h-4 md:w-5 md:h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                  </Button>
+                </Button>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 text-xs md:text-sm text-gray-600">
                   <div className="flex items-center space-x-2">
@@ -375,8 +389,8 @@ export default function PricingSection() {
                   Нажимая кнопку, вы соглашаетесь с обработкой персональных данных
                 </p>
               </form>
-              </CardContent>
-            </Card>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </section>

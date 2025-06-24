@@ -1,10 +1,7 @@
 import Header from "@/components/Header"
 import HeroSection from "@/components/HeroSection"
 import BenefitsSection from "@/components/BenefitsSection"
-import StepsSection from "@/components/StepsSection"
 import PricingSection from "@/components/PricingSection"
-import GiftSection from "@/components/GiftSection"
-import WarehouseSection from "@/components/WarehouseSection"
 import WorksSection from "@/components/WorksSection"
 import VideoSection from "@/components/VideoSection"
 import ReviewsSection from "@/components/ReviewsSection"
@@ -21,10 +18,7 @@ export default function Home() {
       <main>
         <HeroSection />
         <BenefitsSection />
-        <StepsSection />
         <PricingSection />
-        <GiftSection />
-        <WarehouseSection />
         <WorksSection />
         <VideoSection />
         <ReviewsSection />
