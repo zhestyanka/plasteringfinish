@@ -1,9 +1,65 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Phone, MapPin, Mail } from "lucide-react"
 
+interface ContactData {
+  phone: string
+  email: string
+  address: string
+  workingHours: string
+  description?: string
+  socialMedia?: {
+    telegram?: string
+    whatsapp?: string
+    vk?: string
+  }
+}
+
 export default function ContactsSection() {
+  const [contactData, setContactData] = useState<ContactData>({
+    phone: "",
+    email: "",
+    address: "",
+    workingHours: ""
+  })
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const loadContactData = async () => {
+      try {
+        const response = await fetch('/api/data/content')
+        if (response.ok) {
+          const data = await response.json()
+          if (data.contacts) {
+            setContactData(data.contacts)
+          }
+        }
+      } catch (error) {
+        console.error('Ошибка загрузки контактов:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadContactData()
+  }, [])
+
+  if (isLoading) {
+    return (
+      <section className="py-16 bg-gradient-to-b from-amber-50 to-orange-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto"></div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   return (
     <section className="py-16 bg-gradient-to-b from-amber-50 to-orange-50">
       <div className="container mx-auto px-4">
@@ -18,12 +74,19 @@ export default function ContactsSection() {
               <Phone className="w-6 h-6 text-gray-100" />
             </div>
             <div>
-              <a href="tel:+78129869803" className="block text-amber-900 font-semibold hover:text-orange-700">
-                8 (812) 986-98-03
-              </a>
-              <a href="tel:+79633296563" className="block text-amber-800 hover:text-orange-700">
-                8 (963) 329-65-63
-              </a>
+              {contactData.phone ? (
+                <a 
+                  href={`tel:${contactData.phone.replace(/\D/g, '')}`}
+                  className="block text-amber-900 font-semibold hover:text-orange-700"
+                >
+                  {contactData.phone}
+                </a>
+              ) : (
+                <div className="text-amber-900 font-semibold">Телефон не указан</div>
+              )}
+              {contactData.workingHours && (
+                <div className="text-amber-800 text-sm mt-1">{contactData.workingHours}</div>
+              )}
             </div>
           </div>
 
@@ -33,8 +96,10 @@ export default function ContactsSection() {
               <MapPin className="w-6 h-6 text-gray-100" />
             </div>
             <div>
-              <div className="text-amber-800">Санкт-Петербург,</div>
-              <div className="text-amber-900 font-semibold">улица Бабушкина, 2</div>
+              <div className="text-amber-800">Адрес:</div>
+              <div className="text-amber-900 font-semibold">
+                {contactData.address || 'Адрес не указан'}
+              </div>
             </div>
           </div>
 
@@ -44,10 +109,17 @@ export default function ContactsSection() {
               <Mail className="w-6 h-6 text-gray-100" />
             </div>
             <div>
-                              <div className="text-amber-800">E-mail:</div>
-              <a href="mailto:vegasia@mail.ru" className="text-amber-900 font-semibold hover:text-orange-700">
-                vegasia@mail.ru
-              </a>
+              <div className="text-amber-800">E-mail:</div>
+              {contactData.email ? (
+                <a 
+                  href={`mailto:${contactData.email}`}
+                  className="text-amber-900 font-semibold hover:text-orange-700"
+                >
+                  {contactData.email}
+                </a>
+              ) : (
+                <div className="text-amber-900 font-semibold">Email не указан</div>
+              )}
             </div>
           </div>
         </div>
@@ -60,7 +132,7 @@ export default function ContactsSection() {
               <div className="text-center text-amber-800">
                 <MapPin className="w-12 h-12 mx-auto mb-2" />
                 <p>Интерактивная карта</p>
-                <p className="text-sm">Санкт-Петербург, ул. Бабушкина, 2</p>
+                <p className="text-sm">{contactData.address || 'Адрес не указан'}</p>
               </div>
             </div>
           </div>
@@ -68,11 +140,10 @@ export default function ContactsSection() {
           {/* Contact Form */}
           <Card className="bg-gradient-to-br from-white to-amber-50 border-2 border-amber-200 shadow-xl">
             <CardContent className="p-8">
-              <h3 className="text-2xl font-bold text-amber-900 mb-2">Хотите к нам в гости?</h3>
-                              <p className="text-amber-800 mb-2">
-                <span className="text-orange-700 font-semibold">Наш офис находится по адресу: улица Бабушкина, 2</span>
-              </p>
-                              <p className="text-amber-800 mb-6">Оставьте заявку, чтобы мы могли оформить пропуск в бизнес-центр</p>
+              <h3 className="text-2xl font-bold text-amber-900 mb-2">Свяжитесь с нами</h3>
+              {contactData.description && (
+                <p className="text-amber-800 mb-6">{contactData.description}</p>
+              )}
               <div className="space-y-4">
                 <Input placeholder="Введите ваше имя" className="border-amber-300 focus:border-amber-500" />
                 <Input placeholder="Ваш телефон" className="border-amber-300 focus:border-amber-500" />

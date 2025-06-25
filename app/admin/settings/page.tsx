@@ -1,144 +1,228 @@
 "use client"
 
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { toast } from 'sonner'
-import { Save, Lock, Eye, EyeOff } from "lucide-react"
-import { AuthService } from '@/lib/admin/auth'
+import { Separator } from "@/components/ui/separator"
+import { Eye, EyeOff, User, Lock, Save } from "lucide-react"
+import { toast } from "sonner"
+import { AuthService } from "@/lib/admin/auth"
 
 export default function SettingsPage() {
-  const [formData, setFormData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
-  })
-  const [isLoading, setIsLoading] = useState(false)
-  const [showPasswords, setShowPasswords] = useState({
-    current: false,
-    new: false,
-    confirm: false
-  })
+  // Состояние для смены пароля
+  const [currentPassword, setCurrentPassword] = useState("")
+  const [newPassword, setNewPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [isChangingPassword, setIsChangingPassword] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!formData.currentPassword) {
-      toast.error('Введите текущий пароль')
+  // Состояние для смены логина
+  const [currentPasswordForLogin, setCurrentPasswordForLogin] = useState("")
+  const [newUsername, setNewUsername] = useState("")
+  const [currentUsername, setCurrentUsername] = useState("")
+  const [showPasswordForLogin, setShowPasswordForLogin] = useState(false)
+  const [isChangingUsername, setIsChangingUsername] = useState(false)
+
+  useEffect(() => {
+    // Загружаем текущий логин
+    setCurrentUsername(AuthService.getStoredUsername())
+  }, [])
+
+  const handlePasswordChange = async () => {
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      toast.error("Заполните все поля")
       return
     }
 
-    if (!formData.newPassword) {
-      toast.error('Введите новый пароль')
+    if (newPassword !== confirmPassword) {
+      toast.error("Новые пароли не совпадают")
       return
     }
 
-    if (formData.newPassword.length < 6) {
-      toast.error('Новый пароль должен содержать минимум 6 символов')
+    if (newPassword.length < 6) {
+      toast.error("Новый пароль должен содержать минимум 6 символов")
       return
     }
 
-    if (formData.newPassword !== formData.confirmPassword) {
-      toast.error('Пароли не совпадают')
-      return
-    }
+    setIsChangingPassword(true)
 
-    setIsLoading(true)
-    
     try {
-      // Проверяем текущий пароль
-      const isCurrentPasswordValid = AuthService.validatePassword(formData.currentPassword)
-      
-      if (!isCurrentPasswordValid) {
-        toast.error('Неверный текущий пароль')
-        return
-      }
-
-      // Сохраняем новый пароль
-      const success = AuthService.changePassword(formData.currentPassword, formData.newPassword)
+      const success = AuthService.changePassword(currentPassword, newPassword)
       
       if (success) {
-        toast.success('Пароль успешно изменен')
-        setFormData({
-          currentPassword: '',
-          newPassword: '',
-          confirmPassword: ''
-        })
+        toast.success("Пароль успешно изменён")
+        setCurrentPassword("")
+        setNewPassword("")
+        setConfirmPassword("")
       } else {
-        toast.error('Ошибка при смене пароля')
+        toast.error("Неверный текущий пароль")
       }
     } catch (error) {
-      console.error('Ошибка смены пароля:', error)
-      toast.error('Произошла ошибка при смене пароля')
+      toast.error("Ошибка при смене пароля")
     } finally {
-      setIsLoading(false)
+      setIsChangingPassword(false)
     }
   }
 
-  const togglePasswordVisibility = (field: 'current' | 'new' | 'confirm') => {
-    setShowPasswords(prev => ({
-      ...prev,
-      [field]: !prev[field]
-    }))
+  const handleUsernameChange = async () => {
+    if (!currentPasswordForLogin || !newUsername) {
+      toast.error("Заполните все поля")
+      return
+    }
+
+    if (newUsername.length < 3) {
+      toast.error("Логин должен содержать минимум 3 символа")
+      return
+    }
+
+    if (newUsername === currentUsername) {
+      toast.error("Новый логин совпадает с текущим")
+      return
+    }
+
+    setIsChangingUsername(true)
+
+    try {
+      const success = AuthService.changeUsername(currentPasswordForLogin, newUsername)
+      
+      if (success) {
+        toast.success("Логин успешно изменён")
+        setCurrentUsername(newUsername)
+        setCurrentPasswordForLogin("")
+        setNewUsername("")
+      } else {
+        toast.error("Неверный пароль")
+      }
+    } catch (error) {
+      toast.error("Ошибка при смене логина")
+    } finally {
+      setIsChangingUsername(false)
+    }
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Смена пароля</h1>
-          <p className="text-gray-600 mt-2">Измените пароль для входа в админ панель</p>
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Настройки учётной записи</h1>
+        <p className="text-gray-600 mt-2">Управление логином и паролем администратора</p>
       </div>
 
-      <Card className="max-w-2xl">
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Lock className="w-5 h-5 text-coffee-600" />
-            <span>Безопасность</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="currentPassword">Текущий пароль</Label>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Смена логина */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <User className="w-5 h-5" />
+              <span>Изменить логин</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor="current-username">Текущий логин</Label>
+              <Input
+                id="current-username"
+                value={currentUsername}
+                disabled
+                className="bg-gray-50"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="new-username">Новый логин</Label>
+              <Input
+                id="new-username"
+                value={newUsername}
+                onChange={(e) => setNewUsername(e.target.value)}
+                placeholder="Введите новый логин"
+                minLength={3}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="password-for-login">Подтвердите паролем</Label>
               <div className="relative">
                 <Input
-                  id="currentPassword"
-                  type={showPasswords.current ? "text" : "password"}
-                  value={formData.currentPassword}
-                  onChange={(e) => setFormData(prev => ({ ...prev, currentPassword: e.target.value }))}
+                  id="password-for-login"
+                  type={showPasswordForLogin ? "text" : "password"}
+                  value={currentPasswordForLogin}
+                  onChange={(e) => setCurrentPasswordForLogin(e.target.value)}
                   placeholder="Введите текущий пароль"
-                  required
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
                   className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                  onClick={() => togglePasswordVisibility('current')}
+                  onClick={() => setShowPasswordForLogin(!showPasswordForLogin)}
                 >
-                  {showPasswords.current ? (
-                    <EyeOff className="h-4 w-4 text-gray-500" />
+                  {showPasswordForLogin ? (
+                    <EyeOff className="h-4 w-4" />
                   ) : (
-                    <Eye className="h-4 w-4 text-gray-500" />
+                    <Eye className="h-4 w-4" />
                   )}
                 </Button>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="newPassword">Новый пароль</Label>
+            <Button 
+              onClick={handleUsernameChange}
+              disabled={isChangingUsername || !newUsername || !currentPasswordForLogin}
+              className="w-full"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              {isChangingUsername ? "Изменение..." : "Изменить логин"}
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Смена пароля */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <Lock className="w-5 h-5" />
+              <span>Изменить пароль</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor="current-password">Текущий пароль</Label>
               <div className="relative">
                 <Input
-                  id="newPassword"
-                  type={showPasswords.new ? "text" : "password"}
-                  value={formData.newPassword}
-                  onChange={(e) => setFormData(prev => ({ ...prev, newPassword: e.target.value }))}
-                  placeholder="Введите новый пароль (минимум 6 символов)"
-                  required
+                  id="current-password"
+                  type={showCurrentPassword ? "text" : "password"}
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder="Введите текущий пароль"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                >
+                  {showCurrentPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="new-password">Новый пароль</Label>
+              <div className="relative">
+                <Input
+                  id="new-password"
+                  type={showNewPassword ? "text" : "password"}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Введите новый пароль"
                   minLength={6}
                 />
                 <Button
@@ -146,88 +230,54 @@ export default function SettingsPage() {
                   variant="ghost"
                   size="sm"
                   className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                  onClick={() => togglePasswordVisibility('new')}
+                  onClick={() => setShowNewPassword(!showNewPassword)}
                 >
-                  {showPasswords.new ? (
-                    <EyeOff className="h-4 w-4 text-gray-500" />
+                  {showNewPassword ? (
+                    <EyeOff className="h-4 w-4" />
                   ) : (
-                    <Eye className="h-4 w-4 text-gray-500" />
+                    <Eye className="h-4 w-4" />
                   )}
                 </Button>
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Подтвердите новый пароль</Label>
+            <div>
+              <Label htmlFor="confirm-password">Подтвердите пароль</Label>
               <div className="relative">
                 <Input
-                  id="confirmPassword"
-                  type={showPasswords.confirm ? "text" : "password"}
-                  value={formData.confirmPassword}
-                  onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                  id="confirm-password"
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Повторите новый пароль"
-                  required
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
                   className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                  onClick={() => togglePasswordVisibility('confirm')}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
-                  {showPasswords.confirm ? (
-                    <EyeOff className="h-4 w-4 text-gray-500" />
+                  {showConfirmPassword ? (
+                    <EyeOff className="h-4 w-4" />
                   ) : (
-                    <Eye className="h-4 w-4 text-gray-500" />
+                    <Eye className="h-4 w-4" />
                   )}
                 </Button>
               </div>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h4 className="font-medium text-blue-900 mb-2">Требования к паролю:</h4>
-              <ul className="text-sm text-blue-800 space-y-1">
-                <li>• Минимум 6 символов</li>
-                <li>• Рекомендуется использовать буквы, цифры и символы</li>
-                <li>• Избегайте простых паролей типа "123456" или "password"</li>
-              </ul>
-            </div>
-
-            <div className="flex justify-end">
-              <Button 
-                type="submit" 
-                disabled={isLoading}
-                className="bg-coffee-600 hover:bg-coffee-700"
-              >
-                <Save className="w-4 h-4 mr-2" />
-                {isLoading ? 'Изменение...' : 'Изменить пароль'}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-
-      <Card className="max-w-2xl">
-        <CardHeader>
-          <CardTitle>Информация о текущем пользователе</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div>
-              <Label className="text-sm font-medium text-gray-600">Имя пользователя</Label>
-              <p className="text-gray-900">admin</p>
-            </div>
-            <div>
-              <Label className="text-sm font-medium text-gray-600">Последний вход</Label>
-              <p className="text-gray-900">{new Date().toLocaleString('ru-RU')}</p>
-            </div>
-            <div>
-              <Label className="text-sm font-medium text-gray-600">Роль</Label>
-              <p className="text-gray-900">Администратор</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+            <Button 
+              onClick={handlePasswordChange}
+              disabled={isChangingPassword || !currentPassword || !newPassword || !confirmPassword}
+              className="w-full"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              {isChangingPassword ? "Изменение..." : "Изменить пароль"}
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 } 

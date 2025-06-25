@@ -142,11 +142,17 @@ export default function ServicesSection() {
                       Популярно
                     </Badge>
                   )}
-                  <img 
-                    src={service.image} 
-                    alt={service.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
+                  {service.image ? (
+                    <img 
+                      src={service.image} 
+                      alt={service.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-coffee-200 to-coffee-300 flex items-center justify-center">
+                      <IconComponent className="w-12 h-12 md:w-16 md:h-16 text-coffee-600 opacity-50" />
+                    </div>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                   <div className="absolute bottom-3 md:bottom-4 left-3 md:left-4">
                     <div className="w-10 h-10 md:w-12 md:h-12 bg-coffee-600/90 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg border border-coffee-400/30">

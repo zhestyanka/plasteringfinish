@@ -95,7 +95,7 @@ export default function WorksSection() {
   }
 
   if (isLoading) {
-    return (
+  return (
       <section id="works" className="py-16 bg-gradient-to-b from-gray-50 to-white">
         <div className="container mx-auto px-4">
           <div className="text-center">
@@ -106,7 +106,7 @@ export default function WorksSection() {
                   <div key={i} className="h-96 bg-gray-100 rounded-lg"></div>
                 ))}
               </div>
-            </div>
+      </div>
           </div>
         </div>
       </section>
@@ -194,7 +194,7 @@ export default function WorksSection() {
                               }`}
                             />
                           ))}
-                        </div>
+                      </div>
                       </>
                     )}
                   </>
@@ -205,11 +205,11 @@ export default function WorksSection() {
 
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
-                  <div>
+                <div>
                     <CardTitle className="text-lg mb-2">{work.title}</CardTitle>
                     <Badge variant="outline" className="text-xs text-coffee-600 border-coffee-300">
                       {work.category}
-                    </Badge>
+                      </Badge>
                   </div>
                 </div>
               </CardHeader>
@@ -235,9 +235,9 @@ export default function WorksSection() {
                   Подробнее
                 </Button>
               </CardContent>
-            </Card>
-          ))}
-        </div>
+          </Card>
+            ))}
+          </div>
 
         {filteredWorks.length === 0 && (
           <div className="text-center py-12">
@@ -256,4 +256,4 @@ export default function WorksSection() {
       </div>
     </section>
   )
-} 
+}

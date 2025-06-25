@@ -6,8 +6,8 @@
     "stats": [
       {
         "icon": "Ruble",
-        "label": "Стоимость м²",
-        "value": "от 350₽"
+        "label": "test",
+        "value": "от 111₽"
       },
       {
         "icon": "Clock",
@@ -40,10 +40,37 @@
       ]
     }
   },
+  "header": {
+    "companyName": "test",
+    "companySubtitle": "Механизированная отделка",
+    "phone": "+7 (812) 123-45-99",
+    "rating": 4.9,
+    "reviewsCount": 157,
+    "warrantyYears": 5,
+    "city": "Санкт-Петербург",
+    "menuItems": [
+      {
+        "name": "Главная",
+        "href": "#hero"
+      },
+      {
+        "name": "Услуги",
+        "href": "#services"
+      },
+      {
+        "name": "Работы",
+        "href": "#works"
+      },
+      {
+        "name": "Цены",
+        "href": "#pricing"
+      }
+    ]
+  },
   "contacts": {
-    "phone": "+7 (812) 123-45-67",
+    "phone": "+7 (812) 123-45-99",
     "email": "info@plasteringfinish.ru",
-    "address": "Санкт-Петербург, улица Бабушкина, 2",
+    "address": "test",
     "workingHours": "Пн-Вс: 8:00-20:00",
     "socialMedia": {
       "telegram": "@plasteringfinish",
@@ -59,6 +86,6 @@
     "reviewsCount": 157,
     "clientsCount": 500,
     "experienceYears": 8,
-    "warrantyYears": 5
+    "warrantyYears": 7
   }
 }

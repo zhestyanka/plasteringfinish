@@ -12,7 +12,8 @@ import {
   FileText,
   Home,
   Phone,
-  Building2
+  Building2,
+  Menu
 } from "lucide-react"
 import { toast } from "sonner"
 import { HeroContent, Contact, Company } from "@/lib/admin/types"
@@ -27,10 +28,26 @@ export default function ContentPage() {
   })
   
   const [contact, setContact] = useState<Contact>({
-    phones: [],
+    phone: "",
     email: "",
     address: "",
     workingHours: ""
+  })
+  
+  const [headerData, setHeaderData] = useState({
+    companyName: "",
+    companySubtitle: "",
+    phone: "",
+    rating: 4.9,
+    reviewsCount: 0,
+    warrantyYears: 5,
+    city: "",
+    menuItems: [
+      { name: "Главная", href: "#hero" },
+      { name: "Услуги", href: "#services" },
+      { name: "Работы", href: "#works" },
+      { name: "Цены", href: "#pricing" }
+    ]
   })
   
   const [company, setCompany] = useState<Company>({
@@ -57,6 +74,7 @@ export default function ContentPage() {
         const data = await response.json()
         setHeroContent(data.hero || {})
         setContact(data.contacts || {})
+        setHeaderData(data.header || {})
         setCompany(data.company || {})
       } else {
         throw new Error('Failed to load content')
@@ -79,6 +97,7 @@ export default function ContentPage() {
         },
         body: JSON.stringify({
           hero: heroContent,
+          header: headerData,
           contacts: contact,
           company: company
         })
@@ -119,10 +138,14 @@ export default function ContentPage() {
       </div>
 
       <Tabs defaultValue="hero" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="hero" className="flex items-center space-x-2">
             <Home className="w-4 h-4" />
             <span>Главная страница</span>
+          </TabsTrigger>
+          <TabsTrigger value="header" className="flex items-center space-x-2">
+            <Menu className="w-4 h-4" />
+            <span>Хедер</span>
           </TabsTrigger>
           <TabsTrigger value="contact" className="flex items-center space-x-2">
             <Phone className="w-4 h-4" />
@@ -209,6 +232,130 @@ export default function ContentPage() {
           </Card>
         </TabsContent>
 
+        <TabsContent value="header" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Настройки хедера</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="company-name">Название компании</Label>
+                  <Input
+                    id="company-name"
+                    value={headerData.companyName || ''}
+                    onChange={(e) => setHeaderData(prev => ({ ...prev, companyName: e.target.value }))}
+                    placeholder="СПБ Штукатурка"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="company-subtitle">Подзаголовок</Label>
+                  <Input
+                    id="company-subtitle"
+                    value={headerData.companySubtitle || ''}
+                    onChange={(e) => setHeaderData(prev => ({ ...prev, companySubtitle: e.target.value }))}
+                    placeholder="Механизированная отделка"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="header-phone">Телефон в хедере</Label>
+                  <Input
+                    id="header-phone"
+                    value={headerData.phone || ''}
+                    onChange={(e) => setHeaderData(prev => ({ ...prev, phone: e.target.value }))}
+                    placeholder="+7 (812) 123-45-67"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="header-city">Город</Label>
+                  <Input
+                    id="header-city"
+                    value={headerData.city || ''}
+                    onChange={(e) => setHeaderData(prev => ({ ...prev, city: e.target.value }))}
+                    placeholder="Санкт-Петербург"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div>
+                  <Label htmlFor="header-rating">Рейтинг</Label>
+                  <Input
+                    id="header-rating"
+                    type="number"
+                    min="1"
+                    max="5"
+                    step="0.1"
+                    value={headerData.rating || 4.9}
+                    onChange={(e) => setHeaderData(prev => ({ ...prev, rating: Number(e.target.value) }))}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="header-reviews">Количество отзывов</Label>
+                  <Input
+                    id="header-reviews"
+                    type="number"
+                    value={headerData.reviewsCount || 0}
+                    onChange={(e) => setHeaderData(prev => ({ ...prev, reviewsCount: Number(e.target.value) }))}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="header-warranty">Гарантия (лет)</Label>
+                  <Input
+                    id="header-warranty"
+                    type="number"
+                    value={headerData.warrantyYears || 5}
+                    onChange={(e) => setHeaderData(prev => ({ ...prev, warrantyYears: Number(e.target.value) }))}
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Меню навигации</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {headerData.menuItems?.map((item, index) => (
+                <div key={index} className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label>Название пункта меню {index + 1}</Label>
+                    <Input
+                      value={item.name || ''}
+                      onChange={(e) => {
+                        const newMenuItems = [...(headerData.menuItems || [])]
+                        newMenuItems[index] = { ...item, name: e.target.value }
+                        setHeaderData(prev => ({ ...prev, menuItems: newMenuItems }))
+                      }}
+                      placeholder="Главная"
+                    />
+                  </div>
+                  <div>
+                    <Label>Ссылка (якорь)</Label>
+                    <Input
+                      value={item.href || ''}
+                      onChange={(e) => {
+                        const newMenuItems = [...(headerData.menuItems || [])]
+                        newMenuItems[index] = { ...item, href: e.target.value }
+                        setHeaderData(prev => ({ ...prev, menuItems: newMenuItems }))
+                      }}
+                      placeholder="#hero"
+                    />
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         <TabsContent value="contact" className="space-y-6">
           <Card>
             <CardHeader>
@@ -247,31 +394,13 @@ export default function ContentPage() {
               </div>
 
               <div>
-                <Label>Телефоны</Label>
-                <div className="space-y-2">
-                  {contact.phones.map((phone, index) => (
-                    <Input
-                      key={index}
-                      value={phone}
-                      onChange={(e) => {
-                        const newPhones = [...contact.phones]
-                        newPhones[index] = e.target.value
-                        setContact(prev => ({ ...prev, phones: newPhones }))
-                      }}
-                      placeholder="+7 (495) 123-45-67"
-                    />
-                  ))}
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setContact(prev => ({ 
-                      ...prev, 
-                      phones: [...prev.phones, ""] 
-                    }))}
-                  >
-                    Добавить телефон
-                  </Button>
-                </div>
+                <Label htmlFor="contact-phone">Телефон</Label>
+                <Input
+                  id="contact-phone"
+                  value={contact.phone || ''}
+                  onChange={(e) => setContact(prev => ({ ...prev, phone: e.target.value }))}
+                  placeholder="+7 (495) 123-45-67"
+                />
               </div>
             </CardContent>
           </Card>

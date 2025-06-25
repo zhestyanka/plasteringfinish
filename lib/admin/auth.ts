@@ -18,11 +18,12 @@ export class AuthService {
       // Имитация асинхронного запроса
       setTimeout(() => {
         const currentPassword = this.getStoredPassword()
+        const currentUsername = this.getStoredUsername()
         
-        if (username === ADMIN_CREDENTIALS.username && password === currentPassword) {
+        if (username === currentUsername && password === currentPassword) {
           const user: User = {
             id: '1',
-            username: ADMIN_CREDENTIALS.username,
+            username: currentUsername,
             email: ADMIN_CREDENTIALS.email,
             role: ADMIN_CREDENTIALS.role
           }
@@ -130,6 +131,45 @@ export class AuthService {
       console.error('Ошибка смены пароля:', error)
       return false
     }
+  }
+
+  static changeUsername(currentPassword: string, newUsername: string): boolean {
+    try {
+      // Проверяем текущий пароль для безопасности
+      const storedPassword = this.getStoredPassword()
+      if (currentPassword !== storedPassword) {
+        return false
+      }
+
+      // Проверяем что новый логин не пустой
+      if (!newUsername || newUsername.trim().length < 3) {
+        return false
+      }
+
+      // Сохраняем новый логин
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('admin_username', newUsername.trim())
+        
+        // Обновляем текущую сессию
+        const session = this.getCurrentSession()
+        if (session) {
+          session.user.username = newUsername.trim()
+          localStorage.setItem(SESSION_KEY, JSON.stringify(session))
+        }
+      }
+
+      return true
+    } catch (error) {
+      console.error('Ошибка смены логина:', error)
+      return false
+    }
+  }
+
+  static getStoredUsername(): string {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('admin_username') || ADMIN_CREDENTIALS.username
+    }
+    return ADMIN_CREDENTIALS.username
   }
 
   private static getStoredPassword(): string {

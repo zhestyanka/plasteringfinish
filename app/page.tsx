@@ -1,6 +1,5 @@
 import Header from "@/components/Header"
 import HeroSection from "@/components/HeroSection"
-import BenefitsSection from "@/components/BenefitsSection"
 import PricingSection from "@/components/PricingSection"
 import WorksSection from "@/components/WorksSection"
 import VideoSection from "@/components/VideoSection"
@@ -17,7 +16,6 @@ export default function Home() {
       <Header />
       <main>
         <HeroSection />
-        <BenefitsSection />
         <PricingSection />
         <WorksSection />
         <VideoSection />

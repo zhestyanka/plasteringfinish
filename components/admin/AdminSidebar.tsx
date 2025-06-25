@@ -17,7 +17,6 @@ import {
   X,
   ChevronDown,
   Home,
-  Award,
   Phone,
   Wrench
 } from "lucide-react"
@@ -29,7 +28,6 @@ const menuItems = [
     icon: FileText,
     subItems: [
       { title: "Главная страница", href: "/admin/content", icon: Home },
-      { title: "Преимущества", href: "/admin/benefits", icon: Award },
       { title: "Контакты", href: "/admin/contacts", icon: Phone }
     ]
   },

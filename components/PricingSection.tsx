@@ -188,7 +188,7 @@ export default function PricingSection() {
                 <Button 
                   className={`w-full py-3 md:py-4 text-sm md:text-base font-semibold rounded-xl transition-all duration-300 ${
                     selectedPlan === plan.id
-                      ? 'bg-gradient-to-r from-coffee-600 to-coffee-500 hover:from-coffee-700 hover:to-coffee-600 text-white shadow-lg'
+                      ? 'bg-gradient-to-r from-coffee-600 to-coffee-500 hover:from-coffee-700 hover:to-coffee-600 text-coffee-100 border-2 border-coffee-600 shadow-lg'
                       : 'bg-white hover:bg-coffee-50 text-coffee-600 border-2 border-coffee-300 hover:border-coffee-500'
                   }`}
                 >

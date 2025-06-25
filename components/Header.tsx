@@ -1,19 +1,60 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Phone, Menu, X, Star, Shield, MapPin } from "lucide-react"
 
+interface HeaderData {
+  companyName: string
+  companySubtitle: string
+  phone: string
+  rating: number
+  reviewsCount: number
+  warrantyYears: number
+  city: string
+  menuItems: Array<{ name: string; href: string }>
+}
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [headerData, setHeaderData] = useState<HeaderData>({
+    companyName: "СПБ Штукатурка",
+    companySubtitle: "Механизированная отделка",
+    phone: "+7 (812) 123-45-67",
+    rating: 4.9,
+    reviewsCount: 157,
+    warrantyYears: 5,
+    city: "Санкт-Петербург",
+    menuItems: [
+      { name: "Главная", href: "#hero" },
+      { name: "Услуги", href: "#services" },
+      { name: "Работы", href: "#works" },
+      { name: "Цены", href: "#pricing" }
+    ]
+  })
+  const [isLoading, setIsLoading] = useState(true)
 
-  const menuItems = [
-    { name: "Главная", href: "#hero" },
-    { name: "Преимущества", href: "#benefits" },
-    { name: "Услуги", href: "#services" },
-    { name: "Работы", href: "#works" },
-    { name: "Цены", href: "#pricing" },
-  ]
+  useEffect(() => {
+    const loadHeaderData = async () => {
+      try {
+        const response = await fetch('/api/data/content')
+        if (response.ok) {
+          const data = await response.json()
+          if (data.header) {
+            setHeaderData(data.header)
+          }
+        }
+      } catch (error) {
+        console.error('Ошибка загрузки данных хедера:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadHeaderData()
+  }, [])
+
+  const menuItems = headerData.menuItems
 
   const handleMenuClick = (href: string) => {
     setIsMenuOpen(false)
@@ -21,6 +62,18 @@ export default function Header() {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' })
     }
+  }
+
+  if (isLoading) {
+    return (
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-lg border-b border-gray-200/50">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-center h-16 md:h-20">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-coffee-600"></div>
+          </div>
+        </div>
+      </header>
+    )
   }
 
   return (
@@ -33,14 +86,14 @@ export default function Header() {
               <div className="w-4 h-4 md:w-5 md:h-5 bg-black rounded-sm"></div>
             </div>
             <div>
-              <div className="text-lg md:text-xl font-black text-gray-800">СПБ Штукатурка</div>
-              <div className="text-xs text-gray-700 hidden md:block">Механизированная отделка</div>
+              <div className="text-lg md:text-xl font-black text-gray-800">{headerData.companyName}</div>
+              <div className="text-xs text-gray-700 hidden md:block">{headerData.companySubtitle}</div>
             </div>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
-            {menuItems.map((item) => (
+            {headerData.menuItems.map((item) => (
               <button
                 key={item.name}
                 onClick={() => handleMenuClick(item.href)}
@@ -60,12 +113,12 @@ export default function Header() {
                   <Star key={star} className="w-3 h-3 text-coffee-500 fill-current" />
                 ))}
               </div>
-              <span className="text-xs text-gray-600">4.9/5</span>
+              <span className="text-xs text-gray-600">{headerData.rating}/5</span>
             </div>
             
             <div className="flex items-center space-x-2">
               <Shield className="w-4 h-4 text-coffee-600" />
-              <span className="text-xs text-gray-600">Гарантия 5 лет</span>
+              <span className="text-xs text-gray-600">Гарантия {headerData.warrantyYears} лет</span>
             </div>
           </div>
 
@@ -73,11 +126,11 @@ export default function Header() {
           <div className="flex items-center space-x-3 lg:space-x-4">
             {/* Phone Button */}
             <a 
-              href="tel:+78121234567" 
+              href={`tel:${headerData.phone.replace(/\D/g, '')}`}
               className="flex items-center space-x-2 bg-gradient-to-r from-coffee-600 to-coffee-500 hover:from-coffee-700 hover:to-coffee-600 text-black px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all duration-300 transform hover:scale-105 text-sm md:text-base"
             >
               <Phone className="w-3 h-3 md:w-4 md:h-4 text-black" />
-              <span className="hidden sm:inline font-medium">+7 (812) 123-45-67</span>
+              <span className="hidden sm:inline font-medium">{headerData.phone}</span>
               <span className="sm:hidden font-medium">Звонок</span>
             </a>
 
@@ -102,7 +155,7 @@ export default function Header() {
           <div className="lg:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-200/50 shadow-lg">
             <div className="container mx-auto px-4 py-4">
               <nav className="space-y-3">
-                {menuItems.map((item) => (
+                {headerData.menuItems.map((item) => (
                   <button
                     key={item.name}
                     onClick={() => handleMenuClick(item.href)}
@@ -122,24 +175,24 @@ export default function Header() {
                         <Star key={star} className="w-3 h-3 text-coffee-500 fill-current" />
                       ))}
                     </div>
-                    <span className="text-xs text-gray-600">4.9 из 5 • 157 отзывов</span>
+                    <span className="text-xs text-gray-600">{headerData.rating} из 5 • {headerData.reviewsCount} отзывов</span>
                   </div>
                 </div>
                 
                 <div className="flex items-center space-x-4 text-xs text-gray-600">
                   <div className="flex items-center space-x-1">
                     <Shield className="w-3 h-3 text-coffee-600" />
-                    <span>Гарантия 5 лет</span>
+                    <span>Гарантия {headerData.warrantyYears} лет</span>
                   </div>
                   <div className="flex items-center space-x-1">
                     <MapPin className="w-3 h-3 text-coffee-600" />
-                    <span>Санкт-Петербург</span>
+                    <span>{headerData.city}</span>
                   </div>
                 </div>
                 
                 <div className="pt-3">
                   <a 
-                    href="tel:+78121234567"
+                    href={`tel:${headerData.phone.replace(/\D/g, '')}`}
                     className="block w-full text-center bg-gradient-to-r from-coffee-600 to-coffee-500 hover:from-coffee-700 hover:to-coffee-600 text-black py-3 rounded-lg font-medium transition-all duration-300"
                   >
                     <Phone className="w-4 h-4 inline mr-2 text-black" />

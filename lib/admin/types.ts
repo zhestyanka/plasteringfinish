@@ -38,7 +38,7 @@ export interface MixType {
 }
 
 export interface Contact {
-  phones: string[]
+  phone: string
   email: string
   address: string
   workingHours: string
