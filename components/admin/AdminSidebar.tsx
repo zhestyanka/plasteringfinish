@@ -13,12 +13,11 @@ import {
   Camera,
   DollarSign,
   Settings,
-  Menu,
-  X,
   ChevronDown,
   Home,
   Phone,
-  Wrench
+  Wrench,
+  X
 } from "lucide-react"
 
 const menuItems = [
@@ -42,10 +41,11 @@ const menuItems = [
 
 interface AdminSidebarProps {
   className?: string
+  isMobileOpen?: boolean
+  onMobileClose?: () => void
 }
 
-export default function AdminSidebar({ className }: AdminSidebarProps) {
-  const [isMobileOpen, setIsMobileOpen] = useState(false)
+export default function AdminSidebar({ className, isMobileOpen = false, onMobileClose }: AdminSidebarProps) {
   const [expandedItems, setExpandedItems] = useState<string[]>(['Контент'])
   const pathname = usePathname()
 
@@ -64,17 +64,33 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
     return pathname.startsWith(href)
   }
 
-  const SidebarContent = () => (
+  const handleLinkClick = () => {
+    if (onMobileClose) {
+      onMobileClose()
+    }
+  }
+
+  const SidebarContent = ({ showCloseButton = false }) => (
     <div className="flex flex-col h-full">
       <div className="p-6 border-b border-coffee-200">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-coffee-600 rounded-lg flex items-center justify-center">
-            <LayoutDashboard className="w-4 h-4 text-white" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-coffee-600 rounded-lg flex items-center justify-center">
+              <LayoutDashboard className="w-4 h-4 text-white" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-coffee-900">Админ панель</h2>
+              <p className="text-sm text-coffee-600">Управление сайтом</p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-lg font-semibold text-coffee-900">Админ панель</h2>
-            <p className="text-sm text-coffee-600">Управление сайтом</p>
-          </div>
+          {showCloseButton && (
+            <button
+              onClick={onMobileClose}
+              className="p-1 rounded-lg hover:bg-coffee-100 lg:hidden"
+            >
+              <X className="w-5 h-5 text-coffee-600" />
+            </button>
+          )}
         </div>
       </div>
 
@@ -112,7 +128,7 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
                       ? "bg-coffee-600 text-white"
                       : "text-coffee-700 hover:bg-coffee-100 hover:text-coffee-900"
                   )}
-                  onClick={() => setIsMobileOpen(false)}
+                  onClick={handleLinkClick}
                 >
                   <Icon className="w-4 h-4" />
                   <span>{item.title}</span>
@@ -133,7 +149,7 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
                             ? "bg-coffee-600 text-white"
                             : "text-coffee-600 hover:bg-coffee-50 hover:text-coffee-800"
                         )}
-                        onClick={() => setIsMobileOpen(false)}
+                        onClick={handleLinkClick}
                       >
                         <SubIcon className="w-4 h-4" />
                         <span>{subItem.title}</span>
@@ -151,22 +167,6 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
 
   return (
     <>
-      {/* Mobile Menu Button */}
-      <button
-        onClick={() => setIsMobileOpen(true)}
-        className="fixed top-4 left-4 z-50 lg:hidden p-2 bg-white rounded-lg shadow-md border border-coffee-200"
-      >
-        <Menu className="w-5 h-5 text-coffee-600" />
-      </button>
-
-      {/* Mobile Overlay */}
-      {isMobileOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
-          onClick={() => setIsMobileOpen(false)}
-        />
-      )}
-
       {/* Desktop Sidebar */}
       <aside className={cn(
         "hidden lg:flex lg:flex-col lg:w-64 bg-white border-r border-coffee-200",
@@ -180,16 +180,7 @@ export default function AdminSidebar({ className }: AdminSidebarProps) {
         "fixed top-0 left-0 z-50 w-64 h-full bg-white border-r border-coffee-200 transform transition-transform lg:hidden",
         isMobileOpen ? "translate-x-0" : "-translate-x-full"
       )}>
-        <div className="flex items-center justify-between p-4 border-b border-coffee-200">
-          <span className="text-lg font-semibold text-coffee-900">Меню</span>
-          <button
-            onClick={() => setIsMobileOpen(false)}
-            className="p-1 rounded-lg hover:bg-coffee-100"
-          >
-            <X className="w-5 h-5 text-coffee-600" />
-          </button>
-        </div>
-        <SidebarContent />
+        <SidebarContent showCloseButton={true} />
       </aside>
     </>
   )

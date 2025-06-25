@@ -107,7 +107,7 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-6">
       {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-coffee-600 to-coffee-500 rounded-xl p-6 text-white">
+      <div className="bg-gradient-to-r from-coffee-600 to-coffee-500 rounded-xl p-6 text-coffee-100">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold mb-2">
