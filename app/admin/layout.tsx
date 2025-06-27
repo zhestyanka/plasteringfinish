@@ -58,11 +58,6 @@ export default function AdminLayout({
   // Основной лейаут админки
   return (
     <div className="h-screen flex bg-gray-50">
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:block">
-        <AdminSidebar />
-      </div>
-
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div 
@@ -71,7 +66,7 @@ export default function AdminLayout({
         />
       )}
 
-      {/* Mobile Sidebar */}
+      {/* Sidebar (содержит и десктопную и мобильную версии) */}
       <AdminSidebar 
         isMobileOpen={sidebarOpen}
         onMobileClose={() => setSidebarOpen(false)}
