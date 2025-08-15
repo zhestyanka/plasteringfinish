@@ -8,7 +8,8 @@ export async function GET() {
   try {
     const fileContents = await fs.readFile(teamFilePath, 'utf8')
     const data = JSON.parse(fileContents)
-    return NextResponse.json(data)
+    // Возвращаем данные в формате, который ожидает компонент
+    return NextResponse.json({ team: data })
   } catch (error) {
     console.error('Ошибка чтения команды:', error)
     return NextResponse.json({ team: [] })
@@ -18,7 +19,8 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
-    await fs.writeFile(teamFilePath, JSON.stringify(data, null, 2), 'utf8')
+    // Сохраняем только массив team, а не весь объект
+    await fs.writeFile(teamFilePath, JSON.stringify(data.team || data, null, 2), 'utf8')
     return NextResponse.json({ success: true, message: 'Команда сохранена' })
   } catch (error) {
     console.error('Ошибка сохранения команды:', error)

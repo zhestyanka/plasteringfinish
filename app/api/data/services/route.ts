@@ -8,7 +8,8 @@ export async function GET() {
   try {
     const fileContents = await fs.readFile(servicesFilePath, 'utf8')
     const data = JSON.parse(fileContents)
-    return NextResponse.json(data)
+    // Возвращаем данные в формате, который ожидает компонент
+    return NextResponse.json({ services: data })
   } catch (error) {
     console.error('Ошибка чтения услуг:', error)
     return NextResponse.json({ services: [] })
@@ -18,7 +19,8 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
-    await fs.writeFile(servicesFilePath, JSON.stringify(data, null, 2), 'utf8')
+    // Сохраняем только массив services, а не весь объект
+    await fs.writeFile(servicesFilePath, JSON.stringify(data.services || data, null, 2), 'utf8')
     return NextResponse.json({ success: true, message: 'Услуги сохранены' })
   } catch (error) {
     console.error('Ошибка сохранения услуг:', error)

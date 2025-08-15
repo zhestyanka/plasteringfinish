@@ -67,10 +67,10 @@ export default function EquipmentPage() {
           id: item.id,
           icon: "Settings", // устанавливаем иконку по умолчанию
           title: item.name,
-          subtitle: item.type || "",
+          subtitle: item.specifications?.power || "",
           description: item.description,
-          count: `${item.specifications?.quantity || 1} единиц${item.specifications?.quantity === 1 ? 'а' : ''}`,
-          active: item.active !== false
+          count: "1 единица",
+          active: true
         })) || []
         setEquipment(equipmentItems)
       } else {

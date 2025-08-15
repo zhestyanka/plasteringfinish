@@ -8,7 +8,8 @@ export async function GET() {
   try {
     const fileContents = await fs.readFile(videoFilePath, 'utf8')
     const data = JSON.parse(fileContents)
-    return NextResponse.json(data)
+    // Возвращаем данные в формате, который ожидает компонент
+    return NextResponse.json({ video: data })
   } catch (error) {
     console.error('Ошибка чтения видео:', error)
     return NextResponse.json({ video: [] })
@@ -18,7 +19,8 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
-    await fs.writeFile(videoFilePath, JSON.stringify(data, null, 2), 'utf8')
+    // Сохраняем только массив video, а не весь объект
+    await fs.writeFile(videoFilePath, JSON.stringify(data.video || data, null, 2), 'utf8')
     return NextResponse.json({ success: true, message: 'Видео сохранено' })
   } catch (error) {
     console.error('Ошибка сохранения видео:', error)

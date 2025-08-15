@@ -32,11 +32,11 @@ export default function VideoPage() {
 
   const loadVideos = async () => {
     try {
-      const response = await fetch('/api/data/content')
+      const response = await fetch('/api/data/video')
       if (response.ok) {
         const data = await response.json()
-        if (data.videos) {
-          setVideos(data.videos)
+        if (data.video) {
+          setVideos(data.video)
         }
       }
     } catch (error) {
@@ -50,13 +50,13 @@ export default function VideoPage() {
   const handleSave = async () => {
     setIsSaving(true)
     try {
-      const response = await fetch('/api/data/content', {
-        method: 'PUT',
+      const response = await fetch('/api/data/video', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          videos: videos
+          video: videos
         }),
       })
 
