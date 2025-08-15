@@ -2,19 +2,10 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-
-interface FooterData {
-  copyright: string
-  privacyPolicy: string
-  privacyPolicyUrl: string
-  development: string
-  developmentUrl: string
-  phones: string[]
-  callbackButton: string
-}
+import type { Footer } from "@/lib/admin/types"
 
 export default function Footer() {
-  const [footerData, setFooterData] = useState<FooterData>({
+  const [footerData, setFooterData] = useState<Footer>({
     copyright: "© 2024 «Штукатур СПб» Все права защищены",
     privacyPolicy: "Политика конфиденциальности",
     privacyPolicyUrl: "#",
@@ -58,6 +49,11 @@ export default function Footer() {
     )
   }
 
+  // Безопасная обработка development
+  const developmentParts = footerData.development.includes(':') 
+    ? footerData.development.split(':') 
+    : ['Разработка сайта', footerData.development]
+
   return (
     <footer className="bg-gradient-to-r from-amber-900 to-orange-900 text-gray-100 py-8">
       <div className="container mx-auto px-4">
@@ -72,9 +68,9 @@ export default function Footer() {
 
           {/* Center */}
           <div className="text-center">
-            <span className="text-amber-200">{footerData.development.split(':')[0]}: </span>
+            <span className="text-amber-200">{developmentParts[0]}: </span>
             <a href={footerData.developmentUrl} className="text-amber-300 hover:text-amber-100 underline">
-              {footerData.development.split(':')[1]}
+              {developmentParts[1]}
             </a>
           </div>
 

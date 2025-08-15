@@ -23,6 +23,11 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
     
+    // Валидация данных
+    if (!data || typeof data !== 'object') {
+      return NextResponse.json({ error: 'Invalid data format' }, { status: 400 })
+    }
+    
     // Сохраняем данные в файл
     await fs.writeFile(contentFilePath, JSON.stringify(data, null, 2), 'utf8')
     
@@ -36,6 +41,30 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const updateData = await request.json()
+    
+    // Валидация данных
+    if (!updateData || typeof updateData !== 'object') {
+      return NextResponse.json({ error: 'Invalid update data format' }, { status: 400 })
+    }
+    
+    // Валидация footer данных если они переданы
+    if (updateData.footer) {
+      if (typeof updateData.footer !== 'object') {
+        return NextResponse.json({ error: 'Invalid footer data format' }, { status: 400 })
+      }
+      
+      const requiredFields = ['copyright', 'privacyPolicy', 'privacyPolicyUrl', 'development', 'developmentUrl', 'phones', 'callbackButton']
+      for (const field of requiredFields) {
+        if (!(field in updateData.footer)) {
+          return NextResponse.json({ error: `Missing required footer field: ${field}` }, { status: 400 })
+        }
+      }
+      
+      // Проверяем что phones это массив
+      if (!Array.isArray(updateData.footer.phones)) {
+        return NextResponse.json({ error: 'Footer phones must be an array' }, { status: 400 })
+      }
+    }
     
     // Читаем существующие данные
     const fileContents = await fs.readFile(contentFilePath, 'utf8')
