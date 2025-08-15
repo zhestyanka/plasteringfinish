@@ -54,16 +54,36 @@
         "href": "#hero"
       },
       {
-        "name": "Услуги",
-        "href": "#services"
+        "name": "Цены",
+        "href": "#pricing"
       },
       {
         "name": "Работы",
         "href": "#works"
       },
       {
-        "name": "Цены",
-        "href": "#pricing"
+        "name": "Видео",
+        "href": "#video"
+      },
+      {
+        "name": "Отзывы",
+        "href": "#reviews"
+      },
+      {
+        "name": "Команда",
+        "href": "#team"
+      },
+      {
+        "name": "Оборудование",
+        "href": "#equipment"
+      },
+      {
+        "name": "Услуги",
+        "href": "#services"
+      },
+      {
+        "name": "Контакты",
+        "href": "#contacts"
       }
     ]
   },

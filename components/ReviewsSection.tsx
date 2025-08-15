@@ -66,7 +66,7 @@ export default function ReviewsSection() {
 
   if (isLoading) {
     return (
-      <section className="py-16 bg-gradient-to-b from-orange-50 to-amber-50">
+      <section id="reviews" className="py-16 bg-gradient-to-b from-orange-50 to-amber-50">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <div className="animate-pulse">
@@ -84,7 +84,7 @@ export default function ReviewsSection() {
   }
 
   return (
-    <section className="py-16 bg-gradient-to-b from-orange-50 to-amber-50">
+    <section id="reviews" className="py-16 bg-gradient-to-b from-orange-50 to-amber-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-amber-900 mb-8">

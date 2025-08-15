@@ -49,7 +49,7 @@ export default function TeamSection() {
   // Если данные загружаются или команда пуста
   if (isLoading || teamData.length === 0) {
     return (
-      <section className="py-16 bg-gradient-to-br from-amber-900 to-orange-900 text-gray-100">
+      <section id="team" className="py-16 bg-gradient-to-br from-amber-900 to-orange-900 text-gray-100">
         <div className="container mx-auto px-4">
           <div className="text-center">
             {isLoading ? (
@@ -78,7 +78,7 @@ export default function TeamSection() {
   const currentMember = teamData[activeTeamMember]
 
   return (
-    <section className="py-16 bg-gradient-to-br from-amber-900 to-orange-900 text-gray-100">
+    <section id="team" className="py-16 bg-gradient-to-br from-amber-900 to-orange-900 text-gray-100">
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-start mb-12">
           <div>

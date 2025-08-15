@@ -50,7 +50,7 @@ export default function ContactsSection() {
 
   if (isLoading) {
     return (
-      <section className="py-16 bg-gradient-to-b from-amber-50 to-orange-50">
+      <section id="contacts" className="py-16 bg-gradient-to-b from-amber-50 to-orange-50">
         <div className="container mx-auto px-4">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto"></div>
@@ -61,7 +61,7 @@ export default function ContactsSection() {
   }
 
   return (
-    <section className="py-16 bg-gradient-to-b from-amber-50 to-orange-50">
+    <section id="contacts" className="py-16 bg-gradient-to-b from-amber-50 to-orange-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-amber-900">Контакты</h2>

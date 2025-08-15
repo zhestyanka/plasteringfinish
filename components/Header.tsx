@@ -27,9 +27,14 @@ export default function Header() {
     city: "Санкт-Петербург",
     menuItems: [
       { name: "Главная", href: "#hero" },
-      { name: "Услуги", href: "#services" },
+      { name: "Цены", href: "#pricing" },
       { name: "Работы", href: "#works" },
-      { name: "Цены", href: "#pricing" }
+      { name: "Видео", href: "#video" },
+      { name: "Отзывы", href: "#reviews" },
+      { name: "Команда", href: "#team" },
+      { name: "Оборудование", href: "#equipment" },
+      { name: "Услуги", href: "#services" },
+      { name: "Контакты", href: "#contacts" }
     ]
   })
   const [isLoading, setIsLoading] = useState(true)
@@ -92,12 +97,12 @@ export default function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8">
+          <nav className="hidden lg:flex items-center space-x-6">
             {headerData.menuItems.map((item) => (
               <button
                 key={item.name}
                 onClick={() => handleMenuClick(item.href)}
-                className="text-gray-700 hover:text-coffee-600 font-medium transition-colors duration-300 relative group"
+                className="text-gray-700 hover:text-coffee-600 font-medium transition-colors duration-300 relative group text-sm"
               >
                 {item.name}
                 <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-coffee-500 to-coffee-600 group-hover:w-full transition-all duration-300"></div>
@@ -106,7 +111,7 @@ export default function Header() {
           </nav>
 
           {/* Desktop Contact Info */}
-          <div className="hidden lg:flex items-center space-x-6">
+          <div className="hidden lg:flex items-center space-x-4">
             <div className="flex items-center space-x-2">
               <div className="flex">
                 {[1,2,3,4,5].map((star) => (
@@ -120,86 +125,70 @@ export default function Header() {
               <Shield className="w-4 h-4 text-coffee-600" />
               <span className="text-xs text-gray-600">Гарантия {headerData.warrantyYears} лет</span>
             </div>
-          </div>
 
-          {/* Phone and Menu for Mobile/Tablet */}
-          <div className="flex items-center space-x-3 lg:space-x-4">
-            {/* Phone Button */}
-            <a 
-              href={`tel:${headerData.phone.replace(/\D/g, '')}`}
-              className="flex items-center space-x-2 bg-gradient-to-r from-coffee-600 to-coffee-500 hover:from-coffee-700 hover:to-coffee-600 text-black px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all duration-300 transform hover:scale-105 text-sm md:text-base"
-            >
-              <Phone className="w-3 h-3 md:w-4 md:h-4 text-black" />
-              <span className="hidden sm:inline font-medium">{headerData.phone}</span>
-              <span className="sm:hidden font-medium">Звонок</span>
-            </a>
-
-            {/* Mobile Menu Button */}
             <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
+              asChild
+              className="bg-gradient-to-r from-coffee-600 to-coffee-700 hover:from-coffee-700 hover:to-coffee-800 text-white text-sm px-4 py-2 rounded-lg"
             >
-              {isMenuOpen ? (
-                <X className="w-5 h-5 text-gray-700" />
-              ) : (
-                <Menu className="w-5 h-5 text-gray-700" />
-              )}
+              <a href={`tel:${headerData.phone.replace(/\D/g, '')}`}>
+                <Phone className="w-4 h-4 mr-2" />
+                {headerData.phone}
+              </a>
             </Button>
           </div>
+
+          {/* Mobile menu button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="lg:hidden"
+          >
+            {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </Button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-200/50 shadow-lg">
-            <div className="container mx-auto px-4 py-4">
-              <nav className="space-y-3">
-                {headerData.menuItems.map((item) => (
-                  <button
-                    key={item.name}
-                    onClick={() => handleMenuClick(item.href)}
-                    className="block w-full text-left py-3 px-4 text-gray-700 hover:text-coffee-600 hover:bg-coffee-50 rounded-lg transition-all duration-300 font-medium"
-                  >
-                    {item.name}
-                  </button>
-                ))}
-              </nav>
-              
-              {/* Mobile Trust Indicators */}
-              <div className="mt-6 pt-4 border-t border-gray-200 space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className="flex">
-                      {[1,2,3,4,5].map((star) => (
-                        <Star key={star} className="w-3 h-3 text-coffee-500 fill-current" />
-                      ))}
-                    </div>
-                    <span className="text-xs text-gray-600">{headerData.rating} из 5 • {headerData.reviewsCount} отзывов</span>
+          <div className="lg:hidden border-t border-gray-200 py-4">
+            <nav className="flex flex-col space-y-2">
+              {headerData.menuItems.map((item) => (
+                <button
+                  key={item.name}
+                  onClick={() => handleMenuClick(item.href)}
+                  className="text-left px-4 py-2 text-gray-700 hover:bg-coffee-50 hover:text-coffee-600 rounded-lg transition-colors"
+                >
+                  {item.name}
+                </button>
+              ))}
+            </nav>
+            
+            {/* Mobile Contact Info */}
+            <div className="mt-4 pt-4 border-t border-gray-200 space-y-3">
+              <div className="flex items-center justify-between px-4">
+                <div className="flex items-center space-x-2">
+                  <div className="flex">
+                    {[1,2,3,4,5].map((star) => (
+                      <Star key={star} className="w-3 h-3 text-coffee-500 fill-current" />
+                    ))}
                   </div>
+                  <span className="text-sm text-gray-600">{headerData.rating}/5</span>
                 </div>
-                
-                <div className="flex items-center space-x-4 text-xs text-gray-600">
-                  <div className="flex items-center space-x-1">
-                    <Shield className="w-3 h-3 text-coffee-600" />
-                    <span>Гарантия {headerData.warrantyYears} лет</span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <MapPin className="w-3 h-3 text-coffee-600" />
-                    <span>{headerData.city}</span>
-                  </div>
-                </div>
-                
-                <div className="pt-3">
-                  <a 
-                    href={`tel:${headerData.phone.replace(/\D/g, '')}`}
-                    className="block w-full text-center bg-gradient-to-r from-coffee-600 to-coffee-500 hover:from-coffee-700 hover:to-coffee-600 text-black py-3 rounded-lg font-medium transition-all duration-300"
-                  >
-                    <Phone className="w-4 h-4 inline mr-2 text-black" />
-                    Позвонить сейчас
-                  </a>
+                <div className="flex items-center space-x-2">
+                  <Shield className="w-4 h-4 text-coffee-600" />
+                  <span className="text-sm text-gray-600">Гарантия {headerData.warrantyYears} лет</span>
                 </div>
               </div>
+              
+              <Button
+                asChild
+                className="w-full mx-4 bg-gradient-to-r from-coffee-600 to-coffee-700 hover:from-coffee-700 hover:to-coffee-800 text-white"
+              >
+                <a href={`tel:${headerData.phone.replace(/\D/g, '')}`}>
+                  <Phone className="w-4 h-4 mr-2" />
+                  {headerData.phone}
+                </a>
+              </Button>
             </div>
           </div>
         )}

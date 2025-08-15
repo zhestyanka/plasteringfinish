@@ -2,7 +2,7 @@ import { Play } from "lucide-react"
 
 export default function VideoSection() {
   return (
-    <section className="py-16 bg-gradient-to-b from-amber-900 to-orange-900 text-gray-100">
+    <section id="video" className="py-16 bg-gradient-to-b from-amber-900 to-orange-900 text-gray-100">
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Column */}
