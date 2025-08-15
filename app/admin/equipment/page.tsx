@@ -45,11 +45,11 @@ export default function EquipmentPage() {
   const [isAddingNew, setIsAddingNew] = useState(false)
 
   const [formData, setFormData] = useState({
-    icon: "",
-    title: "",
-    subtitle: "",
-    description: "",
-    count: "",
+    icon: "Settings",
+    title: "Станция подачи раствора",
+    subtitle: "PFT G4",
+    description: "Подробное описание оборудования и его характеристик. Современная станция для механизированной подачи штукатурных смесей.",
+    count: "3 единицы",
     active: true
   })
 

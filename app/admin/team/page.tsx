@@ -31,10 +31,10 @@ export default function TeamPage() {
   const [isAddingNew, setIsAddingNew] = useState(false)
 
   const [formData, setFormData] = useState({
-    name: "",
-    role: "",
-    experience: "",
-    certificate: "",
+    name: "Алексей Иванов",
+    role: "Главный инженер",
+    experience: "12 лет опыта",
+    certificate: "Сертификат мастера штукатурных работ",
     image: "",
     active: true
   })

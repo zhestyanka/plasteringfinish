@@ -76,9 +76,9 @@ export default function VideoPage() {
   const addVideo = () => {
     const newVideo: VideoItem = {
       id: Date.now().toString(),
-      title: '',
-      thumbnail: '',
-      videoUrl: '',
+      title: 'Процесс механизированной штукатурки',
+      thumbnail: 'https://example.com/thumbnail.jpg',
+      videoUrl: 'https://example.com/video.mp4',
       active: true
     }
     setVideos(prev => [...prev, newVideo])

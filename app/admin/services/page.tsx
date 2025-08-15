@@ -28,12 +28,12 @@ export default function ServicesPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingService, setEditingService] = useState<Service | null>(null)
   const [formData, setFormData] = useState<Partial<Service>>({
-    title: "",
-    description: "",
-    price: "",
-    features: [],
+    title: "Механизированная штукатурка стен",
+    description: "Профессиональная штукатурка стен с использованием современного оборудования. Быстро, качественно, с гарантией.",
+    price: "от 350₽/м²",
+    features: ["Современное оборудование", "Гарантия 5 лет", "Быстрое выполнение"],
     image: "",
-    popular: false,
+    popular: true,
     active: true,
     icon: "Hammer"
   })

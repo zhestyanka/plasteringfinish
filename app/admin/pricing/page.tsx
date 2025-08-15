@@ -43,12 +43,12 @@ export default function PricingPage() {
   const [isAddingNew, setIsAddingNew] = useState(false)
 
   const [formData, setFormData] = useState({
-    name: "",
-    price: "",
-    description: "",
-    features: [] as string[],
+    name: "Стандарт",
+    price: "450",
+    description: "Базовый тариф для механизированной штукатурки стен",
+    features: ["Подготовка поверхности", "Штукатурка стен", "Гарантия 2 года"],
     popular: false,
-    color: "blue",
+    color: "coffee",
     active: true
   })
 

@@ -26,16 +26,16 @@ interface ContactsData {
 
 export default function ContactsPage() {
   const [contactsData, setContactsData] = useState<ContactsData['contacts']>({
-    phone: '',
-    email: '',
-    address: '',
-    workingHours: '',
+    phone: '+7 (812) 986-98-03',
+    email: '9110163777@rambler.ru',
+    address: 'Санкт-Петербург, ул. Примерная, д. 123',
+    workingHours: 'Пн-Вс: 8:00-20:00',
     socialMedia: {
-      telegram: '',
-      whatsapp: '',
-      vk: ''
+      telegram: '@plasteringfinish',
+      whatsapp: '+7 (812) 986-98-03',
+      vk: 'https://vk.com/plasteringfinish'
     },
-    description: ''
+    description: 'Профессиональная механизированная штукатурка в Санкт-Петербурге. Работаем с объектами любой сложности. Используем современное оборудование и качественные материалы. Гарантия на все виды работ до 5 лет.'
   })
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)

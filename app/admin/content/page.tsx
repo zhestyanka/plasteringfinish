@@ -20,28 +20,32 @@ import { HeroContent, Contact, Company } from "@/lib/admin/types"
 
 export default function ContentPage() {
   const [heroContent, setHeroContent] = useState<HeroContent>({
-    title: "",
-    subtitle: "",
-    description: "",
-    stats: [],
+    title: "Механизированная штукатурка стен",
+    subtitle: "в Санкт-Петербурге",
+    description: "Профессиональная механизированная штукатурка стен и потолков с использованием современного оборудования. Быстро, качественно, с гарантией 5 лет. Работаем по всему Санкт-Петербургу и Ленинградской области.",
+    stats: [
+      { icon: "Ruble", label: "Стоимость", value: "от 350₽" },
+      { icon: "Clock", label: "Скорость работы", value: "100 м²/день" },
+      { icon: "Shield", label: "Гарантия", value: "5 лет" }
+    ],
     calculator: { mixTypes: [] }
   })
   
   const [contact, setContact] = useState<Contact>({
-    phone: "",
-    email: "",
-    address: "",
-    workingHours: ""
+    phone: "+7 (812) 986-98-03",
+    email: "9110163777@rambler.ru",
+    address: "Санкт-Петербург, ул. Примерная, д. 123",
+    workingHours: "Пн-Вс: 8:00-20:00"
   })
   
   const [headerData, setHeaderData] = useState({
-    companyName: "",
-    companySubtitle: "",
-    phone: "",
+    companyName: "Штукатур СПб",
+    companySubtitle: "Механизированная отделка",
+    phone: "+7 (812) 986-98-03",
     rating: 4.9,
-    reviewsCount: 0,
+    reviewsCount: 157,
     warrantyYears: 5,
-    city: "",
+    city: "Санкт-Петербург",
     menuItems: [
       { name: "Главная", href: "#hero" },
       { name: "Услуги", href: "#services" },
@@ -51,13 +55,13 @@ export default function ContentPage() {
   })
   
   const [company, setCompany] = useState<Company>({
-    name: "",
-    subtitle: "",
-    rating: 5,
-    reviewsCount: 0,
-    clientsCount: 0,
-    experienceYears: 0,
-    warrantyYears: 0
+    name: "Штукатур СПб",
+    subtitle: "Профессиональная механизированная штукатурка",
+    rating: 4.9,
+    reviewsCount: 157,
+    clientsCount: 1250,
+    experienceYears: 8,
+    warrantyYears: 5
   })
 
   const [isLoading, setIsLoading] = useState(true)

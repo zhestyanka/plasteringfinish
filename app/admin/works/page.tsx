@@ -45,12 +45,12 @@ export default function WorksPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
 
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    category: "",
-    location: "",
-    area: "",
-    completionDate: "",
+    title: "Штукатурка 3-комнатной квартиры в ЖК Сокол",
+    description: "Подробное описание выполненных работ. Механизированная штукатурка стен и потолков в современной квартире.",
+    category: "Квартиры",
+    location: "ЖК Сокол, Санкт-Петербург",
+    area: "120 кв.м",
+    completionDate: "2024-01-15",
     mainImage: "",
     images: [] as string[],
     active: true,
