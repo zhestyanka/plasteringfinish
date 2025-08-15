@@ -1,13 +1,13 @@
 {
   "hero": {
-    "title": "test",
+    "title": "Штукатурка стен",
     "subtitle": "в Санкт-Петербурге",
     "description": "Профессиональная штукатурка стен и потолков с использованием современного оборудования. Быстро, качественно, с гарантией 5 лет.",
     "stats": [
       {
         "icon": "Ruble",
-        "label": "test",
-        "value": "от 111₽"
+        "label": "Стоимость",
+        "value": "от 350₽"
       },
       {
         "icon": "Clock",
@@ -41,9 +41,9 @@
     }
   },
   "header": {
-    "companyName": "test",
+    "companyName": "Штукатур СПб",
     "companySubtitle": "Механизированная отделка",
-    "phone": "+7 (812) 123-45-99",
+    "phone": "+7 (812) 986-98-03",
     "rating": 4.9,
     "reviewsCount": 157,
     "warrantyYears": 5,
@@ -88,25 +88,25 @@
     ]
   },
   "contacts": {
-    "phone": "+7 (812) 123-45-99",
-    "email": "info@plasteringfinish.ru",
-    "address": "test",
+    "phone": "+7 (812) 986-98-03",
+    "email": "9110163777@rambler.ru",
+    "address": "Санкт-Петербург, ул. Примерная, д. 123",
     "workingHours": "Пн-Вс: 8:00-20:00",
     "socialMedia": {
       "telegram": "@plasteringfinish",
-      "whatsapp": "+7 (812) 123-45-67",
+      "whatsapp": "+7 (812) 986-98-03",
       "vk": "https://vk.com/plasteringfinish"
     },
     "description": "Профессиональная механизированная штукатурка в Санкт-Петербурге. Работаем с объектами любой сложности."
   },
   "company": {
-    "name": "test",
+    "name": "Штукатур СПб",
     "subtitle": "Механизированная отделка",
     "rating": 4.9,
     "reviewsCount": 157,
     "clientsCount": 500,
     "experienceYears": 8,
-    "warrantyYears": 7
+    "warrantyYears": 5
   },
   "footer": {
     "copyright": "© 2024 «Штукатур СПб» Все права защищены",

@@ -136,19 +136,41 @@ export default function HeroSection() {
     return isNaN(num) || !isFinite(num) ? '0' : num.toString()
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Здесь будет логика отправки формы
-    console.log('Форма отправлена:', formData)
-    setIsModalOpen(false)
-    // Сброс формы
-    setFormData({
-      name: '',
-      phone: '',
-      email: '',
-      area: '',
-      message: ''
-    })
+    
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        // Показываем уведомление об успехе
+        alert('Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.')
+        setIsModalOpen(false)
+        
+        // Сброс формы
+        setFormData({
+          name: '',
+          phone: '',
+          email: '',
+          area: '',
+          message: ''
+        })
+      } else {
+        // Показываем ошибку
+        alert(`Ошибка: ${result.error || 'Не удалось отправить заявку'}`)
+      }
+    } catch (error) {
+      console.error('Ошибка отправки формы:', error)
+      alert('Произошла ошибка при отправке заявки. Попробуйте еще раз.')
+    }
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -156,6 +178,48 @@ export default function HeroSection() {
       ...formData,
       [e.target.name]: e.target.value
     })
+  }
+
+  const handleBagPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value
+    
+    // Убираем нули в начале
+    if (value.startsWith('0') && value.length > 1) {
+      value = value.replace(/^0+/, '')
+    }
+    
+    // Если поле пустое, оставляем пустым
+    if (value === '') {
+      setBagPrice('')
+      return
+    }
+    
+    // Проверяем что это число
+    const numValue = parseInt(value)
+    if (!isNaN(numValue) && numValue >= 0) {
+      setBagPrice(value)
+    }
+  }
+
+  const handleBagWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value
+    
+    // Убираем нули в начале
+    if (value.startsWith('0') && value.length > 1) {
+      value = value.replace(/^0+/, '')
+    }
+    
+    // Если поле пустое, оставляем пустым
+    if (value === '') {
+      setBagWeight('')
+      return
+    }
+    
+    // Проверяем что это число
+    const numValue = parseInt(value)
+    if (!isNaN(numValue) && numValue >= 0) {
+      setBagWeight(value)
+    }
   }
 
   return (
@@ -417,7 +481,7 @@ export default function HeroSection() {
                         <Input
                           type="number"
                           value={bagWeight}
-                          onChange={(e) => setBagWeight(e.target.value)}
+                          onChange={handleBagWeightChange}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
                           placeholder=""
                         />
@@ -429,7 +493,7 @@ export default function HeroSection() {
                         <Input
                           type="number"
                           value={bagPrice}
-                          onChange={(e) => setBagPrice(e.target.value)}
+                          onChange={handleBagPriceChange}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
                           placeholder=""
                         />
