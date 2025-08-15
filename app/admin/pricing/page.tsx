@@ -44,7 +44,7 @@ export default function PricingPage() {
 
   const [formData, setFormData] = useState({
     name: "",
-    price: 0,
+    price: "",
     description: "",
     features: [] as string[],
     popular: false,
@@ -129,7 +129,7 @@ export default function PricingPage() {
     setEditingPlan(plan)
     setFormData({
       name: plan.name,
-      price: plan.price,
+      price: plan.price.toString(),
       description: plan.description,
       features: [...plan.features],
       popular: plan.popular,
@@ -143,7 +143,7 @@ export default function PricingPage() {
     setEditingPlan(null)
     setFormData({
       name: "",
-      price: 0,
+      price: "",
       description: "",
       features: [],
       popular: false,
@@ -159,7 +159,7 @@ export default function PricingPage() {
       return
     }
 
-    if (formData.price <= 0) {
+    if (!formData.price || parseFloat(formData.price) <= 0) {
       toast.error('Введите корректную цену')
       return
     }
@@ -231,7 +231,7 @@ export default function PricingPage() {
     setIsAddingNew(false)
     setFormData({
       name: "",
-      price: 0,
+      price: "",
       description: "",
       features: [],
       popular: false,
@@ -256,6 +256,30 @@ export default function PricingPage() {
       ...prev,
       features: prev.features.filter((_, i) => i !== index)
     }))
+  }
+
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value
+    
+    // Убираем все нецифровые символы кроме точки
+    value = value.replace(/[^\d.]/g, '')
+    
+    // Если поле пустое, устанавливаем пустую строку
+    if (value === '') {
+      setFormData(prev => ({ ...prev, price: '' }))
+      return
+    }
+    
+    // Убираем нули в начале только если после них есть другие цифры
+    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
+      value = value.replace(/^0+/, '')
+    }
+    
+    // Проверяем что это число
+    const numValue = parseFloat(value)
+    if (!isNaN(numValue) && numValue >= 0) {
+      setFormData(prev => ({ ...prev, price: value }))
+    }
   }
 
   const getColorClass = (color: string) => {
@@ -321,9 +345,9 @@ export default function PricingPage() {
                 <Label htmlFor="price">Цена (руб/м²)</Label>
                 <Input
                   id="price"
-                  type="number"
+                  type="text"
                   value={formData.price}
-                  onChange={(e) => setFormData(prev => ({ ...prev, price: Number(e.target.value) }))}
+                  onChange={handlePriceChange}
                   placeholder="450"
                 />
               </div>
