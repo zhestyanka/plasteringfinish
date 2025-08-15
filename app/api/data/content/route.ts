@@ -31,4 +31,25 @@ export async function POST(request: NextRequest) {
     console.error('Error saving content:', error)
     return NextResponse.json({ error: 'Failed to save content' }, { status: 500 })
   }
+}
+
+export async function PUT(request: NextRequest) {
+  try {
+    const updateData = await request.json()
+    
+    // Читаем существующие данные
+    const fileContents = await fs.readFile(contentFilePath, 'utf8')
+    const existingData = JSON.parse(fileContents)
+    
+    // Обновляем только переданные поля
+    const updatedData = { ...existingData, ...updateData }
+    
+    // Сохраняем обновленные данные
+    await fs.writeFile(contentFilePath, JSON.stringify(updatedData, null, 2), 'utf8')
+    
+    return NextResponse.json({ success: true, message: 'Content updated successfully' })
+  } catch (error) {
+    console.error('Error updating content:', error)
+    return NextResponse.json({ error: 'Failed to update content' }, { status: 500 })
+  }
 } 

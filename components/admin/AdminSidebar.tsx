@@ -27,7 +27,8 @@ const menuItems = [
     icon: FileText,
     subItems: [
       { title: "Главная страница", href: "/admin/content", icon: Home },
-      { title: "Контакты", href: "/admin/contacts", icon: Phone }
+      { title: "Контакты", href: "/admin/contacts", icon: Phone },
+      { title: "Футер", href: "/admin/footer", icon: FileText }
     ]
   },
   { title: "Услуги", href: "/admin/services", icon: Briefcase },

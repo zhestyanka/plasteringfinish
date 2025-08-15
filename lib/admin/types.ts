@@ -54,6 +54,16 @@ export interface Company {
   warrantyYears: number
 }
 
+export interface Footer {
+  copyright: string
+  privacyPolicy: string
+  privacyPolicyUrl: string
+  development: string
+  developmentUrl: string
+  phones: string[]
+  callbackButton: string
+}
+
 export interface Service {
   id: string
   icon: string

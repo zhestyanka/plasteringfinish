@@ -87,5 +87,17 @@
     "clientsCount": 500,
     "experienceYears": 8,
     "warrantyYears": 7
+  },
+  "footer": {
+    "copyright": "© 2024 «Штукатур СПб» Все права защищены",
+    "privacyPolicy": "Политика конфиденциальности",
+    "privacyPolicyUrl": "#",
+    "development": "Разработка сайта: WebZavod.bz",
+    "developmentUrl": "#",
+    "phones": [
+      "8 (812) 986-98-03",
+      "8 (963) 329-65-63"
+    ],
+    "callbackButton": "Перезвоните мне"
   }
 }
