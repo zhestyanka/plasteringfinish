@@ -1,49 +1,22 @@
-{
-  "team": [
-    {
-      "id": "sergey",
-      "name": "test",
-      "role": "Оператор машины",
-      "experience": "Опыт работы 5 лет",
-      "certificate": "Сертификат KNAUF",
-      "image": "/placeholder-user.jpg",
-      "active": true
-    },
-    {
-      "id": "dmitry",
-      "name": "Дмитрий Гореев",
-      "role": "Прораб",
-      "experience": "Опыт работы 6 лет",
-      "certificate": "Сертификат KNAUF",
-      "image": "/placeholder-user.jpg",
-      "active": true
-    },
-    {
-      "id": "semen",
-      "name": "Семен Власов",
-      "role": "Штукатур 5 разряда",
-      "experience": "Опыт работы 6 лет",
-      "certificate": "Сертификат KNAUF",
-      "image": "/placeholder-user.jpg",
-      "active": true
-    },
-    {
-      "id": "boris",
-      "name": "Борис Романов",
-      "role": "Штукатур 6 разряда",
-      "experience": "Опыт работы 10 лет",
-      "certificate": "Сертификат KNAUF",
-      "image": "/placeholder-user.jpg",
-      "active": true
-    },
-    {
-      "id": "1750787980913",
-      "name": "test",
-      "role": "test",
-      "experience": "12",
-      "certificate": "test",
-      "image": "",
-      "active": true
-    }
-  ]
-}
+[
+  {
+    "id": "1",
+    "name": "Александр Петров",
+    "role": "Главный штукатур",
+    "experience": "8 лет",
+    "image": "/images/team/member1.jpg",
+    "certificate": "Сертификат Knauf",
+    "specialization": "Механизированная штукатурка",
+    "description": "Опытный мастер с большим стажем работы. Специализируется на сложных объектах."
+  },
+  {
+    "id": "2",
+    "name": "Михаил Сидоров",
+    "role": "Бригадир",
+    "experience": "6 лет",
+    "image": "/images/team/member2.jpg",
+    "certificate": "Сертификат Волма",
+    "specialization": "Отделочные работы",
+    "description": "Руководит бригадой из 4 человек. Отвечает за качество и сроки выполнения работ."
+  }
+]

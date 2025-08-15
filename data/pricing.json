@@ -1,26 +1,33 @@
-{
-  "pricing": [
-    {
-      "id": "test",
-      "name": "test",
-      "price": "500",
-      "unit": "м²",
-      "description": "test",
-      "features": [],
-      "popular": false,
-      "active": true,
-      "order": 1
-    },
-    {
-      "id": "1750788156728",
-      "name": "test",
-      "price": "111",
-      "unit": "м²",
-      "description": "test",
-      "features": [],
-      "popular": false,
-      "active": true,
-      "order": 1750788156728
-    }
-  ]
-}
+[
+  {
+    "id": "basic",
+    "name": "Базовый",
+    "price": 350,
+    "color": "coffee",
+    "description": "Механизированная штукатурка стен гипсовыми смесями. Подходит для жилых помещений.",
+    "features": [
+      "Гипсовая штукатурка",
+      "Выравнивание стен",
+      "Грунтовка поверхности",
+      "Гарантия 2 года"
+    ],
+    "isActive": true,
+    "isPopular": false
+  },
+  {
+    "id": "premium",
+    "name": "Премиум",
+    "price": 450,
+    "color": "coffee",
+    "description": "Высококачественная штукатурка с дополнительной обработкой. Для требовательных клиентов.",
+    "features": [
+      "Гипсовая штукатурка",
+      "Выравнивание стен",
+      "Грунтовка поверхности",
+      "Дополнительная шлифовка",
+      "Гарантия 5 лет"
+    ],
+    "isActive": true,
+    "isPopular": true
+  }
+]

@@ -183,8 +183,11 @@ export default function HeroSection() {
   const handleBagPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
     
+    // Убираем все нецифровые символы кроме точки
+    value = value.replace(/[^\d.]/g, '')
+    
     // Убираем нули в начале
-    if (value.startsWith('0') && value.length > 1) {
+    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
       value = value.replace(/^0+/, '')
     }
     
@@ -195,7 +198,7 @@ export default function HeroSection() {
     }
     
     // Проверяем что это число
-    const numValue = parseInt(value)
+    const numValue = parseFloat(value)
     if (!isNaN(numValue) && numValue >= 0) {
       setBagPrice(value)
     }
@@ -204,8 +207,11 @@ export default function HeroSection() {
   const handleBagWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
     
+    // Убираем все нецифровые символы кроме точки
+    value = value.replace(/[^\d.]/g, '')
+    
     // Убираем нули в начале
-    if (value.startsWith('0') && value.length > 1) {
+    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
       value = value.replace(/^0+/, '')
     }
     
@@ -216,9 +222,105 @@ export default function HeroSection() {
     }
     
     // Проверяем что это число
-    const numValue = parseInt(value)
+    const numValue = parseFloat(value)
     if (!isNaN(numValue) && numValue >= 0) {
       setBagWeight(value)
+    }
+  }
+
+  const handleClientPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value
+    
+    // Убираем все нецифровые символы кроме точки
+    value = value.replace(/[^\d.]/g, '')
+    
+    // Убираем нули в начале
+    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
+      value = value.replace(/^0+/, '')
+    }
+    
+    // Если поле пустое, оставляем пустым
+    if (value === '') {
+      setClientPrice('')
+      return
+    }
+    
+    // Проверяем что это число
+    const numValue = parseFloat(value)
+    if (!isNaN(numValue) && numValue >= 0) {
+      setClientPrice(value)
+    }
+  }
+
+  const handleAreaToPlasterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value
+    
+    // Убираем все нецифровые символы кроме точки
+    value = value.replace(/[^\d.]/g, '')
+    
+    // Убираем нули в начале
+    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
+      value = value.replace(/^0+/, '')
+    }
+    
+    // Если поле пустое, оставляем пустым
+    if (value === '') {
+      setAreaToPlaster('')
+      return
+    }
+    
+    // Проверяем что это число
+    const numValue = parseFloat(value)
+    if (!isNaN(numValue) && numValue >= 0) {
+      setAreaToPlaster(value)
+    }
+  }
+
+  const handleLayerThicknessChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value
+    
+    // Убираем все нецифровые символы кроме точки
+    value = value.replace(/[^\d.]/g, '')
+    
+    // Убираем нули в начале
+    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
+      value = value.replace(/^0+/, '')
+    }
+    
+    // Если поле пустое, оставляем пустым
+    if (value === '') {
+      setLayerThickness('')
+      return
+    }
+    
+    // Проверяем что это число
+    const numValue = parseFloat(value)
+    if (!isNaN(numValue) && numValue >= 0) {
+      setLayerThickness(value)
+    }
+  }
+
+  const handleAreaPerShiftChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value
+    
+    // Убираем все нецифровые символы кроме точки
+    value = value.replace(/[^\d.]/g, '')
+    
+    // Убираем нули в начале
+    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
+      value = value.replace(/^0+/, '')
+    }
+    
+    // Если поле пустое, оставляем пустым
+    if (value === '') {
+      setAreaPerShift('')
+      return
+    }
+    
+    // Проверяем что это число
+    const numValue = parseFloat(value)
+    if (!isNaN(numValue) && numValue >= 0) {
+      setAreaPerShift(value)
     }
   }
 
@@ -400,11 +502,11 @@ export default function HeroSection() {
                           Сколько ₽ за м²
                         </label>
                         <Input
-                          type="number"
+                          type="text"
                           value={clientPrice}
-                          onChange={(e) => setClientPrice(e.target.value)}
+                          onChange={handleClientPriceChange}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
-                          placeholder=""
+                          placeholder="450"
                         />
                       </div>
                     </div>
@@ -419,11 +521,11 @@ export default function HeroSection() {
                           Сколько м² нужно отштукатурить:
                         </label>
                         <Input
-                          type="number"
+                          type="text"
                           value={areaToPlaster}
-                          onChange={(e) => setAreaToPlaster(e.target.value)}
+                          onChange={handleAreaToPlasterChange}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
-                          placeholder=""
+                          placeholder="100"
                         />
                       </div>
                   <div>
@@ -431,12 +533,11 @@ export default function HeroSection() {
                           Укажите толщину наносимого слоя: см
                         </label>
                         <Input
-                          type="number"
-                          step="0.1"
+                          type="text"
                           value={layerThickness}
-                          onChange={(e) => setLayerThickness(e.target.value)}
+                          onChange={handleLayerThicknessChange}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
-                          placeholder=""
+                          placeholder="2.0"
                         />
                           </div>
                       <div>
@@ -444,11 +545,11 @@ export default function HeroSection() {
                           Сколько м² отштукатуриваете в смену:
                         </label>
                         <Input
-                          type="number"
+                          type="text"
                           value={areaPerShift}
-                          onChange={(e) => setAreaPerShift(e.target.value)}
+                          onChange={handleAreaPerShiftChange}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
-                          placeholder=""
+                          placeholder="40"
                         />
                       </div>
                     </div>
@@ -479,11 +580,11 @@ export default function HeroSection() {
                           Укажите сколько кг в 1 мешке:
                         </label>
                         <Input
-                          type="number"
+                          type="text"
                           value={bagWeight}
                           onChange={handleBagWeightChange}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
-                          placeholder=""
+                          placeholder="30"
                         />
                       </div>
                       <div>
@@ -491,11 +592,11 @@ export default function HeroSection() {
                           Сколько стоит 1 мешок смеси: ₽ / мешок
                         </label>
                         <Input
-                          type="number"
+                          type="text"
                           value={bagPrice}
                           onChange={handleBagPriceChange}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
-                          placeholder=""
+                          placeholder="350"
                         />
                       </div>
                     </div>

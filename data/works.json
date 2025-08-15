@@ -1,68 +1,28 @@
-{
-  "works": [
-    {
-      "id": "residential-1",
-      "title": "test",
-      "category": "Жилые помещения",
-      "area": "120 м²",
-      "duration": "5 дней",
-      "description": "Механизированная штукатурка стен и потолков в 3-комнатной квартире",
-      "images": [
-        "/images/works/residential-1-1.jpg",
-        "/images/works/residential-1-2.jpg",
-        "/images/works/residential-1-3.jpg"
-      ],
-      "location": "120 м²",
-      "active": true,
-      "featured": true,
-      "order": 1
-    },
-    {
-      "id": "office-1",
-      "title": "Офисное здание на Московском проспекте",
-      "category": "Коммерческие объекты",
-      "area": "800 м²",
-      "duration": "12 дней",
-      "description": "Штукатурка офисных помещений с высокими требованиями к качеству",
-      "images": [
-        "/images/works/office-1-1.jpg",
-        "/images/works/office-1-2.jpg"
-      ],
-      "location": "800 м²",
-      "active": true,
-      "featured": true,
-      "order": 2
-    },
-    {
-      "id": "house-1",
-      "title": "Загородный дом в Ленинградской области",
-      "category": "Частные дома",
-      "area": "300 м²",
-      "duration": "8 дней",
-      "description": "Внутренняя отделка загородного дома с использованием современных технологий",
-      "images": [
-        "/images/works/house-1-1.jpg",
-        "/images/works/house-1-2.jpg",
-        "/images/works/house-1-3.jpg",
-        "/images/works/house-1-4.jpg"
-      ],
-      "location": "300 м²",
-      "active": true,
-      "featured": false,
-      "order": 3
-    },
-    {
-      "id": "1750788075584",
-      "title": "test",
-      "category": "Офисы",
-      "area": "120",
-      "duration": "2025-02-22",
-      "description": "test",
-      "images": [],
-      "location": "test",
-      "active": true,
-      "featured": false,
-      "order": 4
-    }
-  ]
-}
+[
+  {
+    "id": "1",
+    "title": "Штукатурка квартиры в новостройке",
+    "description": "Механизированная штукатурка стен и потолков в трехкомнатной квартире. Площадь работ 180 м².",
+    "image": "/images/works/work1.jpg",
+    "location": "Санкт-Петербург, ул. Ленина, 15",
+    "completionDate": "2024-01-15",
+    "area": 180,
+    "duration": "5 дней",
+    "clientPrice": 350,
+    "mixCost": 45000,
+    "profit": 18000
+  },
+  {
+    "id": "2",
+    "title": "Отделка офисного помещения",
+    "description": "Штукатурка стен в современном офисном центре. Высокие потолки, сложная геометрия.",
+    "image": "/images/works/work2.jpg",
+    "location": "Санкт-Петербург, Невский пр., 100",
+    "completionDate": "2024-02-20",
+    "area": 250,
+    "duration": "7 дней",
+    "clientPrice": 400,
+    "mixCost": 60000,
+    "profit": 40000
+  }
+]

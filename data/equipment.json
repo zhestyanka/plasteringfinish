@@ -1,46 +1,38 @@
-{
-  "equipment": [
-    {
-      "id": "pft-g4",
-      "name": "test",
-      "type": "Штукатурная станция",
-      "description": "Профессиональная штукатурная станция для механизированного нанесения",
-      "specifications": {
-        "quantity": 1,
-        "model": "Штукатурная станция",
-        "power": "N/A",
-        "productivity": "N/A"
-      },
-      "active": true,
-      "order": 1
+[
+  {
+    "id": "1",
+    "name": "Штукатурная станция PFT G4",
+    "description": "Профессиональная штукатурная станция для механизированного нанесения смесей. Производительность до 25 л/мин.",
+    "image": "/images/equipment/pft-g4.jpg",
+    "specifications": {
+      "power": "2.2 кВт",
+      "pressure": "25 бар",
+      "capacity": "25 л/мин",
+      "weight": "85 кг"
     },
-    {
-      "id": "putzmeister",
-      "name": "Putzmeister S5 EV",
-      "type": "Штукатурная станция",
-      "description": "Немецкое оборудование высокого класса для штукатурных работ",
-      "specifications": {
-        "quantity": 1,
-        "model": "Штукатурная станция",
-        "power": "N/A",
-        "productivity": "N/A"
-      },
-      "active": true,
-      "order": 2
+    "advantages": [
+      "Высокая производительность",
+      "Надежность немецкого качества",
+      "Простота обслуживания",
+      "Экономия материала"
+    ]
+  },
+  {
+    "id": "2",
+    "name": "Штукатурная станция PFT Ritmo XL",
+    "description": "Мощная станция для крупных объектов. Идеально подходит для штукатурки больших площадей.",
+    "image": "/images/equipment/pft-ritmo.jpg",
+    "specifications": {
+      "power": "3.0 кВт",
+      "pressure": "30 бар",
+      "capacity": "30 л/мин",
+      "weight": "95 кг"
     },
-    {
-      "id": "mixer",
-      "name": "Смесительный узел",
-      "type": "Миксер",
-      "description": "Автоматический смесительный узел для приготовления растворов",
-      "specifications": {
-        "quantity": 1,
-        "model": "Миксер",
-        "power": "N/A",
-        "productivity": "N/A"
-      },
-      "active": true,
-      "order": 3
-    }
-  ]
-}
+    "advantages": [
+      "Максимальная производительность",
+      "Работа с любыми смесями",
+      "Долговечность",
+      "Быстрая окупаемость"
+    ]
+  }
+]
