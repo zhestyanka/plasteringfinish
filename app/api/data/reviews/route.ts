@@ -7,28 +7,21 @@ const reviewsFilePath = path.join(process.cwd(), 'data', 'reviews.json')
 export async function GET() {
   try {
     const fileContents = await fs.readFile(reviewsFilePath, 'utf8')
-    const data = JSON.parse(fileContents)
-    return NextResponse.json(data, {
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8'
-      }
-    })
+    const reviews = JSON.parse(fileContents)
+    return NextResponse.json(reviews)
   } catch (error) {
-    console.error('Error reading reviews:', error)
-    return NextResponse.json({ error: 'Failed to load reviews' }, { status: 500 })
+    console.error('Ошибка чтения отзывов:', error)
+    return NextResponse.json({ reviews: [] })
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
-    
-    // Сохраняем данные в файл
     await fs.writeFile(reviewsFilePath, JSON.stringify(data, null, 2), 'utf8')
-    
-    return NextResponse.json({ success: true, message: 'Reviews saved successfully' })
+    return NextResponse.json({ success: true, message: 'Отзывы сохранены' })
   } catch (error) {
-    console.error('Error saving reviews:', error)
-    return NextResponse.json({ error: 'Failed to save reviews' }, { status: 500 })
+    console.error('Ошибка сохранения отзывов:', error)
+    return NextResponse.json({ error: 'Ошибка сохранения' }, { status: 500 })
   }
 } 
