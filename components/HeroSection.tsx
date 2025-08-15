@@ -180,69 +180,21 @@ export default function HeroSection() {
     })
   }
 
-  const handleBagPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value
-    
-    // Убираем все нецифровые символы кроме точки
-    value = value.replace(/[^\d.]/g, '')
-    
-    // Убираем нули в начале
-    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
-      value = value.replace(/^0+/, '')
-    }
-    
-    // Если поле пустое, оставляем пустым
-    if (value === '') {
-      setBagPrice('')
-      return
-    }
-    
-    // Проверяем что это число
-    const numValue = parseFloat(value)
-    if (!isNaN(numValue) && numValue >= 0) {
-      setBagPrice(value)
-    }
-  }
-
-  const handleBagWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value
-    
-    // Убираем все нецифровые символы кроме точки
-    value = value.replace(/[^\d.]/g, '')
-    
-    // Убираем нули в начале
-    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
-      value = value.replace(/^0+/, '')
-    }
-    
-    // Если поле пустое, оставляем пустым
-    if (value === '') {
-      setBagWeight('')
-      return
-    }
-    
-    // Проверяем что это число
-    const numValue = parseFloat(value)
-    if (!isNaN(numValue) && numValue >= 0) {
-      setBagWeight(value)
-    }
-  }
-
   const handleClientPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value
     
     // Убираем все нецифровые символы кроме точки
     value = value.replace(/[^\d.]/g, '')
     
-    // Убираем нули в начале
-    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
-      value = value.replace(/^0+/, '')
-    }
-    
     // Если поле пустое, оставляем пустым
     if (value === '') {
       setClientPrice('')
       return
+    }
+    
+    // Убираем нули в начале только если после них есть другие цифры
+    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
+      value = value.replace(/^0+/, '')
     }
     
     // Проверяем что это число
@@ -258,15 +210,15 @@ export default function HeroSection() {
     // Убираем все нецифровые символы кроме точки
     value = value.replace(/[^\d.]/g, '')
     
-    // Убираем нули в начале
-    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
-      value = value.replace(/^0+/, '')
-    }
-    
     // Если поле пустое, оставляем пустым
     if (value === '') {
       setAreaToPlaster('')
       return
+    }
+    
+    // Убираем нули в начале только если после них есть другие цифры
+    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
+      value = value.replace(/^0+/, '')
     }
     
     // Проверяем что это число
@@ -282,15 +234,15 @@ export default function HeroSection() {
     // Убираем все нецифровые символы кроме точки
     value = value.replace(/[^\d.]/g, '')
     
-    // Убираем нули в начале
-    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
-      value = value.replace(/^0+/, '')
-    }
-    
     // Если поле пустое, оставляем пустым
     if (value === '') {
       setLayerThickness('')
       return
+    }
+    
+    // Убираем нули в начале только если после них есть другие цифры
+    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
+      value = value.replace(/^0+/, '')
     }
     
     // Проверяем что это число
@@ -306,21 +258,69 @@ export default function HeroSection() {
     // Убираем все нецифровые символы кроме точки
     value = value.replace(/[^\d.]/g, '')
     
-    // Убираем нули в начале
-    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
-      value = value.replace(/^0+/, '')
-    }
-    
     // Если поле пустое, оставляем пустым
     if (value === '') {
       setAreaPerShift('')
       return
     }
     
+    // Убираем нули в начале только если после них есть другие цифры
+    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
+      value = value.replace(/^0+/, '')
+    }
+    
     // Проверяем что это число
     const numValue = parseFloat(value)
     if (!isNaN(numValue) && numValue >= 0) {
       setAreaPerShift(value)
+    }
+  }
+
+  const handleBagPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value
+    
+    // Убираем все нецифровые символы кроме точки
+    value = value.replace(/[^\d.]/g, '')
+    
+    // Если поле пустое, оставляем пустым
+    if (value === '') {
+      setBagPrice('')
+      return
+    }
+    
+    // Убираем нули в начале только если после них есть другие цифры
+    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
+      value = value.replace(/^0+/, '')
+    }
+    
+    // Проверяем что это число
+    const numValue = parseFloat(value)
+    if (!isNaN(numValue) && numValue >= 0) {
+      setBagPrice(value)
+    }
+  }
+
+  const handleBagWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value
+    
+    // Убираем все нецифровые символы кроме точки
+    value = value.replace(/[^\d.]/g, '')
+    
+    // Если поле пустое, оставляем пустым
+    if (value === '') {
+      setBagWeight('')
+      return
+    }
+    
+    // Убираем нули в начале только если после них есть другие цифры
+    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
+      value = value.replace(/^0+/, '')
+    }
+    
+    // Проверяем что это число
+    const numValue = parseFloat(value)
+    if (!isNaN(numValue) && numValue >= 0) {
+      setBagWeight(value)
     }
   }
 
