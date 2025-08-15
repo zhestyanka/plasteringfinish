@@ -1,0 +1,52 @@
+[
+  {
+    "id": "1",
+    "title": "Механизированная штукатурка стен",
+    "description": "Процесс нанесения штукатурки с помощью профессионального оборудования PFT G4",
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "thumbnail": "/images/video/plastering-process.jpg",
+    "duration": "3:45",
+    "category": "Процесс работы",
+    "isActive": true
+  },
+  {
+    "id": "2",
+    "title": "Штукатурка потолков",
+    "description": "Специализированная штукатурка потолков с использованием современных технологий",
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "thumbnail": "/images/video/ceiling-plastering.jpg",
+    "duration": "5:20",
+    "category": "Специализация",
+    "isActive": true
+  },
+  {
+    "id": "3",
+    "title": "Отзывы клиентов",
+    "description": "Реальные отзывы наших довольных клиентов о качестве выполненных работ",
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "thumbnail": "/images/video/customer-reviews.jpg",
+    "duration": "4:15",
+    "category": "Отзывы",
+    "isActive": true
+  },
+  {
+    "id": "4",
+    "title": "Оборудование для штукатурки",
+    "description": "Обзор профессионального оборудования, используемого в работе",
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "thumbnail": "/images/video/equipment-overview.jpg",
+    "duration": "6:30",
+    "category": "Оборудование",
+    "isActive": true
+  },
+  {
+    "id": "5",
+    "title": "Финишная отделка",
+    "description": "Процесс финишной отделки стен после штукатурки",
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "thumbnail": "/images/video/finish-work.jpg",
+    "duration": "2:55",
+    "category": "Процесс работы",
+    "isActive": true
+  }
+]

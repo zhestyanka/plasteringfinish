@@ -1,0 +1,52 @@
+[
+  {
+    "id": "1",
+    "title": "Штукатурная станция PFT G4 в работе",
+    "description": "Видео процесса механизированной штукатурки стен",
+    "type": "video",
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "thumbnail": "/images/media/pft-g4-working.jpg",
+    "category": "Оборудование",
+    "isActive": true
+  },
+  {
+    "id": "2",
+    "title": "Результат штукатурки стен",
+    "description": "Фото идеально ровных стен после механизированной штукатурки",
+    "type": "image",
+    "url": "/images/media/result-walls.jpg",
+    "thumbnail": "/images/media/result-walls-thumb.jpg",
+    "category": "Результаты",
+    "isActive": true
+  },
+  {
+    "id": "3",
+    "title": "Процесс штукатурки потолка",
+    "description": "Видео специализированной штукатурки потолков",
+    "type": "video",
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "thumbnail": "/images/media/ceiling-process.jpg",
+    "category": "Процесс",
+    "isActive": true
+  },
+  {
+    "id": "4",
+    "title": "Финишная отделка",
+    "description": "Фото процесса финишной отделки стен",
+    "type": "image",
+    "url": "/images/media/finish-work.jpg",
+    "thumbnail": "/images/media/finish-work-thumb.jpg",
+    "category": "Процесс",
+    "isActive": true
+  },
+  {
+    "id": "5",
+    "title": "Наша команда за работой",
+    "description": "Фото профессиональной бригады во время выполнения работ",
+    "type": "image",
+    "url": "/images/media/team-working.jpg",
+    "thumbnail": "/images/media/team-working-thumb.jpg",
+    "category": "Команда",
+    "isActive": true
+  }
+]
