@@ -155,7 +155,6 @@ export default function ContactsPage() {
                   type="tel"
                   value={contactsData.phone}
                   onChange={(e) => setContactsData(prev => ({ ...prev, phone: e.target.value }))}
-                  placeholder="+7 (999) 123-45-67"
                 />
               </div>
 
@@ -169,7 +168,6 @@ export default function ContactsPage() {
                   type="email"
                   value={contactsData.email}
                   onChange={(e) => setContactsData(prev => ({ ...prev, email: e.target.value }))}
-                  placeholder="info@example.com"
                 />
               </div>
 
@@ -182,7 +180,6 @@ export default function ContactsPage() {
                   id="address"
                   value={contactsData.address}
                   onChange={(e) => setContactsData(prev => ({ ...prev, address: e.target.value }))}
-                  placeholder="г. Москва, ул. Примерная, д. 123"
                 />
               </div>
 
@@ -195,7 +192,6 @@ export default function ContactsPage() {
                   id="workingHours"
                   value={contactsData.workingHours}
                   onChange={(e) => setContactsData(prev => ({ ...prev, workingHours: e.target.value }))}
-                  placeholder="Пн-Пт: 9:00-18:00, Сб-Вс: выходной"
                 />
               </div>
             </div>
@@ -206,7 +202,6 @@ export default function ContactsPage() {
                 id="description"
                 value={contactsData.description}
                 onChange={(e) => setContactsData(prev => ({ ...prev, description: e.target.value }))}
-                placeholder="Дополнительная информация о компании"
                 rows={4}
               />
             </div>
@@ -234,7 +229,6 @@ export default function ContactsPage() {
                     vk: prev.socialMedia?.vk || ''
                   }
                 }))}
-                placeholder="@your_telegram"
               />
             </div>
 
@@ -252,7 +246,6 @@ export default function ContactsPage() {
                     vk: prev.socialMedia?.vk || ''
                   }
                 }))}
-                placeholder="+7 (999) 123-45-67"
               />
             </div>
 
@@ -270,7 +263,6 @@ export default function ContactsPage() {
                     whatsapp: prev.socialMedia?.whatsapp || ''
                   }
                 }))}
-                placeholder="https://vk.com/your_page"
               />
             </div>
           </div>

@@ -341,8 +341,7 @@ export default function WorksPage() {
               <Input
                 id="title"
                 value={formData.title}
-                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                placeholder="Штукатурка 3-комнатной квартиры в ЖК Сокол"
+                                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
               />
             </div>
 
@@ -351,8 +350,7 @@ export default function WorksPage() {
               <Textarea
                 id="description"
                 value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                placeholder="Подробное описание выполненных работ..."
+                                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                 rows={3}
               />
             </div>
@@ -382,8 +380,7 @@ export default function WorksPage() {
                 <Input
                   id="area"
                   value={formData.area}
-                  onChange={(e) => setFormData(prev => ({ ...prev, area: e.target.value }))}
-                  placeholder="120 кв.м"
+                                      onChange={(e) => setFormData(prev => ({ ...prev, area: e.target.value }))}
                 />
               </div>
 
@@ -403,8 +400,7 @@ export default function WorksPage() {
               <Input
                 id="location"
                 value={formData.location}
-                onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                placeholder="ЖК Сокол, Москва"
+                                    onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
               />
             </div>
 

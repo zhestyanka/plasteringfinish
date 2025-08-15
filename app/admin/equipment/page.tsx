@@ -282,8 +282,7 @@ export default function EquipmentPage() {
                 <Input
                   id="title"
                   value={formData.title}
-                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                  placeholder="Станция подачи раствора"
+                                      onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                 />
               </div>
 
@@ -292,8 +291,7 @@ export default function EquipmentPage() {
                 <Input
                   id="subtitle"
                   value={formData.subtitle}
-                  onChange={(e) => setFormData(prev => ({ ...prev, subtitle: e.target.value }))}
-                  placeholder="PFT G4"
+                                      onChange={(e) => setFormData(prev => ({ ...prev, subtitle: e.target.value }))}
                 />
               </div>
             </div>
@@ -303,8 +301,7 @@ export default function EquipmentPage() {
               <Textarea
                 id="description"
                 value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                placeholder="Подробное описание оборудования и его характеристик..."
+                                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                 rows={3}
               />
             </div>
@@ -315,8 +312,7 @@ export default function EquipmentPage() {
                 <Input
                   id="count"
                   value={formData.count}
-                  onChange={(e) => setFormData(prev => ({ ...prev, count: e.target.value }))}
-                  placeholder="3 единицы"
+                                      onChange={(e) => setFormData(prev => ({ ...prev, count: e.target.value }))}
                 />
               </div>
 

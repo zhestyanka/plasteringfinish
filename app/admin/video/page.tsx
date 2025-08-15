@@ -159,8 +159,7 @@ export default function VideoPage() {
                   <Input
                     id={`title-${video.id}`}
                     value={video.title}
-                    onChange={(e) => updateVideo(video.id, 'title', e.target.value)}
-                    placeholder="Название видео"
+                                         onChange={(e) => updateVideo(video.id, 'title', e.target.value)}
                   />
                 </div>
                 <div>
@@ -168,8 +167,7 @@ export default function VideoPage() {
                   <Input
                     id={`thumbnail-${video.id}`}
                     value={video.thumbnail}
-                    onChange={(e) => updateVideo(video.id, 'thumbnail', e.target.value)}
-                    placeholder="https://example.com/thumbnail.jpg"
+                                         onChange={(e) => updateVideo(video.id, 'thumbnail', e.target.value)}
                   />
                 </div>
                 <div>
@@ -177,8 +175,7 @@ export default function VideoPage() {
                   <Input
                     id={`videoUrl-${video.id}`}
                     value={video.videoUrl}
-                    onChange={(e) => updateVideo(video.id, 'videoUrl', e.target.value)}
-                    placeholder="https://example.com/video.mp4"
+                                         onChange={(e) => updateVideo(video.id, 'videoUrl', e.target.value)}
                   />
                 </div>
                 <div className="flex items-center space-x-2">

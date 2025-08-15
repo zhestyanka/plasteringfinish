@@ -243,8 +243,7 @@ export default function TeamPage() {
                 <Input
                   id="name"
                   value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  placeholder="Алексей Иванов"
+                                      onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                 />
               </div>
 
@@ -253,8 +252,7 @@ export default function TeamPage() {
                 <Input
                   id="role"
                   value={formData.role}
-                  onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
-                  placeholder="Главный инженер"
+                                      onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
                 />
               </div>
             </div>
@@ -264,8 +262,7 @@ export default function TeamPage() {
               <Input
                 id="experience"
                 value={formData.experience}
-                onChange={(e) => setFormData(prev => ({ ...prev, experience: e.target.value }))}
-                placeholder="12 лет опыта"
+                                    onChange={(e) => setFormData(prev => ({ ...prev, experience: e.target.value }))}
               />
             </div>
 
@@ -274,8 +271,7 @@ export default function TeamPage() {
               <Textarea
                 id="certificate"
                 value={formData.certificate}
-                onChange={(e) => setFormData(prev => ({ ...prev, certificate: e.target.value }))}
-                placeholder="Сертификат мастера штукатурных работ"
+                                    onChange={(e) => setFormData(prev => ({ ...prev, certificate: e.target.value }))}
                 rows={3}
               />
             </div>
@@ -285,7 +281,7 @@ export default function TeamPage() {
               <ImageUpload
                 value={formData.image}
                 onChange={(url: string) => setFormData(prev => ({ ...prev, image: url }))}
-                placeholder="Загрузите фотографию сотрудника"
+
               />
             </div>
 

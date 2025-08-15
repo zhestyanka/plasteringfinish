@@ -169,7 +169,6 @@ export default function ContentPage() {
                   id="hero-title"
                   value={heroContent.title}
                   onChange={(e) => setHeroContent(prev => ({ ...prev, title: e.target.value }))}
-                  placeholder="Механизированная штукатурка стен в Москве"
                 />
               </div>
 
@@ -179,7 +178,6 @@ export default function ContentPage() {
                   id="hero-subtitle"
                   value={heroContent.subtitle}
                   onChange={(e) => setHeroContent(prev => ({ ...prev, subtitle: e.target.value }))}
-                  placeholder="Профессиональная штукатурка любых поверхностей"
                 />
               </div>
 
@@ -189,7 +187,6 @@ export default function ContentPage() {
                   id="hero-description"
                   value={heroContent.description}
                   onChange={(e) => setHeroContent(prev => ({ ...prev, description: e.target.value }))}
-                  placeholder="Краткое описание услуг..."
                   rows={3}
                 />
               </div>
@@ -213,7 +210,6 @@ export default function ContentPage() {
                           newStats[index] = { ...stat, label: e.target.value }
                           setHeroContent(prev => ({ ...prev, stats: newStats }))
                         }}
-                        placeholder="Название"
                       />
                       <Input
                         value={stat.value}
@@ -222,7 +218,6 @@ export default function ContentPage() {
                           newStats[index] = { ...stat, value: e.target.value }
                           setHeroContent(prev => ({ ...prev, stats: newStats }))
                         }}
-                        placeholder="Значение"
                       />
                     </div>
                   </div>
@@ -245,7 +240,6 @@ export default function ContentPage() {
                     id="company-name"
                     value={headerData.companyName || ''}
                     onChange={(e) => setHeaderData(prev => ({ ...prev, companyName: e.target.value }))}
-                    placeholder="СПБ Штукатурка"
                   />
                 </div>
 
@@ -255,7 +249,6 @@ export default function ContentPage() {
                     id="company-subtitle"
                     value={headerData.companySubtitle || ''}
                     onChange={(e) => setHeaderData(prev => ({ ...prev, companySubtitle: e.target.value }))}
-                    placeholder="Механизированная отделка"
                   />
                 </div>
               </div>
@@ -267,7 +260,6 @@ export default function ContentPage() {
                     id="header-phone"
                     value={headerData.phone || ''}
                     onChange={(e) => setHeaderData(prev => ({ ...prev, phone: e.target.value }))}
-                    placeholder="+7 (812) 123-45-67"
                   />
                 </div>
 
@@ -277,7 +269,6 @@ export default function ContentPage() {
                     id="header-city"
                     value={headerData.city || ''}
                     onChange={(e) => setHeaderData(prev => ({ ...prev, city: e.target.value }))}
-                    placeholder="Санкт-Петербург"
                   />
                 </div>
               </div>
@@ -347,7 +338,6 @@ export default function ContentPage() {
                         newMenuItems[index] = { ...item, href: e.target.value }
                         setHeaderData(prev => ({ ...prev, menuItems: newMenuItems }))
                       }}
-                      placeholder="#hero"
                     />
                   </div>
                 </div>
@@ -369,7 +359,6 @@ export default function ContentPage() {
                   type="email"
                   value={contact.email}
                   onChange={(e) => setContact(prev => ({ ...prev, email: e.target.value }))}
-                  placeholder="info@plasterfinish.ru"
                 />
               </div>
 
@@ -379,7 +368,6 @@ export default function ContentPage() {
                   id="contact-address"
                   value={contact.address}
                   onChange={(e) => setContact(prev => ({ ...prev, address: e.target.value }))}
-                  placeholder="г. Москва, ул. Строительная, д. 15"
                 />
               </div>
 
@@ -389,7 +377,6 @@ export default function ContentPage() {
                   id="contact-hours"
                   value={contact.workingHours}
                   onChange={(e) => setContact(prev => ({ ...prev, workingHours: e.target.value }))}
-                  placeholder="Пн-Вс: 8:00 - 22:00"
                 />
               </div>
 
@@ -399,7 +386,6 @@ export default function ContentPage() {
                   id="contact-phone"
                   value={contact.phone || ''}
                   onChange={(e) => setContact(prev => ({ ...prev, phone: e.target.value }))}
-                  placeholder="+7 (495) 123-45-67"
                 />
               </div>
             </CardContent>
@@ -419,7 +405,6 @@ export default function ContentPage() {
                     id="company-name"
                     value={company.name}
                     onChange={(e) => setCompany(prev => ({ ...prev, name: e.target.value }))}
-                    placeholder="ПлacтерФиниш"
                   />
                 </div>
 
@@ -429,7 +414,6 @@ export default function ContentPage() {
                     id="company-subtitle"
                     value={company.subtitle}
                     onChange={(e) => setCompany(prev => ({ ...prev, subtitle: e.target.value }))}
-                    placeholder="Профессиональная механизированная штукатурка"
                   />
                 </div>
               </div>

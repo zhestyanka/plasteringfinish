@@ -255,7 +255,6 @@ export default function ServicesPage() {
                     id="title"
                     value={formData.title}
                     onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                    placeholder="Введите название услуги"
                     required
                   />
                 </div>
@@ -266,7 +265,6 @@ export default function ServicesPage() {
                     id="price"
                     value={formData.price}
                     onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
-                    placeholder="от 150₽/м²"
                     required
                   />
                 </div>
@@ -277,8 +275,7 @@ export default function ServicesPage() {
                 <Textarea
                   id="description"
                   value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  placeholder="Описание услуги"
+                                      onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   rows={3}
                   required
                 />
@@ -289,8 +286,7 @@ export default function ServicesPage() {
                 <Input
                   id="image"
                   value={formData.image}
-                  onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
-                  placeholder="https://example.com/image.jpg"
+                                      onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
                 />
               </div>
 
@@ -301,7 +297,6 @@ export default function ServicesPage() {
                     <Input
                       value={feature}
                       onChange={(e) => updateFeature(index, e.target.value)}
-                      placeholder="Особенность услуги"
                     />
                     <Button
                       type="button"

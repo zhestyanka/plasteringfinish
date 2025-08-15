@@ -337,7 +337,6 @@ export default function PricingPage() {
                   id="name"
                   value={formData.name}
                   onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  placeholder="Стандарт"
                 />
               </div>
 
@@ -348,7 +347,6 @@ export default function PricingPage() {
                   type="text"
                   value={formData.price}
                   onChange={handlePriceChange}
-                  placeholder="450"
                 />
               </div>
 
@@ -381,7 +379,6 @@ export default function PricingPage() {
                 id="description"
                 value={formData.description}
                 onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                placeholder="Краткое описание тарифа..."
                 rows={2}
               />
             </div>
@@ -393,7 +390,6 @@ export default function PricingPage() {
                   <Input
                     value={newFeature}
                     onChange={(e) => setNewFeature(e.target.value)}
-                    placeholder="Добавить особенность..."
                     onKeyPress={(e) => e.key === 'Enter' && addFeature()}
                   />
                   <Button type="button" onClick={addFeature}>
