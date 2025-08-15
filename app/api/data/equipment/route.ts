@@ -7,8 +7,8 @@ const equipmentFilePath = path.join(process.cwd(), 'data', 'equipment.json')
 export async function GET() {
   try {
     const fileContents = await fs.readFile(equipmentFilePath, 'utf8')
-    const equipment = JSON.parse(fileContents)
-    return NextResponse.json(equipment)
+    const data = JSON.parse(fileContents)
+    return NextResponse.json(data)
   } catch (error) {
     console.error('Ошибка чтения оборудования:', error)
     return NextResponse.json({ equipment: [] })

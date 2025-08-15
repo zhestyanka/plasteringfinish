@@ -7,8 +7,8 @@ const videoFilePath = path.join(process.cwd(), 'data', 'video.json')
 export async function GET() {
   try {
     const fileContents = await fs.readFile(videoFilePath, 'utf8')
-    const video = JSON.parse(fileContents)
-    return NextResponse.json(video)
+    const data = JSON.parse(fileContents)
+    return NextResponse.json(data)
   } catch (error) {
     console.error('Ошибка чтения видео:', error)
     return NextResponse.json({ video: [] })

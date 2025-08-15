@@ -352,7 +352,6 @@ export default function ReviewsPage() {
                       id="name"
                       value={textFormData.name}
                       onChange={(e) => setTextFormData(prev => ({ ...prev, name: e.target.value }))}
-                      placeholder="Мария Власова"
                     />
                   </div>
                   <div>
@@ -361,7 +360,6 @@ export default function ReviewsPage() {
                       id="role"
                       value={textFormData.role}
                       onChange={(e) => setTextFormData(prev => ({ ...prev, role: e.target.value }))}
-                      placeholder="Владелица квартиры"
                     />
                   </div>
                 </div>
@@ -372,7 +370,6 @@ export default function ReviewsPage() {
                     id="title"
                     value={textFormData.title}
                     onChange={(e) => setTextFormData(prev => ({ ...prev, title: e.target.value }))}
-                    placeholder="Отличная работа!"
                   />
                 </div>
 
@@ -382,7 +379,6 @@ export default function ReviewsPage() {
                     id="text"
                     value={textFormData.text}
                     onChange={(e) => setTextFormData(prev => ({ ...prev, text: e.target.value }))}
-                    placeholder="Подробный отзыв о работе..."
                     rows={4}
                   />
                 </div>
@@ -522,7 +518,6 @@ export default function ReviewsPage() {
                     id="video-title"
                     value={videoFormData.title}
                     onChange={(e) => setVideoFormData(prev => ({ ...prev, title: e.target.value }))}
-                    placeholder="Отзыв о штукатурке офиса в БЦ"
                   />
                 </div>
 
@@ -532,7 +527,6 @@ export default function ReviewsPage() {
                     id="video-url"
                     value={videoFormData.videoUrl}
                     onChange={(e) => setVideoFormData(prev => ({ ...prev, videoUrl: e.target.value }))}
-                    placeholder="https://youtube.com/watch?v=..."
                   />
                 </div>
 
@@ -541,7 +535,6 @@ export default function ReviewsPage() {
                   <ImageUpload
                     value={videoFormData.thumbnail}
                     onChange={(url: string) => setVideoFormData(prev => ({ ...prev, thumbnail: url }))}
-                    placeholder="Загрузите превью для видео"
                   />
                 </div>
 
