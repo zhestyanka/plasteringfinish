@@ -1,12 +1,12 @@
 import Header from "@/components/Header"
 import HeroSection from "@/components/HeroSection"
-import PricingSection from "@/components/PricingSection"
+import ServicesSection from "@/components/ServicesSection"
 import WorksSection from "@/components/WorksSection"
+import PricingSection from "@/components/PricingSection"
 import VideoSection from "@/components/VideoSection"
 import ReviewsSection from "@/components/ReviewsSection"
 import TeamSection from "@/components/TeamSection"
 import EquipmentSection from "@/components/EquipmentSection"
-import ServicesSection from "@/components/ServicesSection"
 import ContactsSection from "@/components/ContactsSection"
 import Footer from "@/components/Footer"
 
@@ -16,13 +16,13 @@ export default function Home() {
       <Header />
       <main>
         <HeroSection />
-        <PricingSection />
+        <ServicesSection />
         <WorksSection />
+        <PricingSection />
         <VideoSection />
         <ReviewsSection />
         <TeamSection />
         <EquipmentSection />
-        <ServicesSection />
         <ContactsSection />
       </main>
       <Footer />

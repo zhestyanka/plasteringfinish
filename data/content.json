@@ -54,12 +54,16 @@
         "href": "#hero"
       },
       {
-        "name": "Цены",
-        "href": "#pricing"
+        "name": "Услуги",
+        "href": "#services"
       },
       {
         "name": "Работы",
         "href": "#works"
+      },
+      {
+        "name": "Цены",
+        "href": "#pricing"
       },
       {
         "name": "Видео",
@@ -76,10 +80,6 @@
       {
         "name": "Оборудование",
         "href": "#equipment"
-      },
-      {
-        "name": "Услуги",
-        "href": "#services"
       },
       {
         "name": "Контакты",
