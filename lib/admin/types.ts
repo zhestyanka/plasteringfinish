@@ -76,16 +76,6 @@ export interface Service {
   active: boolean
 }
 
-export interface Benefit {
-  id: string
-  icon: string
-  title: string
-  description: string
-  image: string
-  order: number
-  active: boolean
-}
-
 export interface TeamMember {
   id: string
   name: string
@@ -139,16 +129,6 @@ export interface Equipment {
   active: boolean
 }
 
-export interface Step {
-  id: string
-  icon: string
-  number: string
-  title: string
-  description: string
-  link?: string
-  active: boolean
-}
-
 export interface Pricing {
   id: string
   name: string
@@ -157,23 +137,6 @@ export interface Pricing {
   features: string[]
   popular: boolean
   color: string
-  active: boolean
-}
-
-export interface Promotion {
-  id: string
-  title: string
-  description: string
-  price: string
-  conditions: string[]
-  active: boolean
-}
-
-export interface WarehouseBenefit {
-  id: string
-  icon: string
-  title: string
-  description: string
   active: boolean
 }
 
@@ -207,17 +170,6 @@ export interface FormField {
     max?: number
     pattern?: string
   }
-}
-
-export interface MediaFile {
-  id: string
-  filename: string
-  originalName: string
-  path: string
-  url: string
-  size: number
-  mimeType: string
-  createdAt: string
 }
 
 // Admin Dashboard типы

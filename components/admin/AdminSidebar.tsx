@@ -17,7 +17,9 @@ import {
   Home,
   Phone,
   Wrench,
-  X
+  X,
+  Video,
+  Contact
 } from "lucide-react"
 
 const menuItems = [
@@ -27,16 +29,17 @@ const menuItems = [
     icon: FileText,
     subItems: [
       { title: "Главная страница", href: "/admin/content", icon: Home },
-      { title: "Контакты", href: "/admin/contacts", icon: Phone },
+      { title: "Контакты", href: "/admin/contacts", icon: Contact },
       { title: "Футер", href: "/admin/footer", icon: FileText }
     ]
   },
-  { title: "Услуги", href: "/admin/services", icon: Briefcase },
   { title: "Тарифы", href: "/admin/pricing", icon: DollarSign },
   { title: "Портфолио", href: "/admin/works", icon: Camera },
-  { title: "Команда", href: "/admin/team", icon: Users },
+  { title: "Видео", href: "/admin/video", icon: Video },
   { title: "Отзывы", href: "/admin/reviews", icon: Star },
+  { title: "Команда", href: "/admin/team", icon: Users },
   { title: "Оборудование", href: "/admin/equipment", icon: Wrench },
+  { title: "Услуги", href: "/admin/services", icon: Briefcase },
   { title: "Пароль", href: "/admin/settings", icon: Settings },
 ]
 

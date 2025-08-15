@@ -1,93 +1,92 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { 
-  Search, 
-  Bell, 
-  User, 
-  Settings, 
-  ExternalLink,
-  Menu,
-  X
-} from "lucide-react"
-import { useAuth } from "@/lib/admin/auth"
 import { cn } from "@/lib/utils"
+import {
+  Menu,
+  X,
+  ExternalLink,
+  Bell,
+  User
+} from "lucide-react"
+
+interface User {
+  username: string
+  role: 'admin' | 'editor'
+}
 
 interface AdminHeaderProps {
   title?: string
   subtitle?: string
-  onMenuToggle?: () => void
   showMobileMenu?: boolean
+  onMenuToggle?: () => void
 }
 
 export default function AdminHeader({ 
   title, 
   subtitle, 
-  onMenuToggle,
-  showMobileMenu = false 
+  showMobileMenu = false, 
+  onMenuToggle 
 }: AdminHeaderProps) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const { user } = useAuth()
+  const [user, setUser] = useState<User | null>(null)
   const pathname = usePathname()
 
-  // Автоматическое определение заголовка на основе пути
+  useEffect(() => {
+    // Загружаем данные пользователя
+    const loadUser = async () => {
+      try {
+        const response = await fetch('/api/admin/auth/me')
+        if (response.ok) {
+          const userData = await response.json()
+          setUser(userData.user)
+        }
+      } catch (error) {
+        console.error('Ошибка загрузки пользователя:', error)
+      }
+    }
+
+    loadUser()
+  }, [])
+
   const getPageTitle = () => {
     if (title) return title
 
-    const pathSegments = pathname.split("/").filter(Boolean)
-    const lastSegment = pathSegments[pathSegments.length - 1]
-
-    const titleMap: Record<string, string> = {
-      "admin": "Дашборд",
-      "content": "Управление контентом",
-      "hero": "Главная страница",
-      "steps": "Этапы работы",
-      "pricing": "Тарифы",
-      "services": "Услуги",
-      "works": "Портфолио",
-      "reviews": "Отзывы",
-      "team": "Команда",
-      "equipment": "Оборудование",
-      "promotions": "Акции",
-      "warehouse": "Склад",
-      "contacts": "Контакты",
-      "media": "Медиа файлы",
-      "settings": "Настройки"
+    const pathMap: Record<string, string> = {
+      '/admin': 'Главная',
+      '/admin/content': 'Главная страница',
+      '/admin/contacts': 'Контакты',
+      '/admin/footer': 'Футер',
+      '/admin/pricing': 'Тарифы',
+      '/admin/works': 'Портфолио',
+      '/admin/video': 'Видео',
+      '/admin/reviews': 'Отзывы',
+      '/admin/team': 'Команда',
+      '/admin/equipment': 'Оборудование',
+      '/admin/services': 'Услуги',
+      '/admin/settings': 'Настройки',
     }
 
-    return titleMap[lastSegment] || "Админ панель"
+    return pathMap[pathname] || 'Админ панель'
   }
 
-  const breadcrumbs = pathname.split("/").filter(Boolean).map((segment, index, array) => {
-    const href = "/" + array.slice(0, index + 1).join("/")
-    const titleMap: Record<string, string> = {
-      "admin": "Админ",
-      "content": "Контент",
-      "hero": "Главная",
-      "steps": "Этапы",
-      "pricing": "Тарифы",
-      "services": "Услуги",
-      "works": "Портфолио",
-      "reviews": "Отзывы",
-      "team": "Команда",
-      "equipment": "Оборудование",
-      "promotions": "Акции",
-      "warehouse": "Склад",
-      "contacts": "Контакты",
-      "media": "Медиа",
-      "settings": "Настройки"
+  const getBreadcrumbs = () => {
+    const breadcrumbs = [
+      { title: 'Админ панель', href: '/admin', isLast: pathname === '/admin' }
+    ]
+
+    if (pathname !== '/admin') {
+      const pageTitle = getPageTitle()
+      breadcrumbs.push({ title: pageTitle, href: pathname, isLast: true })
     }
-    
-    return {
-      title: titleMap[segment] || segment,
-      href,
-      isLast: index === array.length - 1
-    }
-  })
+
+    return breadcrumbs
+  }
+
+  const breadcrumbs = getBreadcrumbs()
 
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4">
@@ -127,18 +126,6 @@ export default function AdminHeader({
         </div>
 
         <div className="flex items-center space-x-4">
-          {/* Search */}
-          <div className="relative hidden md:block">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input
-              type="text"
-              placeholder="Поиск..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 w-64 border-gray-300 focus:border-coffee-500 focus:ring-coffee-500"
-            />
-          </div>
-
           {/* Quick actions */}
           <div className="flex items-center space-x-2">
             {/* View site */}
@@ -171,20 +158,6 @@ export default function AdminHeader({
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Mobile search */}
-      <div className="mt-4 md:hidden">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-          <Input
-            type="text"
-            placeholder="Поиск..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 w-full border-gray-300 focus:border-coffee-500 focus:ring-coffee-500"
-          />
         </div>
       </div>
     </header>
