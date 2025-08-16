@@ -1,11 +1,19 @@
 import TelegramBot from 'node-telegram-bot-api'
 
 // Конфигурация Telegram бота
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || 'YOUR_BOT_TOKEN_HERE'
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || 'YOUR_CHAT_ID_HERE'
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || ''
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || ''
 
-// Создаем экземпляр бота
-const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: false })
+// Создаем экземпляр бота только если есть токен
+let bot: TelegramBot | null = null
+
+if (TELEGRAM_BOT_TOKEN && TELEGRAM_BOT_TOKEN !== '') {
+  try {
+    bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: false })
+  } catch (error) {
+    console.error('❌ Ошибка создания Telegram бота:', error)
+  }
+}
 
 // Интерфейс для заявки
 interface ContactForm {
@@ -36,6 +44,11 @@ interface CalculatorForm {
  */
 export async function sendContactFormToTelegram(formData: ContactForm): Promise<boolean> {
   try {
+    if (!bot || !TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+      console.log('⚠️ Telegram не настроен, пропускаем отправку')
+      return false
+    }
+
     const message = formatContactFormMessage(formData)
     
     await bot.sendMessage(TELEGRAM_CHAT_ID, message, {
@@ -56,6 +69,11 @@ export async function sendContactFormToTelegram(formData: ContactForm): Promise<
  */
 export async function sendCalculatorFormToTelegram(formData: CalculatorForm): Promise<boolean> {
   try {
+    if (!bot || !TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+      console.log('⚠️ Telegram не настроен, пропускаем отправку')
+      return false
+    }
+
     const message = formatCalculatorFormMessage(formData)
     
     await bot.sendMessage(TELEGRAM_CHAT_ID, message, {
@@ -145,6 +163,11 @@ ${formData.email ? `📧 <b>Email:</b> ${formData.email}` : ''}
  */
 export async function testTelegramConnection(): Promise<boolean> {
   try {
+    if (!bot || !TELEGRAM_BOT_TOKEN) {
+      console.log('⚠️ Telegram бот не настроен')
+      return false
+    }
+
     const me = await bot.getMe()
     console.log('✅ Telegram бот подключен:', me.username)
     return true
@@ -159,6 +182,11 @@ export async function testTelegramConnection(): Promise<boolean> {
  */
 export async function sendTestMessage(): Promise<boolean> {
   try {
+    if (!bot || !TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+      console.log('⚠️ Telegram не настроен, пропускаем отправку')
+      return false
+    }
+
     await bot.sendMessage(TELEGRAM_CHAT_ID, '🧪 Тестовое сообщение от сайта штукатурки', {
       parse_mode: 'HTML'
     })
