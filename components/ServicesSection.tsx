@@ -78,9 +78,41 @@ export default function ServicesSection() {
     loadServices()
   }, [])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
+    
+    try {
+      const formDataWithService = {
+        ...formData,
+        type: 'service'
+      }
+
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formDataWithService)
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        alert('Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.')
+        setFormData({
+          name: '',
+          phone: '',
+          email: '',
+          area: '',
+          message: ''
+        })
+      } else {
+        alert(`Ошибка: ${result.error || 'Не удалось отправить заявку'}`)
+      }
+    } catch (error) {
+      console.error('Ошибка отправки формы:', error)
+      alert('Произошла ошибка при отправке заявки. Попробуйте еще раз.')
+    }
   }
 
   if (isLoading) {
@@ -304,3 +336,4 @@ export default function ServicesSection() {
     </section>
   )
 }
+

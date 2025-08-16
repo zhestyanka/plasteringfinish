@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from 'next/server'
+проблема решенаimport { NextRequest, NextResponse } from 'next/server'
 
 // Конфигурация Telegram
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN
@@ -138,3 +138,4 @@ ${Object.entries(data).map(([key, value]) => `• <b>${key}:</b> ${value}`).join
 🌐 <b>Источник:</b> Сайт
   `.trim()
 }
+

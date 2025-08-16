@@ -94,9 +94,46 @@ export default function PricingSection() {
   const selectedPlanData = plans.find(plan => plan.id === selectedPlan)
   const totalCost = area * (selectedPlanData?.price ? parseInt(selectedPlanData.price) : 450)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Consultation form submitted:', formData)
+    
+    try {
+      const formDataWithPricing = {
+        ...formData,
+        selectedPlan: selectedPlan,
+        area: area,
+        totalCost: totalCost,
+        type: 'pricing'
+      }
+
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formDataWithPricing)
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        alert('Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.')
+        setFormData({
+          name: '',
+          phone: '',
+          email: '',
+          area: '',
+          message: ''
+        })
+        setArea(100)
+        setSelectedPlan('basic')
+      } else {
+        alert(`Ошибка: ${result.error || 'Не удалось отправить заявку'}`)
+      }
+    } catch (error) {
+      console.error('Ошибка отправки формы:', error)
+      alert('Произошла ошибка при отправке заявки. Попробуйте еще раз.')
+    }
   }
 
   if (isLoading) {
@@ -396,3 +433,4 @@ export default function PricingSection() {
     </section>
   )
 }
+
