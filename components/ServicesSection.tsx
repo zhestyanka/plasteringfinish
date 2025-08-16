@@ -54,39 +54,19 @@ export default function ServicesSection() {
     message: ''
   })
   const [services, setServices] = useState<Service[]>([])
-  const [servicesInfo, setServicesInfo] = useState({
-    title: "Полный комплекс строительных работ",
-    subtitle: "Наши услуги",
-    description: "От демонтажа до финишной отделки — выполняем все виды работ качественно и в срок",
-    consultationTitle: "Не знаете с чего начать?",
-    consultationDescription: "Наш инженер бесплатно приедет на объект, оценит объем работ и составит подробную смету. Это ни к чему не обязывает.",
-    benefits: {
-      quick: { title: "Быстро", description: "Выезд в день обращения" },
-      free: { title: "Бесплатно", description: "Оценка и консультация" },
-      convenient: { title: "Удобно", description: "В любое время" },
-      professional: { title: "Профессионально", description: "Опытный инженер" }
-    }
-  })
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const loadServices = async () => {
       try {
-        // Загружаем услуги
-        const servicesResponse = await fetch('/api/data/services')
-        if (servicesResponse.ok) {
-          const data: ServicesData = await servicesResponse.json()
+        const response = await fetch('/api/data/services')
+        if (response.ok) {
+          const data: ServicesData = await response.json()
+          // Фильтруем только активные услуги
           const activeServices = data.services?.filter(service => service.active) || []
           setServices(activeServices)
-        }
-
-        // Загружаем информацию об услугах
-        const contentResponse = await fetch('/api/data/content')
-        if (contentResponse.ok) {
-          const contentData = await contentResponse.json()
-          if (contentData.servicesInfo) {
-            setServicesInfo(contentData.servicesInfo)
-          }
+        } else {
+          console.error('Failed to load services')
         }
       } catch (error) {
         console.error('Error loading services:', error)
@@ -98,35 +78,9 @@ export default function ServicesSection() {
     loadServices()
   }, [])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      })
-
-      const result = await response.json()
-
-      if (response.ok) {
-        alert('Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.')
-        setFormData({
-          name: '',
-          phone: '',
-          service: '',
-          message: ''
-        })
-      } else {
-        alert(`Ошибка: ${result.message || 'Не удалось отправить заявку'}`)
-      }
-    } catch (error) {
-      console.error('Ошибка отправки формы:', error)
-      alert('Произошла ошибка при отправке заявки. Попробуйте еще раз.')
-    }
+    console.log('Form submitted:', formData)
   }
 
   if (isLoading) {
@@ -162,13 +116,13 @@ export default function ServicesSection() {
         <div className="text-center mb-12 md:mb-16">
           <div className="inline-flex items-center space-x-2 bg-coffee-600/20 text-coffee-300 px-3 md:px-4 py-2 rounded-full font-medium mb-4 text-sm backdrop-blur-sm border border-coffee-400/30">
             <Hammer className="w-3 h-3 md:w-4 md:h-4" />
-            <span>{servicesInfo.subtitle}</span>
+            <span>Наши услуги</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-100 mb-4">
-            {servicesInfo.title}
+            Полный комплекс строительных работ
           </h2>
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto px-4">
-            {servicesInfo.description}
+            От демонтажа до финишной отделки — выполняем все виды работ качественно и в срок
           </p>
         </div>
 
@@ -250,11 +204,12 @@ export default function ServicesSection() {
               </div>
               
               <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-100 mb-4 md:mb-6">
-                {servicesInfo.consultationTitle}
+                Не знаете с чего начать?
               </h3>
               
               <p className="text-gray-300 mb-6 md:mb-8 text-lg leading-relaxed">
-                {servicesInfo.consultationDescription}
+                Наш инженер бесплатно приедет на объект, оценит объем работ и составит подробную смету. 
+                Это ни к чему не обязывает.
               </p>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
@@ -263,8 +218,8 @@ export default function ServicesSection() {
                     <Clock className="w-5 h-5 md:w-6 md:h-6 text-coffee-400" />
                   </div>
                   <div>
-                    <div className="text-gray-100 font-semibold text-sm md:text-base">{servicesInfo.benefits.quick.title}</div>
-                    <div className="text-gray-300 text-xs md:text-sm">{servicesInfo.benefits.quick.description}</div>
+                    <div className="text-gray-100 font-semibold text-sm md:text-base">Быстро</div>
+                    <div className="text-gray-300 text-xs md:text-sm">Выезд в день обращения</div>
                   </div>
                 </div>
                 
@@ -273,8 +228,8 @@ export default function ServicesSection() {
                     <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-coffee-400" />
                   </div>
                   <div>
-                    <div className="text-gray-100 font-semibold text-sm md:text-base">{servicesInfo.benefits.free.title}</div>
-                    <div className="text-gray-300 text-xs md:text-sm">{servicesInfo.benefits.free.description}</div>
+                    <div className="text-gray-100 font-semibold text-sm md:text-base">Бесплатно</div>
+                    <div className="text-gray-300 text-xs md:text-sm">Оценка и консультация</div>
                   </div>
                 </div>
                 
@@ -283,8 +238,8 @@ export default function ServicesSection() {
                     <Calendar className="w-5 h-5 md:w-6 md:h-6 text-coffee-400" />
                   </div>
                   <div>
-                    <div className="text-gray-100 font-semibold text-sm md:text-base">{servicesInfo.benefits.convenient.title}</div>
-                    <div className="text-gray-300 text-xs md:text-sm">{servicesInfo.benefits.convenient.description}</div>
+                    <div className="text-gray-100 font-semibold text-sm md:text-base">Удобно</div>
+                    <div className="text-gray-300 text-xs md:text-sm">В любое время</div>
                   </div>
                 </div>
                 
@@ -293,8 +248,8 @@ export default function ServicesSection() {
                     <Phone className="w-5 h-5 md:w-6 md:h-6 text-coffee-400" />
                   </div>
                   <div>
-                    <div className="text-gray-100 font-semibold text-sm md:text-base">{servicesInfo.benefits.professional.title}</div>
-                    <div className="text-gray-300 text-xs md:text-sm">{servicesInfo.benefits.professional.description}</div>
+                    <div className="text-gray-100 font-semibold text-sm md:text-base">Профессионально</div>
+                    <div className="text-gray-300 text-xs md:text-sm">Опытный инженер</div>
                   </div>
                 </div>
               </div>

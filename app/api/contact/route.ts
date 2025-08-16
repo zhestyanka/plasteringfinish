@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import path from 'path'
+import { sendContactFormToTelegram } from '@/lib/telegram'
 
 const contentFilePath = path.join(process.cwd(), 'data', 'content.json')
 
@@ -8,117 +9,92 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.json()
     
-    // Валидация обязательных полей
+    // Валидация данных
     if (!formData.name || !formData.phone) {
-      return NextResponse.json(
-        { success: false, message: 'Имя и телефон обязательны для заполнения' },
-        { status: 400 }
-      )
+      return NextResponse.json({ 
+        error: 'Имя и телефон обязательны' 
+      }, { status: 400 })
     }
 
-    // Читаем текущие настройки из content.json
-    let recipientEmail = '9110163777@rambler.ru' // значение по умолчанию
+    // Загружаем email из content.json
+    let recipientEmail = '9110163777@rambler.ru' // дефолтный email
+    
     try {
-      const contentData = await fs.readFile(contentFilePath, 'utf-8')
-      const content = JSON.parse(contentData)
-      console.log('📧 Читаем email из content.json:', content.contacts?.email || 'не найден')
-      if (content.contacts && content.contacts.email) {
-        recipientEmail = content.contacts.email
-        console.log('✅ Email успешно прочитан:', recipientEmail)
-      } else {
-        console.log('⚠️ Email не найден в content.json, используем по умолчанию:', recipientEmail)
+      const fileContents = await fs.readFile(contentFilePath, 'utf8')
+      const data = JSON.parse(fileContents)
+      if (data.contacts?.email) {
+        recipientEmail = data.contacts.email
       }
     } catch (error) {
-      console.log('❌ Ошибка чтения content.json, используем email по умолчанию:', recipientEmail)
-      console.error('Детали ошибки:', error)
+      console.error('Ошибка чтения content.json:', error)
     }
 
-    // Определяем тип формы и формируем тему письма
-    let emailSubject = 'Новая заявка с сайта'
-    let formType = 'общая'
-    
-    if (formData.service) {
-      emailSubject = `Заявка на услугу: ${formData.service}`
-      formType = 'услуга'
-    } else if (formData.area) {
-      emailSubject = `Заявка на расчет: ${formData.area} м²`
-      formType = 'расчет'
-    } else if (formData.message && formData.message.includes('консультация')) {
-      emailSubject = 'Заявка на консультацию'
-      formType = 'консультация'
-    }
-
-    // Формируем тело письма
+    // Формируем текст письма
+    const emailSubject = 'Новая заявка с сайта Штукатур СПб'
     const emailBody = `
-=== НОВАЯ ЗАЯВКА С САЙТА ===
+Новая заявка с сайта:
 
-Тип заявки: ${formType}
-Дата: ${new Date().toLocaleString('ru-RU')}
-
-ИНФОРМАЦИЯ О КЛИЕНТЕ:
 Имя: ${formData.name}
 Телефон: ${formData.phone}
 Email: ${formData.email || 'Не указан'}
+Площадь: ${formData.area || 'Не указана'} м²
+Сообщение: ${formData.message || 'Не указано'}
 
-${formData.area ? `Площадь помещения: ${formData.area} м²` : ''}
-${formData.service ? `Интересующая услуга: ${formData.service}` : ''}
-
-ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ:
-${formData.message || 'Не указана'}
-
----
-Отправлено с сайта: ${request.headers.get('origin') || 'Неизвестно'}
-IP адрес: ${request.headers.get('x-forwarded-for') || 'Неизвестно'}
-User-Agent: ${request.headers.get('user-agent') || 'Неизвестно'}
+Дата отправки: ${new Date().toLocaleString('ru-RU')}
     `.trim()
 
-    // Логируем заявку
+    // Отправляем заявку в Telegram
+    const telegramSuccess = await sendContactFormToTelegram({
+      name: formData.name,
+      phone: formData.phone,
+      email: formData.email,
+      message: formData.message,
+      area: formData.area,
+      address: formData.address,
+      source: 'Контактная форма'
+    })
+
+    // Логируем для отладки
     console.log('=== НОВАЯ ЗАЯВКА ===')
-    console.log('Получатель:', recipientEmail)
+    console.log('Получатель email:', recipientEmail)
+    console.log('Telegram отправлен:', telegramSuccess ? '✅' : '❌')
     console.log('Тема:', emailSubject)
     console.log('Содержание:', emailBody)
-    console.log('========================')
+    console.log('==================')
 
-    // Отправляем email на реальную почту
-    try {
-      console.log('📧 Отправляем заявку на email:', recipientEmail)
-      
-      const emailResponse = await fetch(`${request.nextUrl.origin}/api/send-email`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          to: recipientEmail,
-          subject: emailSubject,
-          text: emailBody
-        })
-      })
-
-      const emailResult = await emailResponse.json()
-
-      if (emailResponse.ok && emailResult.success) {
-        console.log('✅ Email успешно отправлен на:', recipientEmail)
-        console.log('📧 ID письма:', emailResult.messageId)
-      } else {
-        console.log('⚠️ Ошибка отправки email:', emailResult.error || 'Неизвестная ошибка')
-        console.log('⚠️ Заявка залогирована, но email не отправлен')
+    // В реальном проекте здесь будет отправка через nodemailer или другой сервис
+    // Пример с nodemailer:
+    /*
+    const nodemailer = require('nodemailer')
+    
+    const transporter = nodemailer.createTransporter({
+      service: 'gmail',
+      auth: {
+        user: 'your-email@gmail.com',
+        pass: 'your-app-password'
       }
-    } catch (emailError) {
-      console.log('⚠️ Ошибка отправки email, но заявка залогирована:', emailError)
-    }
+    })
+    
+    await transporter.sendMail({
+      from: 'your-email@gmail.com',
+      to: recipientEmail,
+      subject: emailSubject,
+      text: emailBody
+    })
+    */
 
     return NextResponse.json({ 
       success: true, 
-      message: 'Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.' 
+      message: 'Заявка успешно отправлена',
+      recipientEmail: recipientEmail,
+      telegramSent: telegramSuccess
     })
-
+    
   } catch (error) {
-    console.error('Ошибка обработки заявки:', error)
-    return NextResponse.json(
-      { success: false, message: 'Ошибка при отправке заявки. Попробуйте позже.' },
-      { status: 500 }
-    )
+    console.error('Ошибка отправки заявки:', error)
+    return NextResponse.json({ 
+      error: 'Ошибка отправки заявки' 
+    }, { status: 500 })
   }
 }
 

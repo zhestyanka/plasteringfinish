@@ -27,11 +27,6 @@ export default function ContactsSection() {
     workingHours: ""
   })
   const [isLoading, setIsLoading] = useState(true)
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    message: ''
-  })
 
   useEffect(() => {
     const loadContactData = async () => {
@@ -52,36 +47,6 @@ export default function ContactsSection() {
 
     loadContactData()
   }, [])
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-      })
-
-      const result = await response.json()
-
-      if (response.ok) {
-        alert('Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.')
-        setFormData({
-          name: '',
-          phone: '',
-          message: ''
-        })
-      } else {
-        alert(`Ошибка: ${result.message || 'Не удалось отправить заявку'}`)
-      }
-    } catch (error) {
-      console.error('Ошибка отправки формы:', error)
-      alert('Произошла ошибка при отправке заявки. Попробуйте еще раз.')
-    }
-  }
 
   if (isLoading) {
     return (
@@ -179,31 +144,19 @@ export default function ContactsSection() {
               {contactData.description && (
                 <p className="text-amber-800 mb-6">{contactData.description}</p>
               )}
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <Input 
-                  placeholder="Введите ваше имя" 
-                  className="border-amber-300 focus:border-amber-500"
-                  value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  required
-                />
-                <Input 
-                  placeholder="Ваш телефон" 
-                  className="border-amber-300 focus:border-amber-500"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  required
-                />
-                <Button type="submit" className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-gray-100">
+              <div className="space-y-4">
+                <Input placeholder="Введите ваше имя" className="border-amber-300 focus:border-amber-500" />
+                <Input placeholder="Ваш телефон" className="border-amber-300 focus:border-amber-500" />
+                <Button className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-gray-100">
                   Получить консультацию
                 </Button>
                 <div className="flex items-center space-x-2">
-                  <input type="checkbox" id="consent5" className="text-amber-600" defaultChecked required />
+                  <input type="checkbox" id="consent5" className="text-amber-600" defaultChecked />
                   <label htmlFor="consent5" className="text-sm text-amber-800">
                     Даю согласие на обработку персональных данных
                   </label>
                 </div>
-              </form>
+              </div>
             </CardContent>
           </Card>
         </div>

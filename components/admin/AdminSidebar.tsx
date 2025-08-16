@@ -19,7 +19,8 @@ import {
   Wrench,
   X,
   Video,
-  Contact
+  Contact,
+  Bot
 } from "lucide-react"
 
 const menuItems = [
@@ -33,29 +34,15 @@ const menuItems = [
       { title: "Футер", href: "/admin/footer", icon: FileText }
     ]
   },
-  { 
-    title: "Тарифы", 
-    icon: DollarSign,
-    subItems: [
-      { title: "Список тарифов", href: "/admin/pricing", icon: DollarSign },
-      { title: "Информация о тарифах", href: "/admin/pricing-info", icon: FileText }
-    ]
-  },
+  { title: "Тарифы", href: "/admin/pricing", icon: DollarSign },
   { title: "Портфолио", href: "/admin/works", icon: Camera },
   { title: "Видео", href: "/admin/video", icon: Video },
   { title: "Отзывы", href: "/admin/reviews", icon: Star },
   { title: "Команда", href: "/admin/team", icon: Users },
   { title: "Оборудование", href: "/admin/equipment", icon: Wrench },
-  { 
-    title: "Услуги", 
-    icon: Briefcase,
-    subItems: [
-      { title: "Список услуг", href: "/admin/services", icon: Briefcase },
-      { title: "Информация об услугах", href: "/admin/services-info", icon: FileText }
-    ]
-  },
-  { title: "Настройки Email", href: "/admin/email-settings", icon: Settings },
+  { title: "Услуги", href: "/admin/services", icon: Briefcase },
   { title: "Пароль", href: "/admin/settings", icon: Settings },
+  { title: "Telegram", href: "/admin/telegram", icon: Bot },
 ]
 
 interface AdminSidebarProps {

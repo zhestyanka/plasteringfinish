@@ -78,8 +78,6 @@ export default function ContactsPage() {
   const saveContacts = async () => {
     setIsSaving(true)
     try {
-      console.log('💾 Сохраняем контакты:', contactsData)
-      
       // Сначала загружаем текущие данные
       const currentResponse = await fetch('/api/data/content')
       const currentData = await currentResponse.json()
@@ -90,9 +88,6 @@ export default function ContactsPage() {
         contacts: contactsData
       }
 
-      console.log('📧 Новый email для сохранения:', contactsData.email)
-      console.log('📄 Обновленные данные:', updatedData.contacts)
-
       const response = await fetch('/api/data/content', {
         method: 'POST',
         headers: {
@@ -102,13 +97,12 @@ export default function ContactsPage() {
       })
 
       if (response.ok) {
-        console.log('✅ Контакты успешно сохранены')
         toast.success('Контакты успешно сохранены')
       } else {
         throw new Error('Failed to save contacts')
       }
     } catch (error) {
-      console.error('❌ Ошибка сохранения контактов:', error)
+      console.error('Ошибка сохранения контактов:', error)
       toast.error('Ошибка сохранения')
     } finally {
       setIsSaving(false)

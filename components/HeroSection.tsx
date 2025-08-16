@@ -140,19 +140,32 @@ export default function HeroSection() {
     e.preventDefault()
     
     try {
-      const response = await fetch('/api/contact', {
+      // Отправляем данные калькулятора
+      const calculatorData = {
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        clientPrice: clientPrice,
+        areaToPlaster: areaToPlaster,
+        layerThickness: layerThickness,
+        areaPerShift: areaPerShift,
+        bagPrice: bagPrice,
+        bagWeight: bagWeight
+      }
+
+      const response = await fetch('/api/calculator', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(calculatorData)
       })
 
       const result = await response.json()
 
       if (response.ok) {
         // Показываем уведомление об успехе
-        alert('Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.')
+        alert('Спасибо! Ваш расчет отправлен. Мы свяжемся с вами в ближайшее время.')
         setIsModalOpen(false)
         
         // Сброс формы
@@ -165,11 +178,11 @@ export default function HeroSection() {
         })
       } else {
         // Показываем ошибку
-        alert(`Ошибка: ${result.error || 'Не удалось отправить заявку'}`)
+        alert(`Ошибка: ${result.error || 'Не удалось отправить расчет'}`)
       }
     } catch (error) {
       console.error('Ошибка отправки формы:', error)
-      alert('Произошла ошибка при отправке заявки. Попробуйте еще раз.')
+      alert('Произошла ошибка при отправке расчета. Попробуйте еще раз.')
     }
   }
 
@@ -646,8 +659,8 @@ export default function HeroSection() {
 
                       <div className="bg-gradient-to-r from-coffee-600 to-coffee-500 rounded-xl p-4 shadow-lg">
                     <div className="text-center">
-                          <div className="text-sm text-coffee-600 mb-1">Доход с объекта составит:</div>
-                          <div className="text-3xl font-bold text-coffee-600">
+                          <div className="text-sm text-yellow-100/50 mb-1">Доход с объекта составит:</div>
+                          <div className="text-3xl font-bold text-yellow-100/50">
                             {formatNumber(profit)} ₽
                           </div>
                         </div>
