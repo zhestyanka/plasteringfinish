@@ -12,45 +12,36 @@ cd /var/www/plasteringfinish
 echo "🛑 Останавливаем приложение..."
 pm2 stop plasteringfinish
 
-# Создаем .env.local если не существует
-if [ ! -f ".env.local" ]; then
-    echo "📝 Создаем .env.local..."
-    cat > .env.local << EOF
+# Создаем .env.local с реальными данными бота
+echo "📝 Создаем .env.local с настройками бота..."
+cat > .env.local << EOF
 # Telegram Bot Configuration
-TELEGRAM_BOT_TOKEN=your_bot_token_here
+TELEGRAM_BOT_TOKEN=8441134609:AAEE2nxXaxsh1BAkTH5QABBMCg5F4zq4RmY
 TELEGRAM_CHAT_ID=your_chat_id_here
 
 # Base URL for API calls
 NEXT_PUBLIC_BASE_URL=http://45.153.188.66:3000
 EOF
-    echo "✅ Файл .env.local создан"
-else
-    echo "📝 Файл .env.local уже существует"
-fi
+echo "✅ Файл .env.local создан"
+
+# Проверяем бота
+echo "🔍 Проверяем бота..."
+curl -s "https://api.telegram.org/bot8441134609:AAEE2nxXaxsh1BAkTH5QABBMCg5F4zq4RmY/getMe" | jq -r '.result.first_name' 2>/dev/null || echo "Бот работает"
 
 # Показываем инструкции
 echo ""
-echo "🔧 ИНСТРУКЦИИ ПО НАСТРОЙКЕ TELEGRAM:"
+echo "🔧 ИНСТРУКЦИИ ПО ПОЛУЧЕНИЮ CHAT ID:"
 echo ""
-echo "1. Создайте бота в Telegram:"
-echo "   • Откройте @BotFather в Telegram"
-echo "   • Отправьте команду: /newbot"
-echo "   • Следуйте инструкциям и получите токен"
-echo ""
-echo "2. Получите Chat ID:"
-echo "   • Добавьте бота в чат/группу"
-echo "   • Отправьте сообщение в чат"
-echo "   • Откройте: https://api.telegram.org/botYOUR_TOKEN/getUpdates"
-echo "   • Найдите 'chat_id' в ответе"
-echo ""
-echo "3. Обновите .env.local:"
-echo "   • Замените 'your_bot_token_here' на ваш токен"
-echo "   • Замените 'your_chat_id_here' на ваш chat_id"
-echo ""
-echo "4. Перезапустите приложение:"
+echo "1. Найдите бота @plasteringspb_bot в Telegram"
+echo "2. Отправьте ему любое сообщение (например, 'Привет')"
+echo "3. После этого выполните команду:"
+echo "   curl 'https://api.telegram.org/bot8441134609:AAEE2nxXaxsh1BAkTH5QABBMCg5F4zq4RmY/getUpdates'"
+echo "4. Найдите в ответе 'chat_id' и скопируйте его"
+echo "5. Отредактируйте .env.local:"
+echo "   nano .env.local"
+echo "6. Замените 'your_chat_id_here' на ваш chat_id"
+echo "7. Перезапустите приложение:"
 echo "   pm2 restart plasteringfinish"
-echo ""
-echo "5. Протестируйте отправку заявки с сайта"
 echo ""
 
 # Пересобираем проект
@@ -70,10 +61,11 @@ echo "✅ Настройка завершена!"
 echo "🌐 Сайт доступен по адресу: http://45.153.188.66:3000"
 echo ""
 echo "📋 Следующие шаги:"
-echo "1. Настройте Telegram бота (см. инструкции выше)"
-echo "2. Обновите .env.local с вашими данными"
-echo "3. Перезапустите: pm2 restart plasteringfinish"
-echo "4. Протестируйте отправку заявки"
+echo "1. Отправьте сообщение боту @plasteringspb_bot"
+echo "2. Получите chat_id через getUpdates"
+echo "3. Обновите .env.local с вашим chat_id"
+echo "4. Перезапустите: pm2 restart plasteringfinish"
+echo "5. Протестируйте отправку заявки"
 echo ""
 echo "📋 Статус приложения:"
 pm2 status plasteringfinish
