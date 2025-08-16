@@ -2,9 +2,9 @@ module.exports = {
   apps: [
     {
       name: 'plasteringfinish',
-      script: 'node_modules/.bin/next',
+      script: 'npm',
       args: 'start',
-      cwd: './',
+      cwd: '/var/www/plasteringfinish',
       instances: 1,
       autorestart: true,
       watch: false,
@@ -14,10 +14,10 @@ module.exports = {
         PORT: 3000,
         HOSTNAME: '0.0.0.0'
       },
-      error_file: './logs/err.log',
-      out_file: './logs/out.log',
-      log_file: './logs/combined.log',
+      error_file: '/var/www/plasteringfinish/logs/err.log',
+      out_file: '/var/www/plasteringfinish/logs/out.log',
+      log_file: '/var/www/plasteringfinish/logs/combined.log',
       time: true
     }
   ]
-}; 
+};
