@@ -39,3 +39,4 @@ echo ""
 echo "📋 Статус приложения:"
 pm2 status plasteringfinish
 echo ""
+

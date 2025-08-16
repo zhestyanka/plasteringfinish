@@ -149,3 +149,4 @@ echo "📋 Если проблема остается:"
 echo "1. Проверьте логи: pm2 logs plasteringfinish"
 echo "2. Перезапустите: pm2 restart plasteringfinish"
 echo "3. Проверьте порт: netstat -tulpn | grep :3000"
+

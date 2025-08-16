@@ -61,3 +61,4 @@ echo "1. Если localhost:3000 недоступен: pm2 restart plasteringfin
 echo "2. Если порт 3000 не слушается: проверьте конфигурацию"
 echo "3. Если проблемы с памятью: увеличьте swap"
 echo "4. Если проблемы с firewall: sudo ufw allow 3000"
+

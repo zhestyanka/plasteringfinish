@@ -202,3 +202,4 @@ pm2 restart plasteringfinish
 - **HTTP:** `http://ваш-домен.ru`
 - **HTTPS:** `https://ваш-домен.ru`
 - **WWW:** `http://www.ваш-домен.ru` и `https://www.ваш-домен.ru`
+

@@ -8,79 +8,86 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.json()
     
-    // Валидация данных
+    // Валидация обязательных полей
     if (!formData.name || !formData.phone) {
-      return NextResponse.json({ 
-        error: 'Имя и телефон обязательны' 
-      }, { status: 400 })
+      return NextResponse.json(
+        { success: false, message: 'Имя и телефон обязательны для заполнения' },
+        { status: 400 }
+      )
     }
 
-    // Загружаем email из content.json
-    let recipientEmail = '9110163777@rambler.ru' // дефолтный email
-    
+    // Читаем текущие настройки из content.json
+    let recipientEmail = '9110163777@rambler.ru' // значение по умолчанию
     try {
-      const fileContents = await fs.readFile(contentFilePath, 'utf8')
-      const data = JSON.parse(fileContents)
-      if (data.contacts?.email) {
-        recipientEmail = data.contacts.email
+      const contentData = await fs.readFile(contentFilePath, 'utf-8')
+      const content = JSON.parse(contentData)
+      if (content.contacts && content.contacts.email) {
+        recipientEmail = content.contacts.email
       }
     } catch (error) {
-      console.error('Ошибка чтения content.json:', error)
+      console.log('Используем email по умолчанию:', recipientEmail)
     }
 
-    // Формируем текст письма
-    const emailSubject = 'Новая заявка с сайта Штукатур СПб'
-    const emailBody = `
-Новая заявка с сайта:
+    // Определяем тип формы и формируем тему письма
+    let emailSubject = 'Новая заявка с сайта'
+    let formType = 'общая'
+    
+    if (formData.service) {
+      emailSubject = `Заявка на услугу: ${formData.service}`
+      formType = 'услуга'
+    } else if (formData.area) {
+      emailSubject = `Заявка на расчет: ${formData.area} м²`
+      formType = 'расчет'
+    } else if (formData.message && formData.message.includes('консультация')) {
+      emailSubject = 'Заявка на консультацию'
+      formType = 'консультация'
+    }
 
+    // Формируем тело письма
+    const emailBody = `
+=== НОВАЯ ЗАЯВКА С САЙТА ===
+
+Тип заявки: ${formType}
+Дата: ${new Date().toLocaleString('ru-RU')}
+
+ИНФОРМАЦИЯ О КЛИЕНТЕ:
 Имя: ${formData.name}
 Телефон: ${formData.phone}
 Email: ${formData.email || 'Не указан'}
-Площадь: ${formData.area || 'Не указана'} м²
-Сообщение: ${formData.message || 'Не указано'}
 
-Дата отправки: ${new Date().toLocaleString('ru-RU')}
+${formData.area ? `Площадь помещения: ${formData.area} м²` : ''}
+${formData.service ? `Интересующая услуга: ${formData.service}` : ''}
+
+ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ:
+${formData.message || 'Не указана'}
+
+---
+Отправлено с сайта: ${request.headers.get('origin') || 'Неизвестно'}
+IP адрес: ${request.headers.get('x-forwarded-for') || 'Неизвестно'}
+User-Agent: ${request.headers.get('user-agent') || 'Неизвестно'}
     `.trim()
 
-    // Здесь должна быть логика отправки email
-    // Для демонстрации просто логируем
+    // Логируем заявку (в реальном проекте здесь была бы отправка email)
     console.log('=== НОВАЯ ЗАЯВКА ===')
     console.log('Получатель:', recipientEmail)
     console.log('Тема:', emailSubject)
     console.log('Содержание:', emailBody)
-    console.log('==================')
+    console.log('========================')
 
-    // В реальном проекте здесь будет отправка через nodemailer или другой сервис
-    // Пример с nodemailer:
-    /*
-    const nodemailer = require('nodemailer')
-    
-    const transporter = nodemailer.createTransporter({
-      service: 'gmail',
-      auth: {
-        user: 'your-email@gmail.com',
-        pass: 'your-app-password'
-      }
-    })
-    
-    await transporter.sendMail({
-      from: 'your-email@gmail.com',
-      to: recipientEmail,
-      subject: emailSubject,
-      text: emailBody
-    })
-    */
+    // В реальном проекте здесь был бы код отправки email
+    // Например, через nodemailer или другой сервис
 
     return NextResponse.json({ 
       success: true, 
-      message: 'Заявка успешно отправлена',
-      recipientEmail: recipientEmail
+      message: 'Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.' 
     })
-    
+
   } catch (error) {
-    console.error('Ошибка отправки заявки:', error)
-    return NextResponse.json({ 
-      error: 'Ошибка отправки заявки' 
-    }, { status: 500 })
+    console.error('Ошибка обработки заявки:', error)
+    return NextResponse.json(
+      { success: false, message: 'Ошибка при отправке заявки. Попробуйте позже.' },
+      { status: 500 }
+    )
   }
 }
+

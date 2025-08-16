@@ -25,3 +25,4 @@ cp setup-rovnosteny.sh.backup setup-rovnosteny.sh
 
 echo "✅ Конфликт решен!"
 echo "📋 Теперь можно продолжить работу"
+

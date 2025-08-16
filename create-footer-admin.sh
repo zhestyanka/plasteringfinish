@@ -328,3 +328,4 @@ echo "📋 Теперь выполните:"
 echo "1. npm install --legacy-peer-deps --force"
 echo "2. npm run build"
 echo "3. pm2 restart plasteringfinish"
+
