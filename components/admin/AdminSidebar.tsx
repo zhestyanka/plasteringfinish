@@ -33,7 +33,14 @@ const menuItems = [
       { title: "Футер", href: "/admin/footer", icon: FileText }
     ]
   },
-  { title: "Тарифы", href: "/admin/pricing", icon: DollarSign },
+  { 
+    title: "Тарифы", 
+    icon: DollarSign,
+    subItems: [
+      { title: "Список тарифов", href: "/admin/pricing", icon: DollarSign },
+      { title: "Информация о тарифах", href: "/admin/pricing-info", icon: FileText }
+    ]
+  },
   { title: "Портфолио", href: "/admin/works", icon: Camera },
   { title: "Видео", href: "/admin/video", icon: Video },
   { title: "Отзывы", href: "/admin/reviews", icon: Star },
@@ -47,6 +54,7 @@ const menuItems = [
       { title: "Информация об услугах", href: "/admin/services-info", icon: FileText }
     ]
   },
+  { title: "Настройки Email", href: "/admin/email-settings", icon: Settings },
   { title: "Пароль", href: "/admin/settings", icon: Settings },
 ]
 
