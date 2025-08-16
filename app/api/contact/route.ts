@@ -72,15 +72,35 @@ IP адрес: ${request.headers.get('x-forwarded-for') || 'Неизвестно
 User-Agent: ${request.headers.get('user-agent') || 'Неизвестно'}
     `.trim()
 
-    // Логируем заявку (в реальном проекте здесь была бы отправка email)
+    // Логируем заявку
     console.log('=== НОВАЯ ЗАЯВКА ===')
     console.log('Получатель:', recipientEmail)
     console.log('Тема:', emailSubject)
     console.log('Содержание:', emailBody)
     console.log('========================')
 
-    // В реальном проекте здесь был бы код отправки email
-    // Например, через nodemailer или другой сервис
+    // Отправляем email на реальную почту
+    try {
+      const emailResponse = await fetch(`${request.nextUrl.origin}/api/send-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: recipientEmail,
+          subject: emailSubject,
+          text: emailBody
+        })
+      })
+
+      if (emailResponse.ok) {
+        console.log('✅ Email успешно отправлен на:', recipientEmail)
+      } else {
+        console.log('⚠️ Ошибка отправки email, но заявка залогирована')
+      }
+    } catch (emailError) {
+      console.log('⚠️ Ошибка отправки email, но заявка залогирована:', emailError)
+    }
 
     return NextResponse.json({ 
       success: true, 

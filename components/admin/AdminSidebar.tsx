@@ -39,7 +39,14 @@ const menuItems = [
   { title: "Отзывы", href: "/admin/reviews", icon: Star },
   { title: "Команда", href: "/admin/team", icon: Users },
   { title: "Оборудование", href: "/admin/equipment", icon: Wrench },
-  { title: "Услуги", href: "/admin/services", icon: Briefcase },
+  { 
+    title: "Услуги", 
+    icon: Briefcase,
+    subItems: [
+      { title: "Список услуг", href: "/admin/services", icon: Briefcase },
+      { title: "Информация об услугах", href: "/admin/services-info", icon: FileText }
+    ]
+  },
   { title: "Пароль", href: "/admin/settings", icon: Settings },
 ]
 
