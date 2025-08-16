@@ -1,41 +1,57 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { testTelegramConnection, sendTestMessage } from '@/lib/telegram'
+import { sendTestTelegramMessage, checkTelegramConfig } from '@/lib/telegram'
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    // Проверяем подключение к Telegram
-    const connectionSuccess = await testTelegramConnection()
-    
-    if (!connectionSuccess) {
+    // Проверяем настройки
+    if (!checkTelegramConfig()) {
       return NextResponse.json({ 
-        success: false, 
-        message: 'Ошибка подключения к Telegram',
-        error: 'Проверьте токен бота и настройки'
-      }, { status: 500 })
+        error: 'Telegram не настроен. Проверьте TELEGRAM_BOT_TOKEN и TELEGRAM_CHAT_ID',
+        configured: false
+      }, { status: 400 })
     }
 
     // Отправляем тестовое сообщение
-    const messageSuccess = await sendTestMessage()
-    
-    if (!messageSuccess) {
+    const success = await sendTestTelegramMessage()
+
+    if (success) {
       return NextResponse.json({ 
-        success: false, 
-        message: 'Ошибка отправки тестового сообщения',
-        error: 'Проверьте Chat ID'
+        success: true, 
+        message: 'Тестовое сообщение отправлено в Telegram',
+        configured: true
+      })
+    } else {
+      return NextResponse.json({ 
+        error: 'Ошибка отправки тестового сообщения',
+        configured: true
       }, { status: 500 })
     }
-
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Telegram подключен и тестовое сообщение отправлено'
-    })
     
   } catch (error) {
     console.error('Ошибка тестирования Telegram:', error)
     return NextResponse.json({ 
-      success: false, 
-      message: 'Ошибка тестирования Telegram',
-      error: error instanceof Error ? error.message : 'Неизвестная ошибка'
+      error: 'Ошибка тестирования Telegram',
+      configured: checkTelegramConfig()
+    }, { status: 500 })
+  }
+}
+
+export async function GET() {
+  try {
+    const configured = checkTelegramConfig()
+    
+    return NextResponse.json({ 
+      configured,
+      message: configured 
+        ? 'Telegram настроен корректно' 
+        : 'Telegram не настроен. Установите TELEGRAM_BOT_TOKEN и TELEGRAM_CHAT_ID'
+    })
+    
+  } catch (error) {
+    console.error('Ошибка проверки настроек Telegram:', error)
+    return NextResponse.json({ 
+      error: 'Ошибка проверки настроек',
+      configured: false
     }, { status: 500 })
   }
 }

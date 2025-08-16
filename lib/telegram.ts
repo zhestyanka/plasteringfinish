@@ -4,58 +4,28 @@ import TelegramBot from 'node-telegram-bot-api'
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || ''
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || ''
 
-// Создаем экземпляр бота только если есть токен
-let bot: TelegramBot | null = null
-
-if (TELEGRAM_BOT_TOKEN && TELEGRAM_BOT_TOKEN !== '') {
-  try {
-    bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: false })
-  } catch (error) {
-    console.error('❌ Ошибка создания Telegram бота:', error)
-  }
-}
-
-// Интерфейс для заявки
-interface ContactForm {
-  name: string
-  phone: string
-  email?: string
-  message?: string
-  area?: string
-  address?: string
-  source?: string
-}
-
-// Интерфейс для калькулятора
-interface CalculatorForm {
-  clientPrice: string
-  areaToPlaster: string
-  layerThickness: string
-  areaPerShift: string
-  bagPrice: string
-  bagWeight: string
-  name: string
-  phone: string
-  email?: string
-}
+// Создаем экземпляр бота
+const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: false })
 
 /**
  * Отправляет заявку в Telegram
  */
-export async function sendContactFormToTelegram(formData: ContactForm): Promise<boolean> {
+export async function sendTelegramNotification(formData: any) {
   try {
-    if (!bot || !TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-      console.log('⚠️ Telegram не настроен, пропускаем отправку')
+    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+      console.warn('Telegram bot token или chat ID не настроены')
       return false
     }
 
-    const message = formatContactFormMessage(formData)
+    // Формируем сообщение
+    const message = formatTelegramMessage(formData)
     
+    // Отправляем сообщение
     await bot.sendMessage(TELEGRAM_CHAT_ID, message, {
       parse_mode: 'HTML',
       disable_web_page_preview: true
     })
-    
+
     console.log('✅ Заявка отправлена в Telegram')
     return true
   } catch (error) {
@@ -65,132 +35,73 @@ export async function sendContactFormToTelegram(formData: ContactForm): Promise<
 }
 
 /**
- * Отправляет данные калькулятора в Telegram
+ * Форматирует данные заявки для Telegram
  */
-export async function sendCalculatorFormToTelegram(formData: CalculatorForm): Promise<boolean> {
-  try {
-    if (!bot || !TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-      console.log('⚠️ Telegram не настроен, пропускаем отправку')
-      return false
-    }
+function formatTelegramMessage(data: any): string {
+  const timestamp = new Date().toLocaleString('ru-RU')
+  
+  let message = `🔔 <b>Новая заявка с сайта</b>\n\n`
+  message += `📅 <b>Дата:</b> ${timestamp}\n\n`
 
-    const message = formatCalculatorFormMessage(formData)
-    
-    await bot.sendMessage(TELEGRAM_CHAT_ID, message, {
-      parse_mode: 'HTML',
-      disable_web_page_preview: true
-    })
-    
-    console.log('✅ Данные калькулятора отправлены в Telegram')
-    return true
-  } catch (error) {
-    console.error('❌ Ошибка отправки калькулятора в Telegram:', error)
-    return false
+  // Основная информация
+  if (data.name) message += `👤 <b>Имя:</b> ${data.name}\n`
+  if (data.phone) message += `📞 <b>Телефон:</b> ${data.phone}\n`
+  if (data.email) message += `📧 <b>Email:</b> ${data.email}\n`
+  
+  // Адрес
+  if (data.address) message += `📍 <b>Адрес:</b> ${data.address}\n`
+  
+  // Площадь и тип работ
+  if (data.area) message += `📏 <b>Площадь:</b> ${data.area}\n`
+  if (data.workType) message += `🔨 <b>Тип работ:</b> ${data.workType}\n`
+  
+  // Дополнительная информация
+  if (data.description) {
+    message += `\n📝 <b>Описание:</b>\n${data.description}\n`
   }
-}
-
-/**
- * Форматирует сообщение для заявки
- */
-function formatContactFormMessage(formData: ContactForm): string {
-  const timestamp = new Date().toLocaleString('ru-RU', {
-    timeZone: 'Europe/Moscow',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
-
-  return `
-🔔 <b>НОВАЯ ЗАЯВКА С САЙТА</b>
-
-📅 <b>Дата:</b> ${timestamp}
-👤 <b>Имя:</b> ${formData.name}
-📞 <b>Телефон:</b> ${formData.phone}
-${formData.email ? `📧 <b>Email:</b> ${formData.email}` : ''}
-${formData.area ? `📏 <b>Площадь:</b> ${formData.area}` : ''}
-${formData.address ? `📍 <b>Адрес:</b> ${formData.address}` : ''}
-${formData.message ? `💬 <b>Сообщение:</b> ${formData.message}` : ''}
-${formData.source ? `🌐 <b>Источник:</b> ${formData.source}` : ''}
-
-⚡️ <i>Требует быстрого ответа!</i>
-  `.trim()
-}
-
-/**
- * Форматирует сообщение для калькулятора
- */
-function formatCalculatorFormMessage(formData: CalculatorForm): string {
-  const timestamp = new Date().toLocaleString('ru-RU', {
-    timeZone: 'Europe/Moscow',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
-
-  // Рассчитываем примерную стоимость
-  const area = parseFloat(formData.areaToPlaster) || 0
-  const price = parseFloat(formData.clientPrice) || 0
-  const totalCost = area * price
-
-  return `
-🧮 <b>РАСЧЕТ СТОИМОСТИ</b>
-
-📅 <b>Дата:</b> ${timestamp}
-👤 <b>Имя:</b> ${formData.name}
-📞 <b>Телефон:</b> ${formData.phone}
-${formData.email ? `📧 <b>Email:</b> ${formData.email}` : ''}
-
-📊 <b>Параметры расчета:</b>
-• Цена за м²: ${formData.clientPrice} ₽
-• Площадь: ${formData.areaToPlaster} м²
-• Толщина слоя: ${formData.layerThickness} мм
-• Площадь за смену: ${formData.areaPerShift} м²
-• Цена мешка: ${formData.bagPrice} ₽
-• Вес мешка: ${formData.bagWeight} кг
-
-💰 <b>Примерная стоимость:</b> ${totalCost.toLocaleString('ru-RU')} ₽
-
-⚡️ <i>Клиент заинтересован в расчете!</i>
-  `.trim()
-}
-
-/**
- * Проверяет подключение к Telegram
- */
-export async function testTelegramConnection(): Promise<boolean> {
-  try {
-    if (!bot || !TELEGRAM_BOT_TOKEN) {
-      console.log('⚠️ Telegram бот не настроен')
-      return false
-    }
-
-    const me = await bot.getMe()
-    console.log('✅ Telegram бот подключен:', me.username)
-    return true
-  } catch (error) {
-    console.error('❌ Ошибка подключения к Telegram:', error)
-    return false
+  
+  // Контактная информация
+  if (data.contactMethod) {
+    message += `\n📞 <b>Предпочтительный способ связи:</b> ${data.contactMethod}\n`
   }
+  
+  // Время для звонка
+  if (data.callTime) {
+    message += `⏰ <b>Удобное время для звонка:</b> ${data.callTime}\n`
+  }
+
+  // Источник заявки
+  if (data.source) {
+    message += `\n🌐 <b>Источник:</b> ${data.source}\n`
+  }
+
+  // URL страницы
+  if (data.pageUrl) {
+    message += `🔗 <b>Страница:</b> ${data.pageUrl}\n`
+  }
+
+  message += `\n⚡ <b>Требует быстрого ответа!</b>`
+
+  return message
 }
 
 /**
- * Отправляет тестовое сообщение
+ * Отправляет тестовое сообщение в Telegram
  */
-export async function sendTestMessage(): Promise<boolean> {
+export async function sendTestTelegramMessage(): Promise<boolean> {
   try {
-    if (!bot || !TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-      console.log('⚠️ Telegram не настроен, пропускаем отправку')
+    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+      console.warn('Telegram bot token или chat ID не настроены')
       return false
     }
 
-    await bot.sendMessage(TELEGRAM_CHAT_ID, '🧪 Тестовое сообщение от сайта штукатурки', {
+    const testMessage = `🧪 <b>Тестовое сообщение</b>\n\n✅ Интеграция с Telegram работает корректно!\n\n📅 ${new Date().toLocaleString('ru-RU')}`
+    
+    await bot.sendMessage(TELEGRAM_CHAT_ID, testMessage, {
       parse_mode: 'HTML'
     })
-    console.log('✅ Тестовое сообщение отправлено')
+
+    console.log('✅ Тестовое сообщение отправлено в Telegram')
     return true
   } catch (error) {
     console.error('❌ Ошибка отправки тестового сообщения:', error)
@@ -198,4 +109,9 @@ export async function sendTestMessage(): Promise<boolean> {
   }
 }
 
-export default bot
+/**
+ * Проверяет настройки Telegram
+ */
+export function checkTelegramConfig(): boolean {
+  return !!(TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID)
+}

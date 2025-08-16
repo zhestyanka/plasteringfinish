@@ -140,32 +140,19 @@ export default function HeroSection() {
     e.preventDefault()
     
     try {
-      // Отправляем данные калькулятора
-      const calculatorData = {
-        name: formData.name,
-        phone: formData.phone,
-        email: formData.email,
-        clientPrice: clientPrice,
-        areaToPlaster: areaToPlaster,
-        layerThickness: layerThickness,
-        areaPerShift: areaPerShift,
-        bagPrice: bagPrice,
-        bagWeight: bagWeight
-      }
-
-      const response = await fetch('/api/calculator', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(calculatorData)
+        body: JSON.stringify(formData)
       })
 
       const result = await response.json()
 
       if (response.ok) {
         // Показываем уведомление об успехе
-        alert('Спасибо! Ваш расчет отправлен. Мы свяжемся с вами в ближайшее время.')
+        alert('Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.')
         setIsModalOpen(false)
         
         // Сброс формы
@@ -178,11 +165,11 @@ export default function HeroSection() {
         })
       } else {
         // Показываем ошибку
-        alert(`Ошибка: ${result.error || 'Не удалось отправить расчет'}`)
+        alert(`Ошибка: ${result.error || 'Не удалось отправить заявку'}`)
       }
     } catch (error) {
       console.error('Ошибка отправки формы:', error)
-      alert('Произошла ошибка при отправке расчета. Попробуйте еще раз.')
+      alert('Произошла ошибка при отправке заявки. Попробуйте еще раз.')
     }
   }
 

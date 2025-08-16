@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import path from 'path'
-import { sendContactFormToTelegram } from '@/lib/telegram'
+import { sendTelegramNotification, checkTelegramConfig } from '@/lib/telegram'
 
 const contentFilePath = path.join(process.cwd(), 'data', 'content.json')
 
@@ -43,23 +43,30 @@ Email: ${formData.email || 'Не указан'}
 Дата отправки: ${new Date().toLocaleString('ru-RU')}
     `.trim()
 
-    // Отправляем заявку в Telegram
-    const telegramSuccess = await sendContactFormToTelegram({
-      name: formData.name,
-      phone: formData.phone,
-      email: formData.email,
-      message: formData.message,
-      area: formData.area,
-      address: formData.address,
-      source: 'Контактная форма'
-    })
+    // Отправляем уведомление в Telegram
+    let telegramSent = false
+    if (checkTelegramConfig()) {
+      try {
+        // Добавляем дополнительную информацию к данным формы
+        const telegramData = {
+          ...formData,
+          source: 'Сайт Штукатур СПб',
+          pageUrl: request.headers.get('referer') || 'Неизвестно',
+          timestamp: new Date().toISOString()
+        }
+        
+        telegramSent = await sendTelegramNotification(telegramData)
+      } catch (error) {
+        console.error('Ошибка отправки в Telegram:', error)
+      }
+    }
 
-    // Логируем для отладки
+    // Логируем заявку
     console.log('=== НОВАЯ ЗАЯВКА ===')
-    console.log('Получатель email:', recipientEmail)
-    console.log('Telegram отправлен:', telegramSuccess ? '✅' : '❌')
+    console.log('Получатель:', recipientEmail)
     console.log('Тема:', emailSubject)
     console.log('Содержание:', emailBody)
+    console.log('Telegram отправлен:', telegramSent)
     console.log('==================')
 
     // В реальном проекте здесь будет отправка через nodemailer или другой сервис
@@ -87,7 +94,7 @@ Email: ${formData.email || 'Не указан'}
       success: true, 
       message: 'Заявка успешно отправлена',
       recipientEmail: recipientEmail,
-      telegramSent: telegramSuccess
+      telegramSent: telegramSent
     })
     
   } catch (error) {

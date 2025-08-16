@@ -20,7 +20,7 @@ import {
   X,
   Video,
   Contact,
-  Bot
+  MessageSquare
 } from "lucide-react"
 
 const menuItems = [
@@ -41,8 +41,8 @@ const menuItems = [
   { title: "Команда", href: "/admin/team", icon: Users },
   { title: "Оборудование", href: "/admin/equipment", icon: Wrench },
   { title: "Услуги", href: "/admin/services", icon: Briefcase },
+  { title: "Telegram", href: "/admin/telegram", icon: MessageSquare },
   { title: "Пароль", href: "/admin/settings", icon: Settings },
-  { title: "Telegram", href: "/admin/telegram", icon: Bot },
 ]
 
 interface AdminSidebarProps {

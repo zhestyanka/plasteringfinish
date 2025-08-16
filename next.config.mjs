@@ -10,7 +10,9 @@ const nextConfig = {
     unoptimized: true,
   },
   output: 'standalone',
-  serverExternalPackages: [],
+  experimental: {
+    serverComponentsExternalPackages: [],
+  },
 }
 
 export default nextConfig
