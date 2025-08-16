@@ -127,6 +127,11 @@ export default function HeroSection() {
   const shiftsNeeded = areaPerShiftNum > 0 ? Math.ceil(areaToPlasterNum / areaPerShiftNum) : 0
   const profit = totalWorkCost - mixCost
 
+  // Функция для расчета общей стоимости для отправки в Telegram
+  const calculateTotalCost = () => {
+    return totalWorkCost + mixCost
+  }
+
   // ФУНКЦИИ ДЛЯ БЕЗОПАСНОГО ФОРМАТИРОВАНИЯ
   const formatNumber = (num: number) => {
     return isNaN(num) || !isFinite(num) ? '0' : num.toLocaleString('ru-RU')
@@ -140,12 +145,27 @@ export default function HeroSection() {
     e.preventDefault()
     
     try {
+      // Добавляем данные калькулятора к форме
+      const formDataWithCalculator = {
+        ...formData,
+        // Данные калькулятора
+        clientPrice: clientPrice || '0',
+        areaToPlaster: areaToPlaster || '0',
+        layerThickness: layerThickness || '0',
+        areaPerShift: areaPerShift || '0',
+        bagWeight: bagWeight || '0',
+        bagPrice: bagPrice || '0',
+        totalCost: calculateTotalCost(),
+        // Тип заявки
+        type: 'calculator'
+      }
+
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formDataWithCalculator)
       })
 
       const result = await response.json()
