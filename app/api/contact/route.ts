@@ -21,11 +21,16 @@ export async function POST(request: NextRequest) {
     try {
       const contentData = await fs.readFile(contentFilePath, 'utf-8')
       const content = JSON.parse(contentData)
+      console.log('📧 Читаем email из content.json:', content.contacts?.email || 'не найден')
       if (content.contacts && content.contacts.email) {
         recipientEmail = content.contacts.email
+        console.log('✅ Email успешно прочитан:', recipientEmail)
+      } else {
+        console.log('⚠️ Email не найден в content.json, используем по умолчанию:', recipientEmail)
       }
     } catch (error) {
-      console.log('Используем email по умолчанию:', recipientEmail)
+      console.log('❌ Ошибка чтения content.json, используем email по умолчанию:', recipientEmail)
+      console.error('Детали ошибки:', error)
     }
 
     // Определяем тип формы и формируем тему письма
