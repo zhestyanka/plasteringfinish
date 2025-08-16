@@ -72,10 +72,16 @@ Email: ${formData.email || 'Не указан'}
         })
       })
 
+      const telegramResult = await telegramResponse.json()
+      
       if (telegramResponse.ok) {
-        console.log('✅ Сообщение отправлено в Telegram')
+        if (telegramResult.telegramConfigured === false) {
+          console.log('⚠️ Telegram не настроен, но заявка сохранена')
+        } else {
+          console.log('✅ Сообщение отправлено в Telegram')
+        }
       } else {
-        console.log('⚠️ Ошибка отправки в Telegram')
+        console.log('⚠️ Ошибка отправки в Telegram:', telegramResult.error)
       }
     } catch (telegramError) {
       console.error('Telegram error:', telegramError)

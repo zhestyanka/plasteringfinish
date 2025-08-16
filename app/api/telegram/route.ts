@@ -1,11 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 // Конфигурация Telegram
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || 'YOUR_BOT_TOKEN'
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID || 'YOUR_CHAT_ID'
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID
 
 export async function POST(request: NextRequest) {
   try {
+    // Проверяем наличие переменных окружения
+    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+      console.log('⚠️ Telegram не настроен: отсутствуют переменные окружения')
+      return NextResponse.json({ 
+        success: true, 
+        message: 'Telegram не настроен, но заявка сохранена',
+        telegramConfigured: false 
+      })
+    }
+
     const body = await request.json()
     const { message, type = 'form' } = body
 
