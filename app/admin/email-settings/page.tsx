@@ -99,6 +99,8 @@ export default function EmailSettingsPage() {
   const testEmail = async () => {
     setIsTesting(true)
     try {
+      console.log('🧪 Тестируем отправку email на:', emailSettings.email)
+      
       const response = await fetch('/api/send-email', {
         method: 'POST',
         headers: {
@@ -107,17 +109,28 @@ export default function EmailSettingsPage() {
         body: JSON.stringify({
           to: emailSettings.email,
           subject: 'Тестовое письмо с сайта',
-          text: `Это тестовое письмо отправлено ${new Date().toLocaleString('ru-RU')} для проверки настроек email.`
+          text: `Это тестовое письмо отправлено ${new Date().toLocaleString('ru-RU')} для проверки настроек email.
+
+Настройки SMTP:
+- Сервер: ${emailSettings.smtpHost}
+- Порт: ${emailSettings.smtpPort}
+- Пользователь: ${emailSettings.smtpUser}
+
+Если вы получили это письмо, значит настройки email работают корректно!`
         })
       })
 
       const result = await response.json()
 
       if (result.success) {
-        toast.success('Тестовое письмо отправлено! Проверьте почту.')
+        if (result.message.includes('демо')) {
+          toast.success('Тестовое письмо отправлено в демо режиме! Проверьте логи сервера.')
+        } else {
+          toast.success('Тестовое письмо отправлено! Проверьте почту.')
+        }
         console.log('✅ Тестовое письмо отправлено:', result)
       } else {
-        toast.error('Ошибка отправки тестового письма')
+        toast.error(`Ошибка отправки: ${result.error || 'Неизвестная ошибка'}`)
         console.error('❌ Ошибка отправки тестового письма:', result)
       }
     } catch (error) {

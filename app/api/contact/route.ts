@@ -81,6 +81,8 @@ User-Agent: ${request.headers.get('user-agent') || 'Неизвестно'}
 
     // Отправляем email на реальную почту
     try {
+      console.log('📧 Отправляем заявку на email:', recipientEmail)
+      
       const emailResponse = await fetch(`${request.nextUrl.origin}/api/send-email`, {
         method: 'POST',
         headers: {
@@ -93,10 +95,14 @@ User-Agent: ${request.headers.get('user-agent') || 'Неизвестно'}
         })
       })
 
-      if (emailResponse.ok) {
+      const emailResult = await emailResponse.json()
+
+      if (emailResponse.ok && emailResult.success) {
         console.log('✅ Email успешно отправлен на:', recipientEmail)
+        console.log('📧 ID письма:', emailResult.messageId)
       } else {
-        console.log('⚠️ Ошибка отправки email, но заявка залогирована')
+        console.log('⚠️ Ошибка отправки email:', emailResult.error || 'Неизвестная ошибка')
+        console.log('⚠️ Заявка залогирована, но email не отправлен')
       }
     } catch (emailError) {
       console.log('⚠️ Ошибка отправки email, но заявка залогирована:', emailError)
