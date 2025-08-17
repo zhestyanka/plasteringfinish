@@ -6,10 +6,17 @@ const contentFilePath = path.join(process.cwd(), 'data', 'content.json')
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('📨 API Contact вызван')
+    console.log('📋 Headers:', Object.fromEntries(request.headers.entries()))
+    
     const formData = await request.json()
+    console.log('📋 Полученные данные:', formData)
     
     // Валидация данных
     if (!formData.name || !formData.phone) {
+      console.log('❌ Валидация не пройдена:')
+      console.log('   name:', formData.name)
+      console.log('   phone:', formData.phone)
       return NextResponse.json({ 
         error: 'Имя и телефон обязательны' 
       }, { status: 400 })
@@ -44,6 +51,9 @@ Email: ${formData.email || 'Не указан'}
 
     // Отправляем в Telegram
     try {
+      console.log('🔍 Начинаем отправку в Telegram...')
+      console.log('📋 Данные формы:', formData)
+      
       const telegramData = {
         name: formData.name,
         phone: formData.phone,
@@ -61,18 +71,25 @@ Email: ${formData.email || 'Не указан'}
         source: formData.type === 'calculator' ? 'Калькулятор' : 'Контактная форма'
       }
 
-      const telegramResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/telegram`, {
+      console.log('📤 Данные для Telegram:', telegramData)
+      console.log('🌐 URL для отправки:', `http://localhost:3000/api/telegram`)
+
+      const telegramResponse = await fetch(`http://localhost:3000/api/telegram`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           message: telegramData,
-          type: 'contact'
+          type: formData.type || 'contact'
         })
       })
 
+      console.log('📡 Статус ответа Telegram:', telegramResponse.status)
+      console.log('📡 Заголовки ответа:', Object.fromEntries(telegramResponse.headers.entries()))
+
       const telegramResult = await telegramResponse.json()
+      console.log('📨 Результат Telegram:', telegramResult)
       
       if (telegramResponse.ok) {
         if (telegramResult.telegramConfigured === false) {
@@ -84,7 +101,8 @@ Email: ${formData.email || 'Не указан'}
         console.log('⚠️ Ошибка отправки в Telegram:', telegramResult.error)
       }
     } catch (telegramError) {
-      console.error('Telegram error:', telegramError)
+      console.error('❌ Telegram error:', telegramError)
+      console.error('❌ Stack trace:', telegramError instanceof Error ? telegramError.stack : 'No stack trace')
     }
 
     // Здесь должна быть логика отправки email
@@ -129,4 +147,3 @@ Email: ${formData.email || 'Не указан'}
     }, { status: 500 })
   }
 }
-

@@ -1,14 +1,15 @@
 ﻿import { NextRequest, NextResponse } from 'next/server'
-
-// Конфигурация Telegram
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID
+import { telegramConfig } from '../../../config/telegram'
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('🔔 Telegram API вызван')
+    
     // Проверяем наличие переменных окружения
-    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+    if (!telegramConfig.botToken || !telegramConfig.chatId) {
       console.log('⚠️ Telegram не настроен: отсутствуют переменные окружения')
+      console.log('🔑 TELEGRAM_BOT_TOKEN:', telegramConfig.botToken ? 'Установлен' : 'Отсутствует')
+      console.log('💬 TELEGRAM_CHAT_ID:', telegramConfig.chatId ? 'Установлен' : 'Отсутствует')
       return NextResponse.json({ 
         success: true, 
         message: 'Telegram не настроен, но заявка сохранена',
@@ -17,9 +18,12 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
+    console.log('📨 Полученные данные:', body)
+    
     const { message, type = 'form' } = body
 
     if (!message) {
+      console.log('❌ Сообщение отсутствует')
       return NextResponse.json({ error: 'Message is required' }, { status: 400 })
     }
 
@@ -40,36 +44,57 @@ export async function POST(request: NextRequest) {
         formattedMessage = formatDefaultMessage(message)
     }
 
+    console.log('📝 Отформатированное сообщение:', formattedMessage)
+
     // Отправляем в Telegram
     const telegramResponse = await sendToTelegram(formattedMessage)
     
     if (telegramResponse.ok) {
+      console.log('✅ Сообщение успешно отправлено в Telegram')
       return NextResponse.json({ success: true, message: 'Message sent to Telegram' })
     } else {
+      console.log('❌ Ошибка отправки в Telegram, статус:', telegramResponse.status)
+      const errorText = await telegramResponse.text()
+      console.log('❌ Текст ошибки:', errorText)
       throw new Error('Failed to send to Telegram')
     }
 
   } catch (error) {
-    console.error('Telegram API error:', error)
+    console.error('❌ Telegram API error:', error)
+    console.error('❌ Stack trace:', error instanceof Error ? error.stack : 'No stack trace')
     return NextResponse.json({ error: 'Failed to send message' }, { status: 500 })
   }
 }
 
 async function sendToTelegram(message: string) {
-  const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`
+  const url = `https://api.telegram.org/bot${telegramConfig.botToken}/sendMessage`
+  
+  console.log('🌐 Отправляем в Telegram URL:', url)
+  console.log('💬 Chat ID:', telegramConfig.chatId)
+  console.log('📝 Сообщение:', message)
+  
+  const requestBody = {
+    chat_id: telegramConfig.chatId,
+    text: message,
+    parse_mode: 'HTML'
+  }
+  
+  const postData = JSON.stringify(requestBody)
+  
+  console.log('📤 Тело запроса:', requestBody)
+  console.log('📏 Длина данных:', Buffer.byteLength(postData, 'utf8'))
   
   const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(postData, 'utf8').toString()
     },
-    body: JSON.stringify({
-      chat_id: TELEGRAM_CHAT_ID,
-      text: message,
-      parse_mode: 'HTML'
-    })
+    body: postData
   })
 
+  console.log('📡 Ответ от Telegram API, статус:', response.status)
+  
   return response
 }
 

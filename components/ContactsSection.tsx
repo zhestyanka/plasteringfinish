@@ -27,6 +27,10 @@ export default function ContactsSection() {
     workingHours: ""
   })
   const [isLoading, setIsLoading] = useState(true)
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: ''
+  })
 
   useEffect(() => {
     const loadContactData = async () => {
@@ -47,6 +51,47 @@ export default function ContactsSection() {
 
     loadContactData()
   }, [])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    try {
+      const formDataWithType = {
+        ...formData,
+        type: 'contact'
+      }
+
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formDataWithType)
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        alert('Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.')
+        setFormData({
+          name: '',
+          phone: ''
+        })
+      } else {
+        alert(`Ошибка: ${result.error || 'Не удалось отправить заявку'}`)
+      }
+    } catch (error) {
+      console.error('Ошибка отправки формы:', error)
+      alert('Произошла ошибка при отправке заявки. Попробуйте еще раз.')
+    }
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
 
   if (isLoading) {
     return (
@@ -144,19 +189,37 @@ export default function ContactsSection() {
               {contactData.description && (
                 <p className="text-amber-800 mb-6">{contactData.description}</p>
               )}
-              <div className="space-y-4">
-                <Input placeholder="Введите ваше имя" className="border-amber-300 focus:border-amber-500" />
-                <Input placeholder="Ваш телефон" className="border-amber-300 focus:border-amber-500" />
-                <Button className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-gray-100">
-                  Получить консультацию
-                </Button>
-                <div className="flex items-center space-x-2">
-                  <input type="checkbox" id="consent5" className="text-amber-600" defaultChecked />
-                  <label htmlFor="consent5" className="text-sm text-amber-800">
-                    Даю согласие на обработку персональных данных
-                  </label>
+              <form onSubmit={handleSubmit}>
+                <div className="space-y-4">
+                  <Input 
+                    type="text" 
+                    name="name" 
+                    placeholder="Введите ваше имя" 
+                    value={formData.name} 
+                    onChange={handleInputChange} 
+                    className="border-amber-300 focus:border-amber-500" 
+                    required
+                  />
+                  <Input 
+                    type="tel" 
+                    name="phone" 
+                    placeholder="Ваш телефон" 
+                    value={formData.phone} 
+                    onChange={handleInputChange} 
+                    className="border-amber-300 focus:border-amber-500" 
+                    required
+                  />
+                  <Button type="submit" className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-gray-100">
+                    Получить консультацию
+                  </Button>
+                  <div className="flex items-center space-x-2">
+                    <input type="checkbox" id="consent5" className="text-amber-600" defaultChecked />
+                    <label htmlFor="consent5" className="text-sm text-amber-800">
+                      Даю согласие на обработку персональных данных
+                    </label>
+                  </div>
                 </div>
-              </div>
+              </form>
             </CardContent>
           </Card>
         </div>

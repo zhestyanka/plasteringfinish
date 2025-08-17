@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
@@ -100,9 +100,9 @@ export default function PricingSection() {
     try {
       const formDataWithPricing = {
         ...formData,
-        selectedPlan: selectedPlan,
-        area: area,
-        totalCost: totalCost,
+        selectedPlan: selectedPlanData?.name || 'Не выбран',
+        area: area || '0',
+        totalCost: totalCost || '0',
         type: 'pricing'
       }
 
@@ -117,22 +117,21 @@ export default function PricingSection() {
       const result = await response.json()
 
       if (response.ok) {
-        alert('�������! ���� ������ ����������. �� �������� � ���� � ��������� �����.')
+        alert('Спасибо! Ваша заявка отправлена. Мы свяжемся с вами в ближайшее время.')
         setFormData({
           name: '',
           phone: '',
-          email: '',
           area: '',
           message: ''
         })
         setArea(100)
         setSelectedPlan('basic')
       } else {
-        alert(`������: ${result.error || '�� ������� ��������� ������'}`)
+        alert(`Ошибка: ${result.error || 'Не удалось отправить заявку'}`)
       }
     } catch (error) {
-      console.error('������ �������� �����:', error)
-      alert('��������� ������ ��� �������� ������. ���������� ��� ���.')
+      console.error('Ошибка отправки формы:', error)
+      alert('Произошла ошибка при отправке заявки. Попробуйте еще раз.')
     }
   }
 
@@ -271,7 +270,7 @@ export default function PricingSection() {
               <div className="w-12 h-12 md:w-16 md:h-16 bg-coffee-100 rounded-xl md:rounded-2xl flex items-center justify-center mb-3 md:mb-4">
                 <CheckCircle className="w-6 h-6 md:w-8 md:h-8 text-coffee-600" />
               </div>
-              <h4 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Опытная команда</h4>
+              <h4 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Оптимная команда</h4>
               <p className="text-gray-600 text-sm md:text-base">Более 8 лет на рынке строительных услуг</p>
             </div>
             
@@ -280,7 +279,7 @@ export default function PricingSection() {
                 <Star className="w-6 h-6 md:w-8 md:h-8 text-coffee-600" />
               </div>
               <h4 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Высокий рейтинг</h4>
-              <p className="text-gray-600 text-sm md:text-base">4.9/5 звезд по отзывам клиентов</p>
+              <p className="text-gray-600 text-sm md:text-base">4.9/5 звоезд по отзывам клиентов</p>
             </div>
           </div>
         </div>
@@ -293,7 +292,7 @@ export default function PricingSection() {
                 Получите точную смету
               </h3>
               <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
-                Наш инженер приедет бесплатно, проведет замеры и рассчитает точную стоимость с учетом всех особенностей вашего объекта
+                Наш инженер предложит бесплатно, проведет замеры и рассчитает точную стоимость с учетом всех особенностей вашего объекта
               </p>
             </div>
 
@@ -340,7 +339,7 @@ export default function PricingSection() {
                 </div>
                 <div className="text-center lg:text-left">
                   <div className="font-bold text-coffee-900 text-base md:text-lg">4.9 из 5</div>
-                  <div className="text-coffee-800 text-xs md:text-sm">157 отзывов на Яндекс.Картах</div>
+                  <div className="text-coffee-800 text-xs md:text-sm">157 отзывов на Яндекс.Карты</div>
                 </div>
               </div>
             </div>
@@ -399,7 +398,7 @@ export default function PricingSection() {
                   type="submit" 
                   className="w-full bg-gradient-to-r from-coffee-600 to-coffee-500 hover:from-coffee-700 hover:to-coffee-600 text-white py-3 md:py-4 text-base md:text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] group"
                 >
-                  ПОЛУЧИТЬ РАСЧЕТ БЕСПЛАТНО
+                  ПОЛУЧИТЬ РАСЧЕТ
                   <ArrowRight className="w-4 h-4 md:w-5 md:h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
                 </Button>
                 
