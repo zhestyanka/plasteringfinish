@@ -140,7 +140,61 @@ export default function CalculatorPage() {
       if (response.ok) {
         const data = await response.json()
         if (data.content) {
-          setContent(data.content)
+          // Убеждаемся, что все необходимые поля существуют
+          const safeContent = {
+            header: {
+              title: data.content.header?.title || "Получите точную смету",
+              subtitle: data.content.header?.subtitle || "Бесплатный расчет стоимости",
+              description: data.content.header?.description || "Наш инженер бесплатно приедет на объект, проведет замеры и рассчитает точную стоимость с учетом всех особенностей вашего проекта"
+            },
+            form: {
+              title: data.content.form?.title || "Заказать расчет",
+              subtitle: data.content.form?.subtitle || "Бесплатно и без обязательств",
+              fields: {
+                name: {
+                  label: data.content.form?.fields?.name?.label || "Ваше имя",
+                  placeholder: data.content.form?.fields?.name?.placeholder || "Введите ваше имя"
+                },
+                phone: {
+                  label: data.content.form?.fields?.phone?.label || "Телефон",
+                  placeholder: data.content.form?.fields?.phone?.placeholder || "+7 (999) 123-45-67"
+                },
+                email: {
+                  label: data.content.form?.fields?.email?.label || "Email",
+                  placeholder: data.content.form?.fields?.email?.placeholder || "example@mail.ru"
+                },
+                area: {
+                  label: data.content.form?.fields?.area?.label || "Площадь помещения (м²)",
+                  placeholder: data.content.form?.fields?.area?.placeholder || "Введите площадь"
+                },
+                message: {
+                  label: data.content.form?.fields?.message?.label || "Дополнительная информация",
+                  placeholder: data.content.form?.fields?.message?.placeholder || "Опишите ваш проект..."
+                }
+              },
+              button: data.content.form?.button || "ПОЛУЧИТЬ РАСЧЕТ",
+              consent: data.content.form?.consent || "Нажимая кнопку, вы соглашаетесь с обработкой персональных данных"
+            },
+            features: {
+              warranty: {
+                title: data.content.features?.warranty?.title || "Гарантия",
+                value: data.content.features?.warranty?.value || "до 7 лет"
+              },
+              visit: {
+                title: data.content.features?.visit?.title || "Выезд",
+                value: data.content.features?.visit?.value || "в день обращения"
+              },
+              quality: {
+                title: data.content.features?.quality?.title || "Качество",
+                value: data.content.features?.quality?.value || "по ГОСТ"
+              }
+            },
+            rating: {
+              stars: data.content.rating?.stars || "4.9 из 5",
+              reviews: data.content.rating?.reviews || "157 отзывов на Яндекс.Карты"
+            }
+          }
+          setContent(safeContent)
         }
       }
     } catch (error) {
