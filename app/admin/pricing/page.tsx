@@ -47,20 +47,6 @@ interface PricingContent {
     title: string
     subtitle: string
   }
-  benefits: {
-    warranty: {
-      title: string
-      description: string
-    }
-    team: {
-      title: string
-      description: string
-    }
-    rating: {
-      title: string
-      description: string
-    }
-  }
 }
 
 export default function PricingPage() {
@@ -86,20 +72,6 @@ export default function PricingPage() {
       badge: "Прозрачные цены",
       title: "Тарифы на механизированную штукатурку",
       subtitle: "Выберите подходящий тариф для вашего проекта"
-    },
-    benefits: {
-      warranty: {
-        title: "Гарантия качества",
-        description: "До 5 лет гарантии на все виды работ"
-      },
-      team: {
-        title: "Оптимная команда",
-        description: "Более 8 лет на рынке строительных услуг"
-      },
-      rating: {
-        title: "Высокий рейтинг",
-        description: "4.9/5 звоезд по отзывам клиентов"
-      }
     }
   })
 
@@ -151,20 +123,6 @@ export default function PricingPage() {
               badge: data.content.header?.badge || "Прозрачные цены",
               title: data.content.header?.title || "Тарифы на механизированную штукатурку",
               subtitle: data.content.header?.subtitle || "Выберите подходящий тариф для вашего проекта"
-            },
-            benefits: {
-              warranty: {
-                title: data.content.benefits?.warranty?.title || "Гарантия качества",
-                description: data.content.benefits?.warranty?.description || "До 5 лет гарантии на все виды работ"
-              },
-              team: {
-                title: data.content.benefits?.team?.title || "Оптимная команда",
-                description: data.content.benefits?.team?.description || "Более 8 лет на рынке строительных услуг"
-              },
-              rating: {
-                title: data.content.benefits?.rating?.title || "Высокий рейтинг",
-                description: data.content.benefits?.rating?.description || "4.9/5 звоезд по отзывам клиентов"
-              }
             }
           }
           setContent(safeContent)
@@ -554,116 +512,7 @@ export default function PricingPage() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid gap-6 md:grid-cols-3">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-sm">Гарантия качества</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="warranty-title">Заголовок</Label>
-                      <Input
-                        id="warranty-title"
-                        value={content.benefits.warranty.title}
-                        onChange={(e) => setContent({
-                          ...content,
-                          benefits: {
-                            ...content.benefits,
-                            warranty: { ...content.benefits.warranty, title: e.target.value }
-                          }
-                        })}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="warranty-desc">Описание</Label>
-                      <Textarea
-                        id="warranty-desc"
-                        value={content.benefits.warranty.description}
-                        onChange={(e) => setContent({
-                          ...content,
-                          benefits: {
-                            ...content.benefits,
-                            warranty: { ...content.benefits.warranty, description: e.target.value }
-                          }
-                        })}
-                        rows={2}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-sm">Оптимная команда</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="team-title">Заголовок</Label>
-                      <Input
-                        id="team-title"
-                        value={content.benefits.team.title}
-                        onChange={(e) => setContent({
-                          ...content,
-                          benefits: {
-                            ...content.benefits,
-                            team: { ...content.benefits.team, title: e.target.value }
-                          }
-                        })}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="team-desc">Описание</Label>
-                      <Textarea
-                        id="team-desc"
-                        value={content.benefits.team.description}
-                        onChange={(e) => setContent({
-                          ...content,
-                          benefits: {
-                            ...content.benefits,
-                            team: { ...content.benefits.team, description: e.target.value }
-                          }
-                        })}
-                        rows={2}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-sm">Высокий рейтинг</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="rating-title">Заголовок</Label>
-                      <Input
-                        id="rating-title"
-                        value={content.benefits.rating.title}
-                        onChange={(e) => setContent({
-                          ...content,
-                          benefits: {
-                            ...content.benefits,
-                            rating: { ...content.benefits.rating, title: e.target.value }
-                          }
-                        })}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="rating-desc">Описание</Label>
-                      <Textarea
-                        id="rating-desc"
-                        value={content.benefits.rating.description}
-                        onChange={(e) => setContent({
-                          ...content,
-                          benefits: {
-                            ...content.benefits,
-                            rating: { ...content.benefits.rating, description: e.target.value }
-                          }
-                        })}
-                        rows={2}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
               </div>
             </CardContent>
           </Card>
