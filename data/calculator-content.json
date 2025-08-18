@@ -1,13 +1,13 @@
 {
   "content": {
     "header": {
-      "badge": "Калькулятор стоимости раб",
+      "badge": "Калькулятор стоимости работ",
       "title": "Получите точную смету"
     },
     "priceSection": {
       "title": "Укажите цены:",
       "priceLabel": "Сколько ₽ за м²",
-      "pricePlaceholder": "450"
+      "pricePlaceholder": "300"
     },
     "objectSection": {
       "title": "Укажите данные объекта:",

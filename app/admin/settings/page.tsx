@@ -503,7 +503,7 @@ export default function SettingsPage() {
                   <li>Добавьте бота в нужный чат/канал</li>
                   <li>Отправьте любое сообщение в чат</li>
                   <li>Перейдите по ссылке: https://api.telegram.org/bot[TOKEN]/getUpdates</li>
-                  <li>Найдите "chat":{"id": число} в ответе</li>
+                  <li>Найдите "chat":{'{'}"id": число{'}'} в ответе</li>
                 </ol>
               </div>
             </CardContent>
