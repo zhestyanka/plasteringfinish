@@ -128,9 +128,9 @@ export default function WorksSection() {
         {/* Category Filter */}
         {categories.length > 1 && (
           <div className="flex flex-wrap justify-center gap-4 mb-12">
-            {categories.map((category) => (
+            {categories.map((category, index) => (
               <Button
-                key={category}
+                key={`${category}-${index}`}
                 variant={activeCategory === category ? "default" : "outline"}
                 onClick={() => setActiveCategory(category)}
                 className={

@@ -1,22 +1,6 @@
 {
-  "hero": {
-    "stats": [
-      {
-        "icon": "Ruble",
-        "label": "Стоимость",
-        "value": "от 350₽"
-      },
-      {
-        "icon": "Clock",
-        "label": "Скорость работы",
-        "value": "100 м²/день"
-      },
-      {
-        "icon": "Shield",
-        "label": "Гарантия",
-        "value": "5 лет"
-      }
-    ]
-  },
-  "company": {}
+  "header": {
+    "companyName": "СПБ Штукатурка",
+    "companySubtitle": "СПБ Штукатурка"
+  }
 }

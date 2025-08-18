@@ -46,7 +46,28 @@ export default function Header() {
         if (response.ok) {
           const data = await response.json()
           if (data.header) {
-            setHeaderData(data.header)
+            // Безопасная инициализация с дефолтными значениями
+            const safeHeaderData = {
+              companyName: data.header.companyName || "СПБ Штукатурка",
+              companySubtitle: data.header.companySubtitle || "Механизированная отделка",
+              phone: data.header.phone || "+7 (812) 123-45-67",
+              rating: data.header.rating || 4.9,
+              reviewsCount: data.header.reviewsCount || 157,
+              warrantyYears: data.header.warrantyYears || 5,
+              city: data.header.city || "Санкт-Петербург",
+              menuItems: data.header.menuItems || [
+                { name: "Главная", href: "#hero" },
+                { name: "Цены", href: "#pricing" },
+                { name: "Работы", href: "#works" },
+                { name: "Видео", href: "#video" },
+                { name: "Отзывы", href: "#reviews" },
+                { name: "Команда", href: "#team" },
+                { name: "Оборудование", href: "#equipment" },
+                { name: "Услуги", href: "#services" },
+                { name: "Контакты", href: "#contacts" }
+              ]
+            }
+            setHeaderData(safeHeaderData)
           }
         }
       } catch (error) {
@@ -98,7 +119,7 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-6">
-            {headerData.menuItems.map((item) => (
+            {headerData.menuItems?.map((item) => (
               <button
                 key={item.name}
                 onClick={() => handleMenuClick(item.href)}
@@ -152,7 +173,7 @@ export default function Header() {
         {isMenuOpen && (
           <div className="lg:hidden border-t border-gray-200 py-4">
             <nav className="flex flex-col space-y-2">
-              {headerData.menuItems.map((item) => (
+              {headerData.menuItems?.map((item) => (
                 <button
                   key={item.name}
                   onClick={() => handleMenuClick(item.href)}
