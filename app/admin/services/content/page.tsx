@@ -96,7 +96,38 @@ export default function ServicesContentPage() {
       if (response.ok) {
         const data = await response.json()
         if (data.content) {
-          setContent(data.content)
+          // Убеждаемся, что все необходимые поля существуют
+          const safeContent = {
+            header: {
+              badge: data.content.header?.badge || "Наши услуги",
+              title: data.content.header?.title || "Полный комплекс строительных работ",
+              subtitle: data.content.header?.subtitle || "От демонтажа до финишной отделки — выполняем все виды работ качественно и в срок"
+            },
+            consultation: {
+              badge: data.content.consultation?.badge || "Бесплатная консультация",
+              title: data.content.consultation?.title || "Не знаете с чего начать?",
+              description: data.content.consultation?.description || "Наш инженер бесплатно приедет на объект, оценит объем работ и составит подробную смету. Это ни к чему не обязывает.",
+              features: {
+                fast: {
+                  title: data.content.consultation?.features?.fast?.title || "Быстро",
+                  description: data.content.consultation?.features?.fast?.description || "Выезд в день обращения"
+                },
+                free: {
+                  title: data.content.consultation?.features?.free?.title || "Бесплатно",
+                  description: data.content.consultation?.features?.free?.description || "Оценка и консультация"
+                },
+                convenient: {
+                  title: data.content.consultation?.features?.convenient?.title || "Удобно",
+                  description: data.content.consultation?.features?.convenient?.description || "В любое время"
+                },
+                professional: {
+                  title: data.content.consultation?.features?.professional?.title || "Профессионально",
+                  description: data.content.consultation?.features?.professional?.description || "Опытный инженер"
+                }
+              }
+            }
+          }
+          setContent(safeContent)
         }
       }
     } catch (error) {
