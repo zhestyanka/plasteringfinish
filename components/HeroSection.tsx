@@ -762,9 +762,9 @@ export default function HeroSection() {
                       </div>
 
                       <div className="bg-gradient-to-r from-coffee-600 to-coffee-500 rounded-xl p-4 shadow-lg">
-                    <div className="text-center">
-                          <div className="text-sm text-yellow-100/50 mb-1">{calculatorContent.resultsSection.incomeLabel}</div>
-                          <div className="text-3xl font-bold text-yellow-100/50">
+                                            <div className="text-center">
+                          <div className="text-sm text-gray-900 mb-1">{calculatorContent.resultsSection.incomeLabel}</div>
+                          <div className="text-3xl font-bold text-gray-900">
                             {formatNumber(profit)} ₽
                           </div>
                         </div>
