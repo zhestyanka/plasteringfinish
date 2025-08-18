@@ -1,35 +1,53 @@
 {
   "content": {
     "header": {
-      "title": "Получите точную смету",
-      "subtitle": "Бесплатный расчет стоимости"
+      "badge": "Калькулятор стоимости раб",
+      "title": "Получите точную смету"
     },
-    "form": {
-      "name": "Ваше им",
-      "phone": "Номер телефона",
-      "email": "Email",
-      "area": "Площадь помещения (м²)",
-      "message": "Дополнительная информация",
-      "button": "ПОЛУЧИТЬ РАСЧЕТ",
-      "consent": "Нажимая кнопку, вы соглашаетесь с обработкой персональных данных"
+    "priceSection": {
+      "title": "Укажите цены:",
+      "priceLabel": "Сколько ₽ за м²",
+      "pricePlaceholder": "450"
     },
-    "features": {
-      "warranty": {
-        "title": "Гарантия",
-        "value": "до 7 лет"
-      },
-      "visit": {
-        "title": "Выезд",
-        "value": "в день обращения"
-      },
-      "quality": {
-        "title": "Качество",
-        "value": "по ГОСТ"
-      }
+    "objectSection": {
+      "title": "Укажите данные объекта:",
+      "areaLabel": "Сколько м² нужно отштукатурить:",
+      "areaPlaceholder": "100",
+      "thicknessLabel": "Укажите толщину наносимого слоя: см",
+      "thicknessPlaceholder": "2.0",
+      "shiftLabel": "Сколько м² отштукатуриваете в смену:",
+      "shiftPlaceholder": "40"
     },
-    "rating": {
-      "value": "4.9 из 5",
-      "reviews": "157 отзывов на Яндекс.Карты"
+    "mixtureSection": {
+      "title": "Укажите данные по смеси:",
+      "mixtureLabel": "Выберите, какой смесью работать:",
+      "bagWeightLabel": "Укажите сколько кг в 1 мешке:",
+      "bagWeightPlaceholder": "30",
+      "bagPriceLabel": "Сколько стоит 1 мешок смеси: ₽ / мешок",
+      "bagPricePlaceholder": "350",
+      "mixtures": [
+        {
+          "value": "knauf",
+          "label": "Knauf MP 75"
+        },
+        {
+          "value": "volma",
+          "label": "Волма Гипс-Актив Экстра"
+        },
+        {
+          "value": "kreisel",
+          "label": "Kreisel 501"
+        }
+      ]
+    },
+    "resultsSection": {
+      "title": "Результаты",
+      "workCostLabel": "Общая стоимость работ на объекте:",
+      "mixtureCostLabel": "Стоимость смеси составит:",
+      "bagsNeededLabel": "Вам понадобится ориентировочно:",
+      "shiftsNeededLabel": "Объект будет выполнен за:",
+      "incomeLabel": "Доход с объекта составит:",
+      "footer": "Надёжные штукатурные станции от производителя"
     }
   }
 }

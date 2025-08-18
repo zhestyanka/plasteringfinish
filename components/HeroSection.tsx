@@ -61,6 +61,50 @@ export default function HeroSection() {
     calculator: { mixTypes: [] }
   })
 
+  // Данные калькулятора из API
+  const [calculatorContent, setCalculatorContent] = useState({
+    header: {
+      badge: "Калькулятор стоимости работ",
+      title: "Стоимость работ"
+    },
+    priceSection: {
+      title: "Укажите цены:",
+      priceLabel: "Сколько ₽ за м²",
+      pricePlaceholder: "450"
+    },
+    objectSection: {
+      title: "Укажите данные объекта:",
+      areaLabel: "Сколько м² нужно отштукатурить:",
+      areaPlaceholder: "100",
+      thicknessLabel: "Укажите толщину наносимого слоя: см",
+      thicknessPlaceholder: "2.0",
+      shiftLabel: "Сколько м² отштукатуриваете в смену:",
+      shiftPlaceholder: "40"
+    },
+    mixtureSection: {
+      title: "Укажите данные по смеси:",
+      mixtureLabel: "Выберите, какой смесью работать:",
+      bagWeightLabel: "Укажите сколько кг в 1 мешке:",
+      bagWeightPlaceholder: "30",
+      bagPriceLabel: "Сколько стоит 1 мешок смеси: ₽ / мешок",
+      bagPricePlaceholder: "350",
+      mixtures: [
+        { value: "knauf", label: "Knauf MP 75" },
+        { value: "volma", label: "Волма Гипс-Актив Экстра" },
+        { value: "kreisel", label: "Kreisel 501" }
+      ]
+    },
+    resultsSection: {
+      title: "Результаты",
+      workCostLabel: "Общая стоимость работ на объекте:",
+      mixtureCostLabel: "Стоимость смеси составит:",
+      bagsNeededLabel: "Вам понадобится ориентировочно:",
+      shiftsNeededLabel: "Объект будет выполнен за:",
+      incomeLabel: "Доход с объекта составит:",
+      footer: "Надёжные штукатурные станции от производителя"
+    }
+  })
+
   const [companyData, setCompanyData] = useState<CompanyData>({
     name: "СПБ Штукатурка",
     subtitle: "Механизированная отделка",
@@ -75,6 +119,7 @@ export default function HeroSection() {
   useEffect(() => {
     const loadContent = async () => {
       try {
+        // Загружаем основной контент
         const response = await fetch('/api/data/content')
         if (response.ok) {
           const data = await response.json()
@@ -85,8 +130,60 @@ export default function HeroSection() {
             setCompanyData(data.company)
           }
         }
+
+        // Загружаем данные калькулятора
+        const calculatorResponse = await fetch('/api/data/calculator-content')
+        if (calculatorResponse.ok) {
+          const calculatorData = await calculatorResponse.json()
+          if (calculatorData.content) {
+            // Безопасная инициализация с дефолтными значениями
+            const safeCalculatorContent = {
+              header: {
+                badge: calculatorData.content.header?.badge || "Калькулятор стоимости работ",
+                title: calculatorData.content.header?.title || "Стоимость работ"
+              },
+              priceSection: {
+                title: calculatorData.content.priceSection?.title || "Укажите цены:",
+                priceLabel: calculatorData.content.priceSection?.priceLabel || "Сколько ₽ за м²",
+                pricePlaceholder: calculatorData.content.priceSection?.pricePlaceholder || "450"
+              },
+              objectSection: {
+                title: calculatorData.content.objectSection?.title || "Укажите данные объекта:",
+                areaLabel: calculatorData.content.objectSection?.areaLabel || "Сколько м² нужно отштукатурить:",
+                areaPlaceholder: calculatorData.content.objectSection?.areaPlaceholder || "100",
+                thicknessLabel: calculatorData.content.objectSection?.thicknessLabel || "Укажите толщину наносимого слоя: см",
+                thicknessPlaceholder: calculatorData.content.objectSection?.thicknessPlaceholder || "2.0",
+                shiftLabel: calculatorData.content.objectSection?.shiftLabel || "Сколько м² отштукатуриваете в смену:",
+                shiftPlaceholder: calculatorData.content.objectSection?.shiftPlaceholder || "40"
+              },
+              mixtureSection: {
+                title: calculatorData.content.mixtureSection?.title || "Укажите данные по смеси:",
+                mixtureLabel: calculatorData.content.mixtureSection?.mixtureLabel || "Выберите, какой смесью работать:",
+                bagWeightLabel: calculatorData.content.mixtureSection?.bagWeightLabel || "Укажите сколько кг в 1 мешке:",
+                bagWeightPlaceholder: calculatorData.content.mixtureSection?.bagWeightPlaceholder || "30",
+                bagPriceLabel: calculatorData.content.mixtureSection?.bagPriceLabel || "Сколько стоит 1 мешок смеси: ₽ / мешок",
+                bagPricePlaceholder: calculatorData.content.mixtureSection?.bagPricePlaceholder || "350",
+                mixtures: calculatorData.content.mixtureSection?.mixtures || [
+                  { value: "knauf", label: "Knauf MP 75" },
+                  { value: "volma", label: "Волма Гипс-Актив Экстра" },
+                  { value: "kreisel", label: "Kreisel 501" }
+                ]
+              },
+              resultsSection: {
+                title: calculatorData.content.resultsSection?.title || "Результаты",
+                workCostLabel: calculatorData.content.resultsSection?.workCostLabel || "Общая стоимость работ на объекте:",
+                mixtureCostLabel: calculatorData.content.resultsSection?.mixtureCostLabel || "Стоимость смеси составит:",
+                bagsNeededLabel: calculatorData.content.resultsSection?.bagsNeededLabel || "Вам понадобится ориентировочно:",
+                shiftsNeededLabel: calculatorData.content.resultsSection?.shiftsNeededLabel || "Объект будет выполнен за:",
+                incomeLabel: calculatorData.content.resultsSection?.incomeLabel || "Доход с объекта составит:",
+                footer: calculatorData.content.resultsSection?.footer || "Надёжные штукатурные станции от производителя"
+              }
+            }
+            setCalculatorContent(safeCalculatorContent)
+          }
+        }
       } catch (error) {
-        console.error('Error loading hero content:', error)
+        console.error('Error loading content:', error)
       }
     }
 
@@ -503,10 +600,10 @@ export default function HeroSection() {
               <div className="text-center mb-8 md:mb-12">
                 <div className="inline-flex items-center space-x-2 bg-coffee-100 text-coffee-800 px-3 md:px-4 py-2 rounded-full font-medium mb-4 text-sm">
                   <Calculator className="w-3 h-3 md:w-4 md:h-4" />
-                  <span>Калькулятор стоимости работ</span>
+                  <span>{calculatorContent.header.badge}</span>
                 </div>
                 <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">
-                  Стоимость работ
+                  {calculatorContent.header.title}
                 </h3>
                 </div>
 
@@ -515,18 +612,18 @@ export default function HeroSection() {
                 <div className="space-y-6 md:space-y-8">
                   {/* Цены работы */}
                   <div className="bg-coffee-50 rounded-xl p-4 md:p-6">
-                    <h4 className="text-lg font-bold text-gray-900 mb-4">Укажите цены:</h4>
+                    <h4 className="text-lg font-bold text-gray-900 mb-4">{calculatorContent.priceSection.title}</h4>
                     <div className="space-y-4">
                   <div>
                         <label className="block text-gray-800 font-semibold mb-2 text-sm">
-                          Сколько ₽ за м²
+                          {calculatorContent.priceSection.priceLabel}
                         </label>
                         <Input
                           type="text"
                           value={clientPrice}
                           onChange={handleClientPriceChange}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
-                          placeholder="450"
+                          placeholder={calculatorContent.priceSection.pricePlaceholder}
                         />
                       </div>
                     </div>
@@ -534,42 +631,42 @@ export default function HeroSection() {
 
                   {/* Данные объекта */}
                   <div className="bg-coffee-50 rounded-xl p-4 md:p-6">
-                    <h4 className="text-lg font-bold text-gray-900 mb-4">Укажите данные объекта:</h4>
+                    <h4 className="text-lg font-bold text-gray-900 mb-4">{calculatorContent.objectSection.title}</h4>
                     <div className="space-y-4">
                       <div>
                         <label className="block text-gray-800 font-semibold mb-2 text-sm">
-                          Сколько м² нужно отштукатурить:
+                          {calculatorContent.objectSection.areaLabel}
                         </label>
                         <Input
                           type="text"
                           value={areaToPlaster}
                           onChange={handleAreaToPlasterChange}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
-                          placeholder="100"
+                          placeholder={calculatorContent.objectSection.areaPlaceholder}
                         />
                       </div>
                   <div>
                         <label className="block text-gray-800 font-semibold mb-2 text-sm">
-                          Укажите толщину наносимого слоя: см
+                          {calculatorContent.objectSection.thicknessLabel}
                         </label>
                         <Input
                           type="text"
                           value={layerThickness}
                           onChange={handleLayerThicknessChange}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
-                          placeholder="2.0"
+                          placeholder={calculatorContent.objectSection.thicknessPlaceholder}
                         />
                           </div>
                       <div>
                         <label className="block text-gray-800 font-semibold mb-2 text-sm">
-                          Сколько м² отштукатуриваете в смену:
+                          {calculatorContent.objectSection.shiftLabel}
                         </label>
                         <Input
                           type="text"
                           value={areaPerShift}
                           onChange={handleAreaPerShiftChange}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
-                          placeholder="40"
+                          placeholder={calculatorContent.objectSection.shiftPlaceholder}
                         />
                       </div>
                     </div>
@@ -577,46 +674,46 @@ export default function HeroSection() {
 
                   {/* Данные по смеси */}
                   <div className="bg-coffee-50 rounded-xl p-4 md:p-6">
-                    <h4 className="text-lg font-bold text-gray-900 mb-4">Укажите данные по смеси:</h4>
+                    <h4 className="text-lg font-bold text-gray-900 mb-4">{calculatorContent.mixtureSection.title}</h4>
                     <div className="space-y-4">
                       <div>
                         <label className="block text-gray-800 font-semibold mb-2 text-sm">
-                          Выберите, какой смесью работать:
+                          {calculatorContent.mixtureSection.mixtureLabel}
                         </label>
                         <select
                           value={mixType}
                           onChange={(e) => setMixType(e.target.value)}
                           className="w-full border-2 border-gray-200 focus:border-coffee-400 rounded-xl bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coffee-400/20"
                         >
-                          {mixTypes.map((mix) => (
-                            <option key={mix.id} value={mix.id}>
-                              {mix.name}
+                          {calculatorContent.mixtureSection.mixtures.map((mix) => (
+                            <option key={mix.value} value={mix.value}>
+                              {mix.label}
                             </option>
                           ))}
                         </select>
                       </div>
                   <div>
                         <label className="block text-gray-800 font-semibold mb-2 text-sm">
-                          Укажите сколько кг в 1 мешке:
+                          {calculatorContent.mixtureSection.bagWeightLabel}
                         </label>
                         <Input
                           type="text"
                           value={bagWeight}
                           onChange={handleBagWeightChange}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
-                          placeholder="30"
+                          placeholder={calculatorContent.mixtureSection.bagWeightPlaceholder}
                         />
                       </div>
                       <div>
                         <label className="block text-gray-800 font-semibold mb-2 text-sm">
-                          Сколько стоит 1 мешок смеси: ₽ / мешок
+                          {calculatorContent.mixtureSection.bagPriceLabel}
                         </label>
                         <Input
                           type="text"
                           value={bagPrice}
                           onChange={handleBagPriceChange}
                           className="border-2 border-gray-200 focus:border-coffee-400 rounded-xl"
-                          placeholder="350"
+                          placeholder={calculatorContent.mixtureSection.bagPricePlaceholder}
                         />
                       </div>
                     </div>
@@ -626,12 +723,12 @@ export default function HeroSection() {
                 {/* Правая колонка - Результаты */}
                 <div className="space-y-6 md:space-y-8">
                   <div className="bg-gradient-to-br from-coffee-50 to-coffee-100 rounded-2xl p-6 md:p-8 border-2 border-coffee-200">
-                    <h4 className="text-2xl font-bold text-gray-900 mb-6 text-center">Результаты</h4>
+                    <h4 className="text-2xl font-bold text-gray-900 mb-6 text-center">{calculatorContent.resultsSection.title}</h4>
                     
                     <div className="space-y-4 mb-6">
                       <div className="bg-white rounded-xl p-4 shadow-sm">
                         <div className="text-center">
-                          <div className="text-sm text-gray-600 mb-1">Общая стоимость работ на объекте:</div>
+                          <div className="text-sm text-gray-600 mb-1">{calculatorContent.resultsSection.workCostLabel}</div>
                           <div className="text-2xl font-bold text-coffee-600">
                             {formatNumber(totalWorkCost)} ₽
                           </div>
@@ -641,7 +738,7 @@ export default function HeroSection() {
 
                       <div className="bg-white rounded-xl p-4 shadow-sm">
                         <div className="text-center">
-                          <div className="text-sm text-gray-600 mb-1">Стоимость смеси составит:</div>
+                          <div className="text-sm text-gray-600 mb-1">{calculatorContent.resultsSection.mixtureCostLabel}</div>
                           <div className="text-2xl font-bold text-coffee-600">
                             {formatNumber(mixCost)} ₽
                           </div>
@@ -650,7 +747,7 @@ export default function HeroSection() {
 
                       <div className="bg-white rounded-xl p-4 shadow-sm">
                         <div className="text-center">
-                          <div className="text-sm text-gray-600 mb-1">Вам понадобится ориентировочно:</div>
+                          <div className="text-sm text-gray-600 mb-1">{calculatorContent.resultsSection.bagsNeededLabel}</div>
                           <div className="text-3xl font-bold text-coffee-600 mb-1">{formatCount(bagsNeeded)}</div>
                           <div className="text-sm text-gray-600">мешков смеси</div>
                         </div>
@@ -658,7 +755,7 @@ export default function HeroSection() {
 
                       <div className="bg-white rounded-xl p-4 shadow-sm">
                         <div className="text-center">
-                          <div className="text-sm text-gray-600 mb-1">Объект будет выполнен за:</div>
+                          <div className="text-sm text-gray-600 mb-1">{calculatorContent.resultsSection.shiftsNeededLabel}</div>
                           <div className="text-3xl font-bold text-coffee-600 mb-1">{formatCount(shiftsNeeded)}</div>
                           <div className="text-sm text-gray-600">рабочих смен</div>
                         </div>
@@ -666,7 +763,7 @@ export default function HeroSection() {
 
                       <div className="bg-gradient-to-r from-coffee-600 to-coffee-500 rounded-xl p-4 shadow-lg">
                     <div className="text-center">
-                          <div className="text-sm text-yellow-100/50 mb-1">Доход с объекта составит:</div>
+                          <div className="text-sm text-yellow-100/50 mb-1">{calculatorContent.resultsSection.incomeLabel}</div>
                           <div className="text-3xl font-bold text-yellow-100/50">
                             {formatNumber(profit)} ₽
                           </div>
@@ -675,7 +772,7 @@ export default function HeroSection() {
                     </div>
 
                     <div className="text-center text-xs text-gray-700 border-t border-coffee-200 pt-4">
-                      Надёжные штукатурные станции от производителя
+                      {calculatorContent.resultsSection.footer}
                     </div>
                   </div>
                 </div>

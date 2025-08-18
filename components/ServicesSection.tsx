@@ -55,10 +55,43 @@ export default function ServicesSection() {
   })
   const [services, setServices] = useState<Service[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  
+  // Данные контента услуг из API
+  const [servicesContent, setServicesContent] = useState({
+    header: {
+      badge: "Наши услуги",
+      title: "Полный комплекс строительных работ",
+      subtitle: "От демонтажа до финишной отделки — выполняем все виды работ качественно и в срок"
+    },
+    consultation: {
+      badge: "Бесплатная консультация",
+      title: "Не знаете с чего начать?",
+      description: "Наш инженер бесплатно приедет на объект, оценит объем работ и составит подробную смету. Это ни к чему не обязывает.",
+      features: {
+        fast: {
+          title: "Быстро",
+          description: "Выезд в день обращения"
+        },
+        free: {
+          title: "Бесплатно",
+          description: "Оценка и консультация"
+        },
+        convenient: {
+          title: "Удобно",
+          description: "В любое время"
+        },
+        professional: {
+          title: "Профессионально",
+          description: "Опытный инженер"
+        }
+      }
+    }
+  })
 
   useEffect(() => {
     const loadServices = async () => {
       try {
+        // Загружаем услуги
         const response = await fetch('/api/data/services')
         if (response.ok) {
           const data: ServicesData = await response.json()
@@ -67,6 +100,46 @@ export default function ServicesSection() {
           setServices(activeServices)
         } else {
           console.error('Failed to load services')
+        }
+
+        // Загружаем контент услуг
+        const contentResponse = await fetch('/api/data/services-content')
+        if (contentResponse.ok) {
+          const contentData = await contentResponse.json()
+          if (contentData.content) {
+            // Безопасная инициализация с дефолтными значениями
+            const safeServicesContent = {
+              header: {
+                badge: contentData.content.header?.badge || "Наши услуги",
+                title: contentData.content.header?.title || "Полный комплекс строительных работ",
+                subtitle: contentData.content.header?.subtitle || "От демонтажа до финишной отделки — выполняем все виды работ качественно и в срок"
+              },
+              consultation: {
+                badge: contentData.content.consultation?.badge || "Бесплатная консультация",
+                title: contentData.content.consultation?.title || "Не знаете с чего начать?",
+                description: contentData.content.consultation?.description || "Наш инженер бесплатно приедет на объект, оценит объем работ и составит подробную смету. Это ни к чему не обязывает.",
+                features: {
+                  fast: {
+                    title: contentData.content.consultation?.features?.fast?.title || "Быстро",
+                    description: contentData.content.consultation?.features?.fast?.description || "Выезд в день обращения"
+                  },
+                  free: {
+                    title: contentData.content.consultation?.features?.free?.title || "Бесплатно",
+                    description: contentData.content.consultation?.features?.free?.description || "Оценка и консультация"
+                  },
+                  convenient: {
+                    title: contentData.content.consultation?.features?.convenient?.title || "Удобно",
+                    description: contentData.content.consultation?.features?.convenient?.description || "В любое время"
+                  },
+                  professional: {
+                    title: contentData.content.consultation?.features?.professional?.title || "Профессионально",
+                    description: contentData.content.consultation?.features?.professional?.description || "Опытный инженер"
+                  }
+                }
+              }
+            }
+            setServicesContent(safeServicesContent)
+          }
         }
       } catch (error) {
         console.error('Error loading services:', error)
@@ -147,13 +220,13 @@ export default function ServicesSection() {
         <div className="text-center mb-12 md:mb-16">
           <div className="inline-flex items-center space-x-2 bg-coffee-600/20 text-coffee-300 px-3 md:px-4 py-2 rounded-full font-medium mb-4 text-sm backdrop-blur-sm border border-coffee-400/30">
             <Hammer className="w-3 h-3 md:w-4 md:h-4" />
-            <span>Наши услуги</span>
+            <span>{servicesContent.header.badge}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-100 mb-4">
-            Полный комплекс строительных работ
+            {servicesContent.header.title}
           </h2>
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto px-4">
-            От демонтажа до финишной отделки — выполняем все виды работ качественно и в срок
+            {servicesContent.header.subtitle}
           </p>
         </div>
 
@@ -231,16 +304,15 @@ export default function ServicesSection() {
             <div>
               <div className="inline-flex items-center space-x-2 bg-coffee-600/20 text-coffee-300 px-3 md:px-4 py-2 rounded-full font-medium mb-4 text-sm">
                 <MessageCircle className="w-3 h-3 md:w-4 md:h-4" />
-                <span>Бесплатная консультация</span>
+                <span>{servicesContent.consultation.badge}</span>
               </div>
               
               <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-100 mb-4 md:mb-6">
-                Не знаете с чего начать?
+                {servicesContent.consultation.title}
               </h3>
               
               <p className="text-gray-300 mb-6 md:mb-8 text-lg leading-relaxed">
-                Наш инженер бесплатно приедет на объект, оценит объем работ и составит подробную смету. 
-                Это ни к чему не обязывает.
+                {servicesContent.consultation.description}
               </p>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
@@ -249,8 +321,8 @@ export default function ServicesSection() {
                     <Clock className="w-5 h-5 md:w-6 md:h-6 text-coffee-400" />
                   </div>
                   <div>
-                    <div className="text-gray-100 font-semibold text-sm md:text-base">Быстро</div>
-                    <div className="text-gray-300 text-xs md:text-sm">Выезд в день обращения</div>
+                    <div className="text-gray-100 font-semibold text-sm md:text-base">{servicesContent.consultation.features.fast.title}</div>
+                    <div className="text-gray-300 text-xs md:text-sm">{servicesContent.consultation.features.fast.description}</div>
                   </div>
                 </div>
                 
@@ -259,8 +331,8 @@ export default function ServicesSection() {
                     <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-coffee-400" />
                   </div>
                   <div>
-                    <div className="text-gray-100 font-semibold text-sm md:text-base">Бесплатно</div>
-                    <div className="text-gray-300 text-xs md:text-sm">Оценка и консультация</div>
+                    <div className="text-gray-100 font-semibold text-sm md:text-base">{servicesContent.consultation.features.free.title}</div>
+                    <div className="text-gray-300 text-xs md:text-sm">{servicesContent.consultation.features.free.description}</div>
                   </div>
                 </div>
                 
@@ -269,8 +341,8 @@ export default function ServicesSection() {
                     <Calendar className="w-5 h-5 md:w-6 md:h-6 text-coffee-400" />
                   </div>
                   <div>
-                    <div className="text-gray-100 font-semibold text-sm md:text-base">Удобно</div>
-                    <div className="text-gray-300 text-xs md:text-sm">В любое время</div>
+                    <div className="text-gray-100 font-semibold text-sm md:text-base">{servicesContent.consultation.features.convenient.title}</div>
+                    <div className="text-gray-300 text-xs md:text-sm">{servicesContent.consultation.features.convenient.description}</div>
                   </div>
                 </div>
                 
@@ -279,8 +351,8 @@ export default function ServicesSection() {
                     <Phone className="w-5 h-5 md:w-6 md:h-6 text-coffee-400" />
                   </div>
                   <div>
-                    <div className="text-gray-100 font-semibold text-sm md:text-base">Профессионально</div>
-                    <div className="text-gray-300 text-xs md:text-sm">Опытный инженер</div>
+                    <div className="text-gray-100 font-semibold text-sm md:text-base">{servicesContent.consultation.features.professional.title}</div>
+                    <div className="text-gray-300 text-xs md:text-sm">{servicesContent.consultation.features.professional.description}</div>
                   </div>
                 </div>
               </div>
