@@ -277,7 +277,9 @@ export default function PricingSection() {
         <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-3 mb-8 md:mb-12">
           <div className="glass-effect rounded-xl p-4 md:p-6 text-center hover:shadow-glow transition-all duration-300 border border-gray-200 hover:border-coffee-300 hover:scale-105">
             <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-coffee-500 to-coffee-600 rounded-xl flex items-center justify-center mx-auto mb-3">
-              <Shield className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 md:w-6 md:h-6 text-white">
+                <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>
+              </svg>
             </div>
             <div className="text-gray-800 text-xs md:text-sm font-medium">{pricingContent.benefits.warranty.title}</div>
             <div className="text-sm md:text-base text-gray-600">{pricingContent.benefits.warranty.description}</div>
@@ -285,7 +287,10 @@ export default function PricingSection() {
           
           <div className="glass-effect rounded-xl p-4 md:p-6 text-center hover:shadow-glow transition-all duration-300 border border-gray-200 hover:border-coffee-300 hover:scale-105">
             <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-coffee-500 to-coffee-600 rounded-xl flex items-center justify-center mx-auto mb-3">
-              <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 md:w-6 md:h-6 text-white">
+                <path d="M21.801 10A10 10 0 1 1 17 3.335"></path>
+                <path d="m9 11 3 3L22 4"></path>
+              </svg>
             </div>
             <div className="text-gray-800 text-xs md:text-sm font-medium">{pricingContent.benefits.team.title}</div>
             <div className="text-sm md:text-base text-gray-600">{pricingContent.benefits.team.description}</div>
@@ -293,7 +298,9 @@ export default function PricingSection() {
           
           <div className="glass-effect rounded-xl p-4 md:p-6 text-center hover:shadow-glow transition-all duration-300 border border-gray-200 hover:border-coffee-300 hover:scale-105">
             <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-coffee-500 to-coffee-600 rounded-xl flex items-center justify-center mx-auto mb-3">
-              <Star className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 md:w-6 md:h-6 text-white">
+                <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"></path>
+              </svg>
             </div>
             <div className="text-gray-800 text-xs md:text-sm font-medium">{pricingContent.benefits.rating.title}</div>
             <div className="text-sm md:text-base text-gray-600">{pricingContent.benefits.rating.description}</div>
