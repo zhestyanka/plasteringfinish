@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { 
   Save, 
@@ -20,11 +21,43 @@ import {
   EyeOff,
   Star,
   X,
-  CreditCard
+  CreditCard,
+  FileText,
+  MessageCircle
 } from "lucide-react"
 import { toast } from "sonner"
 import { Pricing } from "@/lib/admin/types"
 import { cn } from "@/lib/utils"
+
+interface PricingContent {
+  header: {
+    badge: string
+    title: string
+    subtitle: string
+  }
+  paymentMethods: {
+    title: string
+    description: string
+    methods: string[]
+  }
+  benefits: {
+    title: string
+    items: {
+      title: string
+      description: string
+    }[]
+  }
+  calculator: {
+    title: string
+    subtitle: string
+    description: string
+  }
+  contact: {
+    title: string
+    subtitle: string
+    description: string
+  }
+}
 
 const PRICING_COLORS = [
   { value: "blue", label: "Синий", className: "bg-blue-500" },
@@ -42,6 +75,38 @@ export default function PricingPage() {
   const [editingPlan, setEditingPlan] = useState<Pricing | null>(null)
   const [isAddingNew, setIsAddingNew] = useState(false)
 
+  // Состояние для текстового контента
+  const [content, setContent] = useState<PricingContent>({
+    header: {
+      badge: "Наши тарифы",
+      title: "Прозрачные цены на штукатурку",
+      subtitle: "Выберите подходящий тариф для вашего проекта"
+    },
+    paymentMethods: {
+      title: "Способы оплаты",
+      description: "Удобные варианты оплаты для наших клиентов",
+      methods: ["Наличные", "Банковская карта", "Безналичный расчет"]
+    },
+    benefits: {
+      title: "Преимущества работы с нами",
+      items: [
+        { title: "Гарантия качества", description: "5 лет гарантии на все работы" },
+        { title: "Быстрое выполнение", description: "Сроки от 1 дня" },
+        { title: "Опытные мастера", description: "Более 8 лет опыта" }
+      ]
+    },
+    calculator: {
+      title: "Калькулятор стоимости",
+      subtitle: "Рассчитайте стоимость онлайн",
+      description: "Быстрый расчет стоимости штукатурных работ"
+    },
+    contact: {
+      title: "Получить консультацию",
+      subtitle: "Бесплатная консультация",
+      description: "Наш специалист свяжется с вами в течение 15 минут"
+    }
+  })
+
   const [formData, setFormData] = useState({
     name: "Стандарт",
     price: "450",
@@ -56,6 +121,7 @@ export default function PricingPage() {
 
   useEffect(() => {
     loadPricing()
+    loadContent()
   }, [])
 
   const loadPricing = async () => {
@@ -86,6 +152,74 @@ export default function PricingPage() {
     }
   }
 
+  const loadContent = async () => {
+    try {
+      const response = await fetch('/api/data/pricing-content')
+      if (response.ok) {
+        const data = await response.json()
+        if (data.content) {
+          const safeContent = {
+            header: {
+              badge: data.content.header?.badge || "Наши тарифы",
+              title: data.content.header?.title || "Прозрачные цены на штукатурку",
+              subtitle: data.content.header?.subtitle || "Выберите подходящий тариф для вашего проекта"
+            },
+            paymentMethods: {
+              title: data.content.paymentMethods?.title || "Способы оплаты",
+              description: data.content.paymentMethods?.description || "Удобные варианты оплаты для наших клиентов",
+              methods: data.content.paymentMethods?.methods || ["Наличные", "Банковская карта", "Безналичный расчет"]
+            },
+            benefits: {
+              title: data.content.benefits?.title || "Преимущества работы с нами",
+              items: data.content.benefits?.items || [
+                { title: "Гарантия качества", description: "5 лет гарантии на все работы" },
+                { title: "Быстрое выполнение", description: "Сроки от 1 дня" },
+                { title: "Опытные мастера", description: "Более 8 лет опыта" }
+              ]
+            },
+            calculator: {
+              title: data.content.calculator?.title || "Калькулятор стоимости",
+              subtitle: data.content.calculator?.subtitle || "Рассчитайте стоимость онлайн",
+              description: data.content.calculator?.description || "Быстрый расчет стоимости штукатурных работ"
+            },
+            contact: {
+              title: data.content.contact?.title || "Получить консультацию",
+              subtitle: data.content.contact?.subtitle || "Бесплатная консультация",
+              description: data.content.contact?.description || "Наш специалист свяжется с вами в течение 15 минут"
+            }
+          }
+          setContent(safeContent)
+        }
+      }
+    } catch (error) {
+      console.error('Ошибка загрузки контента:', error)
+    }
+  }
+
+  const saveContent = async () => {
+    setIsSaving(true)
+    try {
+      const response = await fetch('/api/data/pricing-content', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content })
+      })
+
+      if (response.ok) {
+        toast.success('Контент успешно сохранен')
+      } else {
+        throw new Error('Failed to save content')
+      }
+    } catch (error) {
+      console.error('Ошибка сохранения:', error)
+      toast.error('Ошибка сохранения')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
   const savePricing = async () => {
     setIsSaving(true)
     try {
@@ -100,7 +234,7 @@ export default function PricingPage() {
           features: plan.features,
           popular: plan.popular,
           active: plan.active,
-          order: parseInt(plan.id) || 1
+          order: 1
         }))
       }
 
@@ -111,7 +245,7 @@ export default function PricingPage() {
         },
         body: JSON.stringify(apiData)
       })
-
+      
       if (response.ok) {
         toast.success('Тарифы успешно сохранены')
       } else {
@@ -125,108 +259,74 @@ export default function PricingPage() {
     }
   }
 
-  const startEdit = (plan: Pricing) => {
+  const handleAddPlan = () => {
+    setIsAddingNew(true)
+    setEditingPlan(null)
+    setFormData({
+      name: "",
+      price: "",
+      description: "",
+      features: [],
+      popular: false,
+      color: "coffee",
+      active: true
+    })
+  }
+
+  const handleEditPlan = (plan: Pricing) => {
     setEditingPlan(plan)
+    setIsAddingNew(false)
     setFormData({
       name: plan.name,
       price: plan.price.toString(),
       description: plan.description,
-      features: [...plan.features],
+      features: plan.features,
       popular: plan.popular,
       color: plan.color,
       active: plan.active
     })
-    setIsAddingNew(false)
   }
 
-  const startAdd = () => {
-    setEditingPlan(null)
-    setFormData({
-      name: "",
-      price: "",
-      description: "",
-      features: [],
-      popular: false,
-      color: "blue",
-      active: true
-    })
-    setIsAddingNew(true)
-  }
-
-  const saveForm = () => {
-    if (!formData.name.trim()) {
-      toast.error('Введите название тарифа')
+  const handleSavePlan = () => {
+    if (!formData.name || !formData.price) {
+      toast.error('Заполните обязательные поля')
       return
     }
 
-    if (!formData.price || parseFloat(formData.price) <= 0) {
-      toast.error('Введите корректную цену')
-      return
-    }
+    let updatedPlans: Pricing[]
 
     if (editingPlan) {
-      setPricingPlans(prev => prev.map(plan => 
+      // Обновляем существующий план
+      updatedPlans = pricingPlans.map(plan => 
         plan.id === editingPlan.id 
-          ? { ...plan, ...formData }
+          ? {
+              ...plan,
+              name: formData.name,
+              price: parseInt(formData.price),
+              description: formData.description,
+              features: formData.features,
+              popular: formData.popular,
+              color: formData.color,
+              active: formData.active
+            }
           : plan
-      ))
-      toast.success('Тариф обновлен')
+      )
     } else {
+      // Добавляем новый план
       const newPlan: Pricing = {
         id: Date.now().toString(),
-        ...formData
+        name: formData.name,
+        price: parseInt(formData.price),
+        description: formData.description,
+        features: formData.features,
+        popular: formData.popular,
+        color: formData.color,
+        active: formData.active
       }
-      setPricingPlans(prev => [...prev, newPlan])
-      toast.success('Тариф добавлен')
+      updatedPlans = [...pricingPlans, newPlan]
     }
 
-    // Автосохранение
-    setTimeout(async () => {
-      await savePricing()
-    }, 100)
-
-    cancelEdit()
-  }
-
-  const deletePlan = (id: string) => {
-    if (confirm('Вы уверены, что хотите удалить этот тариф?')) {
-      setPricingPlans(prev => prev.filter(plan => plan.id !== id))
-      toast.success('Тариф удален')
-      
-      // Автосохранение
-      setTimeout(async () => {
-        await savePricing()
-      }, 100)
-    }
-  }
-
-  const toggleActive = (id: string) => {
-    setPricingPlans(prev => prev.map(plan => 
-      plan.id === id 
-        ? { ...plan, active: !plan.active }
-        : plan
-    ))
-
-    // Автосохранение
-    setTimeout(async () => {
-      await savePricing()
-    }, 100)
-  }
-
-  const togglePopular = (id: string) => {
-    setPricingPlans(prev => prev.map(plan => 
-      plan.id === id 
-        ? { ...plan, popular: !plan.popular }
-        : plan
-    ))
-
-    // Автосохранение
-    setTimeout(async () => {
-      await savePricing()
-    }, 100)
-  }
-
-  const cancelEdit = () => {
+    setPricingPlans(updatedPlans)
     setEditingPlan(null)
     setIsAddingNew(false)
     setFormData({
@@ -235,10 +335,13 @@ export default function PricingPage() {
       description: "",
       features: [],
       popular: false,
-      color: "blue",
+      color: "coffee",
       active: true
     })
-    setNewFeature("")
+  }
+
+  const handleDeletePlan = (id: string) => {
+    setPricingPlans(pricingPlans.filter(plan => plan.id !== id))
   }
 
   const addFeature = () => {
@@ -258,42 +361,6 @@ export default function PricingPage() {
     }))
   }
 
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value
-    
-    // Убираем все нецифровые символы кроме точки
-    value = value.replace(/[^\d.]/g, '')
-    
-    // Если поле пустое, устанавливаем пустую строку
-    if (value === '') {
-      setFormData(prev => ({ ...prev, price: '' }))
-      return
-    }
-    
-    // Убираем нули в начале только если после них есть другие цифры
-    if (value.startsWith('0') && value.length > 1 && value[1] !== '.') {
-      value = value.replace(/^0+/, '')
-    }
-    
-    // Проверяем что это число
-    const numValue = parseFloat(value)
-    if (!isNaN(numValue) && numValue >= 0) {
-      setFormData(prev => ({ ...prev, price: value }))
-    }
-  }
-
-  const getColorClass = (color: string) => {
-    const colorMap: { [key: string]: string } = {
-      blue: "border-blue-500 bg-blue-50",
-      green: "border-green-500 bg-green-50",
-      purple: "border-purple-500 bg-purple-50",
-      orange: "border-orange-500 bg-orange-50",
-      red: "border-red-500 bg-red-50",
-      coffee: "border-coffee-500 bg-coffee-50"
-    }
-    return colorMap[color] || colorMap.blue
-  }
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -306,251 +373,413 @@ export default function PricingPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Тарифы</h1>
-          <p className="text-gray-600 mt-2">Управление ценовыми планами</p>
+          <h1 className="text-3xl font-bold text-gray-900">Управление тарифами</h1>
+          <p className="text-gray-600 mt-2">Добавление и редактирование тарифных планов</p>
         </div>
-        <div className="flex space-x-3">
-          <Button onClick={startAdd} variant="outline">
-            <Plus className="w-4 h-4 mr-2" />
-            Добавить тариф
-          </Button>
-          <Button onClick={savePricing} disabled={isSaving}>
-            <Save className="w-4 h-4 mr-2" />
-            {isSaving ? 'Сохранение...' : 'Сохранить все'}
-          </Button>
-        </div>
+        <Button onClick={savePricing} disabled={isSaving}>
+          <Save className="w-4 h-4 mr-2" />
+          {isSaving ? 'Сохранение...' : 'Сохранить тарифы'}
+        </Button>
       </div>
 
-      {/* Форма добавления/редактирования */}
-      {(isAddingNew || editingPlan) && (
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              {editingPlan ? 'Редактирование тарифа' : 'Новый тариф'}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <Label htmlFor="name">Название тарифа</Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                />
-              </div>
+      <Tabs defaultValue="pricing" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="pricing" className="flex items-center gap-2">
+            <DollarSign className="w-4 h-4" />
+            Управление тарифами
+          </TabsTrigger>
+          <TabsTrigger value="content" className="flex items-center gap-2">
+            <FileText className="w-4 h-4" />
+            Редактирование текста
+          </TabsTrigger>
+        </TabsList>
 
-              <div>
-                <Label htmlFor="price">Цена (руб/м²)</Label>
-                <Input
-                  id="price"
-                  type="text"
-                  value={formData.price}
-                  onChange={handlePriceChange}
-                />
-              </div>
+        <TabsContent value="pricing" className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold">Тарифные планы</h2>
+            <Button onClick={handleAddPlan}>
+              <Plus className="w-4 h-4 mr-2" />
+              Добавить тариф
+            </Button>
+          </div>
 
-              <div>
-                <Label htmlFor="color">Цветовая схема</Label>
-                <Select 
-                  value={formData.color} 
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, color: value }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {PRICING_COLORS.map(color => (
-                      <SelectItem key={color.value} value={color.value}>
-                        <div className="flex items-center space-x-2">
-                          <div className={cn("w-4 h-4 rounded", color.className)}></div>
-                          <span>{color.label}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+          <div className="grid gap-4">
+            {pricingPlans.map((plan) => (
+              <Card key={plan.id} className={cn(
+                "transition-all",
+                !plan.active && "opacity-60"
+              )}>
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="flex-shrink-0">
+                        <Badge variant={plan.popular ? "default" : "secondary"}>
+                          {plan.popular ? "Популярный" : "Обычный"}
+                        </Badge>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold">{plan.name}</h3>
+                        <p className="text-gray-600">{plan.description}</p>
+                        <p className="text-coffee-600 font-medium">{plan.price}₽/м²</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        checked={plan.active}
+                        onCheckedChange={() => {
+                          setPricingPlans(plans => plans.map(p => 
+                            p.id === plan.id ? { ...p, active: !p.active } : p
+                          ))
+                        }}
+                      />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEditPlan(plan)}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDeletePlan(plan.id)}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
 
-            <div>
-              <Label htmlFor="description">Описание</Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                rows={2}
-              />
-            </div>
-
-            <div>
-              <Label>Особенности тарифа</Label>
-              <div className="space-y-2">
-                <div className="flex space-x-2">
-                  <Input
-                    value={newFeature}
-                    onChange={(e) => setNewFeature(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && addFeature()}
-                  />
-                  <Button type="button" onClick={addFeature}>
-                    <Plus className="w-4 h-4" />
-                  </Button>
+          {/* Форма добавления/редактирования тарифа */}
+          {(isAddingNew || editingPlan) && (
+            <Card>
+              <CardHeader>
+                <CardTitle>
+                  {editingPlan ? 'Редактировать тариф' : 'Добавить новый тариф'}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="name">Название тарифа</Label>
+                    <Input
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="Стандарт"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="price">Цена (₽/м²)</Label>
+                    <Input
+                      id="price"
+                      type="number"
+                      value={formData.price}
+                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                      placeholder="450"
+                    />
+                  </div>
                 </div>
-                {formData.features.length > 0 && (
+
+                <div>
+                  <Label htmlFor="description">Описание</Label>
+                  <Textarea
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    rows={3}
+                    placeholder="Описание тарифного плана"
+                  />
+                </div>
+
+                <div>
+                  <Label>Особенности тарифа</Label>
                   <div className="space-y-2">
                     {formData.features.map((feature, index) => (
-                      <div key={index} className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded">
-                        <span className="text-sm">{feature}</span>
+                      <div key={index} className="flex items-center space-x-2">
+                        <Input
+                          value={feature}
+                          onChange={(e) => {
+                            const newFeatures = [...formData.features]
+                            newFeatures[index] = e.target.value
+                            setFormData({ ...formData, features: newFeatures })
+                          }}
+                        />
                         <Button
+                          type="button"
+                          variant="outline"
                           size="sm"
-                          variant="ghost"
                           onClick={() => removeFeature(index)}
-                          className="text-red-600 hover:text-red-700"
                         >
                           <X className="w-4 h-4" />
                         </Button>
                       </div>
                     ))}
+                    <div className="flex items-center space-x-2">
+                      <Input
+                        value={newFeature}
+                        onChange={(e) => setNewFeature(e.target.value)}
+                        placeholder="Добавить особенность"
+                        onKeyPress={(e) => e.key === 'Enter' && addFeature()}
+                      />
+                      <Button type="button" variant="outline" onClick={addFeature}>
+                        <Plus className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
-                )}
-              </div>
-            </div>
+                </div>
 
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <Switch
-                  checked={formData.active}
-                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, active: checked }))}
-                />
-                <Label>Активный тариф</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Switch
-                  checked={formData.popular}
-                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, popular: checked }))}
-                />
-                <Label>Популярный тариф</Label>
-              </div>
-            </div>
-
-            <div className="flex space-x-3">
-              <Button onClick={saveForm}>
-                <CheckCircle className="w-4 h-4 mr-2" />
-                {editingPlan ? 'Сохранить изменения' : 'Добавить тариф'}
-              </Button>
-              <Button variant="outline" onClick={cancelEdit}>
-                Отмена
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Список тарифов */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {pricingPlans.map((plan) => (
-          <Card 
-            key={plan.id} 
-            className={cn(
-              "relative border-2",
-              !plan.active && "opacity-60",
-              plan.popular && "ring-2 ring-yellow-400 ring-offset-2",
-              getColorClass(plan.color)
-            )}
-          >
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <div>
+                <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-center space-x-2">
-                    <CardTitle className="text-xl">{plan.name}</CardTitle>
-                    {plan.popular && (
-                      <Badge className="bg-yellow-500 text-white">
-                        <Star className="w-3 h-3 mr-1" />
-                        Популярный
-                      </Badge>
-                    )}
+                    <Switch
+                      id="popular"
+                      checked={formData.popular}
+                      onCheckedChange={(checked) => setFormData({ ...formData, popular: checked })}
+                    />
+                    <Label htmlFor="popular">Популярный тариф</Label>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">{plan.description}</p>
-                  <div className="mt-2">
-                    <span className="text-3xl font-bold text-gray-900">{plan.price}</span>
-                    <span className="text-gray-600 ml-1">руб/м²</span>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="active"
+                      checked={formData.active}
+                      onCheckedChange={(checked) => setFormData({ ...formData, active: checked })}
+                    />
+                    <Label htmlFor="active">Активный</Label>
                   </div>
                 </div>
-                
-                <div className="flex space-x-1">
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => toggleActive(plan.id)}
-                    className={plan.active ? "text-green-600" : "text-gray-400"}
-                  >
-                    {plan.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => startEdit(plan)}
-                  >
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => deletePlan(plan.id)}
-                    className="text-red-600 hover:text-red-700"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="text-sm">
-                  <h4 className="font-medium text-gray-900 mb-2">Включено:</h4>
-                  <ul className="space-y-1">
-                    {plan.features.map((feature, index) => (
-                      <li key={index} className="flex items-start space-x-2">
-                        <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-600">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                
-                <div className="flex items-center space-x-2">
-                  <Badge variant={plan.active ? "default" : "secondary"}>
-                    {plan.active ? "Активен" : "Неактивен"}
-                  </Badge>
-                  {plan.popular && (
-                    <Badge variant="outline" className="border-yellow-400 text-yellow-600">
-                      Популярный
-                    </Badge>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
 
-      {pricingPlans.length === 0 && !isAddingNew && (
-        <Card>
-          <CardContent className="text-center py-12">
-            <CreditCard className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Нет тарифов
-            </h3>
-            <p className="text-gray-600 mb-4">
-              Добавьте первый ценовой план
-            </p>
-            <Button onClick={startAdd}>
-              <Plus className="w-4 h-4 mr-2" />
-              Добавить тариф
+                <div className="flex justify-end space-x-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setEditingPlan(null)
+                      setIsAddingNew(false)
+                    }}
+                  >
+                    Отмена
+                  </Button>
+                  <Button onClick={handleSavePlan}>
+                    {editingPlan ? 'Сохранить' : 'Добавить'}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+
+        <TabsContent value="content" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-semibold">Редактирование текста тарифов</h2>
+              <p className="text-gray-600 mt-2">Настройка текстового контента страницы тарифов</p>
+            </div>
+            <Button 
+              onClick={saveContent} 
+              disabled={isSaving}
+              className="bg-gradient-to-r from-coffee-600 to-coffee-500 hover:from-coffee-700 hover:to-coffee-600"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              {isSaving ? 'Сохранение...' : 'Сохранить контент'}
             </Button>
-          </CardContent>
-        </Card>
-      )}
+          </div>
+
+          <div className="grid gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <DollarSign className="w-5 h-5" />
+                  Заголовок страницы
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="badge">Бейдж</Label>
+                  <Input
+                    id="badge"
+                    value={content.header.badge}
+                    onChange={(e) => setContent({
+                      ...content,
+                      header: { ...content.header, badge: e.target.value }
+                    })}
+                    placeholder="Наши тарифы"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="title">Заголовок</Label>
+                  <Input
+                    id="title"
+                    value={content.header.title}
+                    onChange={(e) => setContent({
+                      ...content,
+                      header: { ...content.header, title: e.target.value }
+                    })}
+                    placeholder="Прозрачные цены на штукатурку"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="subtitle">Подзаголовок</Label>
+                  <Textarea
+                    id="subtitle"
+                    value={content.header.subtitle}
+                    onChange={(e) => setContent({
+                      ...content,
+                      header: { ...content.header, subtitle: e.target.value }
+                    })}
+                    placeholder="Выберите подходящий тариф для вашего проекта"
+                    rows={2}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CreditCard className="w-5 h-5" />
+                  Способы оплаты
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="payment-title">Заголовок</Label>
+                  <Input
+                    id="payment-title"
+                    value={content.paymentMethods.title}
+                    onChange={(e) => setContent({
+                      ...content,
+                      paymentMethods: { ...content.paymentMethods, title: e.target.value }
+                    })}
+                    placeholder="Способы оплаты"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="payment-description">Описание</Label>
+                  <Textarea
+                    id="payment-description"
+                    value={content.paymentMethods.description}
+                    onChange={(e) => setContent({
+                      ...content,
+                      paymentMethods: { ...content.paymentMethods, description: e.target.value }
+                    })}
+                    placeholder="Удобные варианты оплаты для наших клиентов"
+                    rows={2}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Star className="w-5 h-5" />
+                  Преимущества
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="benefits-title">Заголовок</Label>
+                  <Input
+                    id="benefits-title"
+                    value={content.benefits.title}
+                    onChange={(e) => setContent({
+                      ...content,
+                      benefits: { ...content.benefits, title: e.target.value }
+                    })}
+                    placeholder="Преимущества работы с нами"
+                  />
+                </div>
+                <div className="space-y-4">
+                  <Label>Пункты преимуществ</Label>
+                  {content.benefits.items.map((item, index) => (
+                    <div key={index} className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label>Заголовок {index + 1}</Label>
+                        <Input
+                          value={item.title}
+                          onChange={(e) => {
+                            const newItems = [...content.benefits.items]
+                            newItems[index] = { ...item, title: e.target.value }
+                            setContent({
+                              ...content,
+                              benefits: { ...content.benefits, items: newItems }
+                            })
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <Label>Описание {index + 1}</Label>
+                        <Input
+                          value={item.description}
+                          onChange={(e) => {
+                            const newItems = [...content.benefits.items]
+                            newItems[index] = { ...item, description: e.target.value }
+                            setContent({
+                              ...content,
+                              benefits: { ...content.benefits, items: newItems }
+                            })
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageCircle className="w-5 h-5" />
+                  Контактная форма
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="contact-title">Заголовок</Label>
+                  <Input
+                    id="contact-title"
+                    value={content.contact.title}
+                    onChange={(e) => setContent({
+                      ...content,
+                      contact: { ...content.contact, title: e.target.value }
+                    })}
+                    placeholder="Получить консультацию"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="contact-subtitle">Подзаголовок</Label>
+                  <Input
+                    id="contact-subtitle"
+                    value={content.contact.subtitle}
+                    onChange={(e) => setContent({
+                      ...content,
+                      contact: { ...content.contact, subtitle: e.target.value }
+                    })}
+                    placeholder="Бесплатная консультация"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="contact-description">Описание</Label>
+                  <Textarea
+                    id="contact-description"
+                    value={content.contact.description}
+                    onChange={(e) => setContent({
+                      ...content,
+                      contact: { ...content.contact, description: e.target.value }
+                    })}
+                    placeholder="Наш специалист свяжется с вами в течение 15 минут"
+                    rows={2}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 } 

@@ -1,120 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server'
-import fs from 'fs'
+import { promises as fs } from 'fs'
 import path from 'path'
 
 const dataFilePath = path.join(process.cwd(), 'data', 'pricing-content.json')
 
-// Функция для чтения данных из файла
-function readData() {
+export async function GET() {
   try {
-    if (fs.existsSync(dataFilePath)) {
-      const data = fs.readFileSync(dataFilePath, 'utf8')
-      return JSON.parse(data)
-    }
+    const data = await fs.readFile(dataFilePath, 'utf8')
+    return NextResponse.json(JSON.parse(data))
   } catch (error) {
-    console.error('Ошибка чтения файла pricing-content.json:', error)
-  }
-  
-  // Возвращаем данные по умолчанию, если файл не существует
-  return {
-    content: {
-      header: {
-        badge: "Прозрачные цены",
-        title: "Тарифы на механизированную штукатурку",
-        subtitle: "Выберите подходящий тариф для вашего проекта"
-      },
-      paymentMethods: {
-        cash: {
-          title: "Наличные",
-          description: "Оплата наличными при завершении работ"
+    // Если файл не существует, возвращаем данные по умолчанию
+    const defaultData = {
+      content: {
+        header: {
+          badge: "Наши тарифы",
+          title: "Прозрачные цены на штукатурку",
+          subtitle: "Выберите подходящий тариф для вашего проекта"
         },
-        card: {
-          title: "Банковская карта",
-          description: "Безналичная оплата картой, возможна рассрочка"
+        paymentMethods: {
+          title: "Способы оплаты",
+          description: "Удобные варианты оплаты для наших клиентов",
+          methods: ["Наличные", "Банковская карта", "Безналичный расчет"]
         },
-        bank: {
-          title: "Банковский перевод",
-          description: "Оплата по счету для юридических лиц",
-          discount: "Скидка 5%"
-        }
-      },
-      benefits: {
-        warranty: {
-          title: "Гарантия качества",
-          description: "До 5 лет гарантии на все виды работ"
+        benefits: {
+          title: "Преимущества работы с нами",
+          items: [
+            { "title": "Гарантия качества", "description": "5 лет гарантии на все работы" },
+            { "title": "Быстрое выполнение", "description": "Сроки от 1 дня" },
+            { "title": "Опытные мастера", "description": "Более 8 лет опыта" }
+          ]
         },
-        team: {
-          title: "Оптимная команда",
-          description: "Более 8 лет на рынке строительных услуг"
+        calculator: {
+          title: "Калькулятор стоимости",
+          subtitle: "Рассчитайте стоимость онлайн",
+          description: "Быстрый расчет стоимости штукатурных работ"
         },
-        rating: {
-          title: "Высокий рейтинг",
-          description: "4.9/5 звоезд по отзывам клиентов"
-        }
-      },
-      calculator: {
-        title: "Получите точную смету",
-        description: "Наш инженер предложит бесплатно, проведет замеры и рассчитает точную стоимость с учетом всех особенностей вашего объекта",
-        features: {
-          warranty: {
-            title: "Гарантия",
-            value: "до 7 лет"
-          },
-          visit: {
-            title: "Выезд",
-            value: "в день обращения"
-          },
-          quality: {
-            title: "Качество",
-            value: "по ГОСТ"
-          }
-        },
-        rating: {
-          stars: "4.9 из 5",
-          reviews: "157 отзывов на Яндекс.Карты"
-        }
-      },
-      form: {
-        title: "Заказать расчет",
-        subtitle: "Бесплатно и без обязательств",
         contact: {
-          phone: "+7 (812) 123-45-67",
-          email: "info@shtukaturka-spb.ru",
-          address: "Санкт-Петербург",
-          hours: "Ежедневно 9:00-21:00"
+          title: "Получить консультацию",
+          subtitle: "Бесплатная консультация",
+          description: "Наш специалист свяжется с вами в течение 15 минут"
         }
       }
     }
-  }
-}
-
-// Функция для записи данных в файл
-function writeData(data: any) {
-  try {
-    // Создаем директорию, если она не существует
-    const dir = path.dirname(dataFilePath)
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true })
-    }
-    
-    fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), 'utf8')
-    return true
-  } catch (error) {
-    console.error('Ошибка записи файла pricing-content.json:', error)
-    return false
-  }
-}
-
-export async function GET() {
-  try {
-    const data = readData()
-    return NextResponse.json(data)
-  } catch (error) {
-    console.error('Ошибка GET /api/data/pricing-content:', error)
-    return NextResponse.json(
-      { error: 'Ошибка загрузки данных' },
-      { status: 500 }
-    )
+    return NextResponse.json(defaultData)
   }
 }
 
@@ -122,30 +50,18 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     
-    if (!body.content) {
-      return NextResponse.json(
-        { error: 'Отсутствует content в теле запроса' },
-        { status: 400 }
-      )
-    }
+    // Создаем директорию, если она не существует
+    const dir = path.dirname(dataFilePath)
+    await fs.mkdir(dir, { recursive: true })
     
-    const success = writeData(body)
+    // Записываем данные в файл
+    await fs.writeFile(dataFilePath, JSON.stringify(body, null, 2), 'utf8')
     
-    if (success) {
-      return NextResponse.json({ 
-        success: true, 
-        message: 'Данные успешно сохранены' 
-      })
-    } else {
-      return NextResponse.json(
-        { error: 'Ошибка сохранения данных' },
-        { status: 500 }
-      )
-    }
+    return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Ошибка POST /api/data/pricing-content:', error)
+    console.error('Ошибка сохранения контента тарифов:', error)
     return NextResponse.json(
-      { error: 'Ошибка обработки запроса' },
+      { error: 'Ошибка сохранения данных' },
       { status: 500 }
     )
   }

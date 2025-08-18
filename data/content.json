@@ -8,42 +8,15 @@
     "warrantyYears": 5,
     "city": "Санкт-Петербург",
     "menuItems": [
-      {
-        "name": "Главная",
-        "href": "#hero"
-      },
-      {
-        "name": "Услуги",
-        "href": "#services"
-      },
-      {
-        "name": "Работы",
-        "href": "#works"
-      },
-      {
-        "name": "Цены",
-        "href": "#pricing"
-      },
-      {
-        "name": "Видео",
-        "href": "#video"
-      },
-      {
-        "name": "Отзывы",
-        "href": "#reviews"
-      },
-      {
-        "name": "Команда",
-        "href": "#team"
-      },
-      {
-        "name": "Оборудование",
-        "href": "#equipment"
-      },
-      {
-        "name": "Контакты",
-        "href": "#contacts"
-      }
+      { "name": "Главная", "href": "#hero" },
+      { "name": "Услуги", "href": "#services" },
+      { "name": "Работы", "href": "#works" },
+      { "name": "Цены", "href": "#pricing" },
+      { "name": "Видео", "href": "#video" },
+      { "name": "Отзывы", "href": "#reviews" },
+      { "name": "Команда", "href": "#team" },
+      { "name": "Оборудование", "href": "#equipment" },
+      { "name": "Контакты", "href": "#contacts" }
     ]
   },
   "hero": {
@@ -65,5 +38,26 @@
     "clientsCount": 1250,
     "experienceYears": 8,
     "warrantyYears": 5
+  },
+  "contacts": {
+    "phone": "+7 (812) 986-98-03",
+    "email": "9110163777@rambler.ru",
+    "address": "Санкт-Петербург, ул. Примерная, д. 123",
+    "workingHours": "Пн-Вс: 8:00-20:00",
+    "socialMedia": {
+      "telegram": "@plasteringfinish",
+      "whatsapp": "+7 (812) 986-98-03",
+      "vk": "https://vk.com/plasteringfinish"
+    },
+    "description": "Профессиональная механизированная штукатурка в Санкт-Петербурге. Работаем с объектами любой сложности. Используем современное оборудование и качественные материалы. Гарантия на все виды работ до 5 лет."
+  },
+  "footer": {
+    "copyright": "© 2024 «Штукатур СПб» Все права защищены",
+    "privacyPolicy": "Политика конфиденциальности",
+    "privacyPolicyUrl": "#",
+    "development": "Разработка сайта: WebZavod.bz",
+    "developmentUrl": "#",
+    "phones": ["8 (812) 986-98-03", "8 (963) 329-65-63"],
+    "callbackButton": "Перезвоните мне"
   }
 }
