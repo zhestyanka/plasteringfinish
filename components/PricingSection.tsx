@@ -274,31 +274,29 @@ export default function PricingSection() {
 
 
         {/* Trust Indicators */}
-        <div className="bg-white rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-center">
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 md:w-16 md:h-16 bg-coffee-100 rounded-xl md:rounded-2xl flex items-center justify-center mb-3 md:mb-4">
-                <Shield className="w-6 h-6 md:w-8 md:h-8 text-coffee-600" />
-              </div>
-              <h4 className="text-lg md:text-xl font-bold text-gray-900 mb-2">{pricingContent.benefits.warranty.title}</h4>
-              <p className="text-gray-600 text-sm md:text-base">{pricingContent.benefits.warranty.description}</p>
+        <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-3 mb-8 md:mb-12">
+          <div className="glass-effect rounded-xl p-4 md:p-6 text-center hover:shadow-glow transition-all duration-300 border border-gray-200 hover:border-coffee-300 hover:scale-105">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-coffee-500 to-coffee-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <Shield className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 md:w-16 md:h-16 bg-coffee-100 rounded-xl md:rounded-2xl flex items-center justify-center mb-3 md:mb-4">
-                <CheckCircle className="w-6 h-6 md:w-8 md:h-8 text-coffee-600" />
-              </div>
-              <h4 className="text-lg md:text-xl font-bold text-gray-900 mb-2">{pricingContent.benefits.team.title}</h4>
-              <p className="text-gray-600 text-sm md:text-base">{pricingContent.benefits.team.description}</p>
+            <div className="text-gray-800 text-xs md:text-sm font-medium">{pricingContent.benefits.warranty.title}</div>
+            <div className="text-sm md:text-base text-gray-600">{pricingContent.benefits.warranty.description}</div>
+          </div>
+          
+          <div className="glass-effect rounded-xl p-4 md:p-6 text-center hover:shadow-glow transition-all duration-300 border border-gray-200 hover:border-coffee-300 hover:scale-105">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-coffee-500 to-coffee-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
-            
-            <div className="flex flex-col items-center">
-              <div className="w-12 h-12 md:w-16 md:h-16 bg-coffee-100 rounded-xl md:rounded-2xl flex items-center justify-center mb-3 md:mb-4">
-                <Star className="w-6 h-6 md:w-8 md:h-8 text-coffee-600" />
-              </div>
-              <h4 className="text-lg md:text-xl font-bold text-gray-900 mb-2">{pricingContent.benefits.rating.title}</h4>
-              <p className="text-gray-600 text-sm md:text-base">{pricingContent.benefits.rating.description}</p>
+            <div className="text-gray-800 text-xs md:text-sm font-medium">{pricingContent.benefits.team.title}</div>
+            <div className="text-sm md:text-base text-gray-600">{pricingContent.benefits.team.description}</div>
+          </div>
+          
+          <div className="glass-effect rounded-xl p-4 md:p-6 text-center hover:shadow-glow transition-all duration-300 border border-gray-200 hover:border-coffee-300 hover:scale-105">
+            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-coffee-500 to-coffee-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <Star className="w-5 h-5 md:w-6 md:h-6 text-white" />
             </div>
+            <div className="text-gray-800 text-xs md:text-sm font-medium">{pricingContent.benefits.rating.title}</div>
+            <div className="text-sm md:text-base text-gray-600">{pricingContent.benefits.rating.description}</div>
           </div>
         </div>
 
