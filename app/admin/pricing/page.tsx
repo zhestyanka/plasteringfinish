@@ -235,7 +235,74 @@ export default function PricingPage() {
       if (response.ok) {
         const data = await response.json()
         if (data.content) {
-          setContent(data.content)
+          // Безопасная инициализация с дефолтными значениями
+          const safeContent = {
+            header: {
+              badge: data.content.header?.badge || "Прозрачные цены",
+              title: data.content.header?.title || "Тарифы на механизированную штукатурку",
+              subtitle: data.content.header?.subtitle || "Выберите подходящий тариф для вашего проекта"
+            },
+            paymentMethods: {
+              cash: {
+                title: data.content.paymentMethods?.cash?.title || "Наличные",
+                description: data.content.paymentMethods?.cash?.description || "Оплата наличными при завершении работ"
+              },
+              card: {
+                title: data.content.paymentMethods?.card?.title || "Банковская карта",
+                description: data.content.paymentMethods?.card?.description || "Безналичная оплата картой, возможна рассрочка"
+              },
+              transfer: {
+                title: data.content.paymentMethods?.transfer?.title || "Банковский перевод",
+                description: data.content.paymentMethods?.transfer?.description || "Оплата по счету для юридических лиц",
+                discount: data.content.paymentMethods?.transfer?.discount || "Скидка 5%"
+              }
+            },
+            benefits: {
+              warranty: {
+                title: data.content.benefits?.warranty?.title || "Гарантия качества",
+                description: data.content.benefits?.warranty?.description || "До 5 лет гарантии на все виды работ"
+              },
+              team: {
+                title: data.content.benefits?.team?.title || "Оптимная команда",
+                description: data.content.benefits?.team?.description || "Более 8 лет на рынке строительных услуг"
+              },
+              rating: {
+                title: data.content.benefits?.rating?.title || "Высокий рейтинг",
+                description: data.content.benefits?.rating?.description || "4.9/5 звоезд по отзывам клиентов"
+              }
+            },
+            calculator: {
+              title: data.content.calculator?.title || "Получите точную смету",
+              description: data.content.calculator?.description || "Наш инженер предложит бесплатно, проведет замеры и рассчитает точную стоимость с учетом всех особенностей вашего объекта",
+              form: {
+                name: data.content.calculator?.form?.name || "Ваше имя",
+                phone: data.content.calculator?.form?.phone || "Номер телефона",
+                area: data.content.calculator?.form?.area || "Площадь помещения (м²)",
+                message: data.content.calculator?.form?.message || "Дополнительная информация о проекте",
+                button: data.content.calculator?.form?.button || "ПОЛУЧИТЬ РАСЧЕТ",
+                consent: data.content.calculator?.form?.consent || "Нажимая кнопку, вы соглашаетесь с обработкой персональных данных"
+              },
+              features: {
+                warranty: {
+                  title: data.content.calculator?.features?.warranty?.title || "Гарантия",
+                  value: data.content.calculator?.features?.warranty?.value || "до 7 лет"
+                },
+                visit: {
+                  title: data.content.calculator?.features?.visit?.title || "Выезд",
+                  value: data.content.calculator?.features?.visit?.value || "в день обращения"
+                },
+                quality: {
+                  title: data.content.calculator?.features?.quality?.title || "Качество",
+                  value: data.content.calculator?.features?.quality?.value || "по ГОСТ"
+                }
+              },
+              rating: {
+                value: data.content.calculator?.rating?.value || "4.9 из 5",
+                reviews: data.content.calculator?.rating?.reviews || "157 отзывов на Яндекс.Карты"
+              }
+            }
+          }
+          setContent(safeContent)
         }
       }
     } catch (error) {
@@ -703,12 +770,12 @@ export default function PricingPage() {
                       <Label htmlFor="transfer-title">Заголовок</Label>
                       <Input
                         id="transfer-title"
-                        value={content.paymentMethods.transfer.title}
+                        value={content.paymentMethods?.transfer?.title || ""}
                         onChange={(e) => setContent({
                           ...content,
                           paymentMethods: {
                             ...content.paymentMethods,
-                            transfer: { ...content.paymentMethods.transfer, title: e.target.value }
+                            transfer: { ...content.paymentMethods?.transfer, title: e.target.value }
                           }
                         })}
                       />
@@ -717,12 +784,12 @@ export default function PricingPage() {
                       <Label htmlFor="transfer-desc">Описание</Label>
                       <Textarea
                         id="transfer-desc"
-                        value={content.paymentMethods.transfer.description}
+                        value={content.paymentMethods?.transfer?.description || ""}
                         onChange={(e) => setContent({
                           ...content,
                           paymentMethods: {
                             ...content.paymentMethods,
-                            transfer: { ...content.paymentMethods.transfer, description: e.target.value }
+                            transfer: { ...content.paymentMethods?.transfer, description: e.target.value }
                           }
                         })}
                         rows={2}
@@ -732,12 +799,12 @@ export default function PricingPage() {
                       <Label htmlFor="transfer-discount">Скидка</Label>
                       <Input
                         id="transfer-discount"
-                        value={content.paymentMethods.transfer.discount}
+                        value={content.paymentMethods?.transfer?.discount || ""}
                         onChange={(e) => setContent({
                           ...content,
                           paymentMethods: {
                             ...content.paymentMethods,
-                            transfer: { ...content.paymentMethods.transfer, discount: e.target.value }
+                            transfer: { ...content.paymentMethods?.transfer, discount: e.target.value }
                           }
                         })}
                         placeholder="Скидка 5%"

@@ -2,66 +2,71 @@
   {
     "id": "1",
     "title": "Штукатурка квартиры в новостройке",
-    "description": "Механизированная штукатурка стен и потолков в трехкомнатной квартире. Площадь работ 180 м².",
-    "image": "/images/works/work1.jpg",
-    "location": "Санкт-Петербург, ул. Ленина, 15",
-    "completionDate": "2024-01-15",
     "area": 180,
     "duration": "5 дней",
-    "clientPrice": 350,
-    "mixCost": 45000,
-    "profit": 18000
+    "description": "Механизированная штукатурка стен и потолков в трехкомнатной квартире. Площадь работ 180 м².",
+    "images": [
+      "/placeholder.jpg"
+    ],
+    "location": 180,
+    "active": true,
+    "featured": false,
+    "order": 1
   },
   {
     "id": "2",
     "title": "Отделка офисного помещения",
-    "description": "Штукатурка стен в современном офисном центре. Высокие потолки, сложная геометрия.",
-    "image": "/images/works/work2.jpg",
-    "location": "Санкт-Петербург, Невский пр., 100",
-    "completionDate": "2024-02-20",
     "area": 250,
     "duration": "7 дней",
-    "clientPrice": 400,
-    "mixCost": 60000,
-    "profit": 40000
+    "description": "Штукатурка стен в современном офисном центре. Высокие потолки, сложная геометрия.",
+    "images": [
+      "/placeholder.jpg"
+    ],
+    "location": 250,
+    "active": false,
+    "featured": false,
+    "order": 2
   },
   {
     "id": "3",
     "title": "Загородный дом в Ленинградской области",
-    "description": "Внутренняя отделка загородного дома. Работа с деревянными поверхностями и высокими потолками.",
-    "image": "/images/works/work3.jpg",
-    "location": "Ленинградская область, Всеволожский район",
-    "completionDate": "2024-03-10",
     "area": 320,
     "duration": "10 дней",
-    "clientPrice": 450,
-    "mixCost": 72000,
-    "profit": 72000
+    "description": "Внутренняя отделка загородного дома. Работа с деревянными поверхностями и высокими потолками.",
+    "images": [
+      "/placeholder.jpg"
+    ],
+    "location": 320,
+    "active": true,
+    "featured": false,
+    "order": 3
   },
   {
     "id": "4",
     "title": "Торговый центр на Московском проспекте",
-    "description": "Штукатурка стен в торговом центре. Большие объемы, сжатые сроки, высокие требования к качеству.",
-    "image": "/images/works/work4.jpg",
-    "location": "Санкт-Петербург, Московский пр., 200",
-    "completionDate": "2024-04-05",
     "area": 500,
     "duration": "12 дней",
-    "clientPrice": 380,
-    "mixCost": 120000,
-    "profit": 70000
+    "description": "Штукатурка стен в торговом центре. Большие объемы, сжатые сроки, высокие требования к качеству.",
+    "images": [
+      "/placeholder.jpg"
+    ],
+    "location": 500,
+    "active": true,
+    "featured": false,
+    "order": 4
   },
   {
     "id": "5",
     "title": "Элитная квартира в центре города",
-    "description": "Премиальная отделка квартиры с дизайнерским ремонтом. Использование дорогих материалов.",
-    "image": "/images/works/work5.jpg",
-    "location": "Санкт-Петербург, ул. Марата, 50",
-    "completionDate": "2024-05-15",
     "area": 150,
     "duration": "8 дней",
-    "clientPrice": 550,
-    "mixCost": 45000,
-    "profit": 37500
+    "description": "Премиальная отделка квартиры с дизайнерским ремонтом. Использование дорогих материалов.",
+    "images": [
+      "/placeholder.jpg"
+    ],
+    "location": 150,
+    "active": true,
+    "featured": false,
+    "order": 5
   }
 ]

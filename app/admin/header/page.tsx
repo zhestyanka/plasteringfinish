@@ -123,26 +123,6 @@ export default function HeaderPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="header-phone">Телефон в хедере</Label>
-              <Input
-                id="header-phone"
-                value={headerData.phone || ''}
-                onChange={(e) => setHeaderData(prev => ({ ...prev, phone: e.target.value }))}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="header-city">Город</Label>
-              <Input
-                id="header-city"
-                value={headerData.city || ''}
-                onChange={(e) => setHeaderData(prev => ({ ...prev, city: e.target.value }))}
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div>
               <Label htmlFor="header-rating">Рейтинг</Label>
               <Input
                 id="header-rating"
@@ -156,22 +136,12 @@ export default function HeaderPage() {
             </div>
 
             <div>
-              <Label htmlFor="header-reviews">Количество отзывов</Label>
-              <Input
-                id="header-reviews"
-                type="number"
-                value={headerData.reviewsCount || 0}
-                onChange={(e) => setHeaderData(prev => ({ ...prev, reviewsCount: Number(e.target.value) }))}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="header-warranty">Гарантия (лет)</Label>
+              <Label htmlFor="header-warranty">Гарантия</Label>
               <Input
                 id="header-warranty"
-                type="number"
-                value={headerData.warrantyYears || 5}
-                onChange={(e) => setHeaderData(prev => ({ ...prev, warrantyYears: Number(e.target.value) }))}
+                value={headerData.warrantyText || '5 лет'}
+                onChange={(e) => setHeaderData(prev => ({ ...prev, warrantyText: e.target.value }))}
+                placeholder="5 лет"
               />
             </div>
           </div>

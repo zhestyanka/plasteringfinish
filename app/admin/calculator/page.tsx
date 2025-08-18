@@ -9,79 +9,96 @@ import { Label } from "@/components/ui/label"
 import { 
   Save, 
   Calculator,
-  MessageSquare,
-  Shield,
-  Clock,
-  Award
+  DollarSign,
+  Ruler,
+  Package,
+  Settings
 } from "lucide-react"
 import { toast } from "sonner"
 
 interface CalculatorContent {
   header: {
+    badge: string
     title: string
-    subtitle: string
   }
-  form: {
-    name: string
-    phone: string
-    email: string
-    area: string
-    message: string
-    button: string
-    consent: string
+  priceSection: {
+    title: string
+    priceLabel: string
+    pricePlaceholder: string
   }
-  features: {
-    warranty: {
-      title: string
-      value: string
-    }
-    visit: {
-      title: string
-      value: string
-    }
-    quality: {
-      title: string
-      value: string
-    }
+  objectSection: {
+    title: string
+    areaLabel: string
+    areaPlaceholder: string
+    thicknessLabel: string
+    thicknessPlaceholder: string
+    shiftLabel: string
+    shiftPlaceholder: string
   }
-  rating: {
-    value: string
-    reviews: string
+  mixtureSection: {
+    title: string
+    mixtureLabel: string
+    bagWeightLabel: string
+    bagWeightPlaceholder: string
+    bagPriceLabel: string
+    bagPricePlaceholder: string
+    mixtures: Array<{
+      value: string
+      label: string
+    }>
+  }
+  resultsSection: {
+    title: string
+    workCostLabel: string
+    mixtureCostLabel: string
+    bagsNeededLabel: string
+    shiftsNeededLabel: string
+    incomeLabel: string
+    footer: string
   }
 }
 
 export default function CalculatorPage() {
   const [content, setContent] = useState<CalculatorContent>({
     header: {
-      title: "Рассчитайте стоимость штукатурки",
-      subtitle: "Получите точную смету за 5 минут"
+      badge: "Калькулятор стоимости работ",
+      title: "Стоимость работ"
     },
-    form: {
-      name: "Ваше имя",
-      phone: "Номер телефона",
-      email: "Email",
-      area: "Площадь помещения (м²)",
-      message: "Дополнительная информация",
-      button: "РАССЧИТАТЬ СТОИМОСТЬ",
-      consent: "Нажимая кнопку, вы соглашаетесь с обработкой персональных данных"
+    priceSection: {
+      title: "Укажите цены:",
+      priceLabel: "Сколько ₽ за м²",
+      pricePlaceholder: "450"
     },
-    features: {
-      warranty: {
-        title: "Гарантия",
-        value: "до 7 лет"
-      },
-      visit: {
-        title: "Выезд",
-        value: "в день обращения"
-      },
-      quality: {
-        title: "Качество",
-        value: "по ГОСТ"
-      }
+    objectSection: {
+      title: "Укажите данные объекта:",
+      areaLabel: "Сколько м² нужно отштукатурить:",
+      areaPlaceholder: "100",
+      thicknessLabel: "Укажите толщину наносимого слоя: см",
+      thicknessPlaceholder: "2.0",
+      shiftLabel: "Сколько м² отштукатуриваете в смену:",
+      shiftPlaceholder: "40"
     },
-    rating: {
-      value: "4.9 из 5",
-      reviews: "157 отзывов на Яндекс.Карты"
+    mixtureSection: {
+      title: "Укажите данные по смеси:",
+      mixtureLabel: "Выберите, какой смесью работать:",
+      bagWeightLabel: "Укажите сколько кг в 1 мешке:",
+      bagWeightPlaceholder: "30",
+      bagPriceLabel: "Сколько стоит 1 мешок смеси: ₽ / мешок",
+      bagPricePlaceholder: "350",
+      mixtures: [
+        { value: "knauf", label: "Knauf MP 75" },
+        { value: "volma", label: "Волма Гипс-Актив Экстра" },
+        { value: "kreisel", label: "Kreisel 501" }
+      ]
+    },
+    resultsSection: {
+      title: "Результаты",
+      workCostLabel: "Общая стоимость работ на объекте:",
+      mixtureCostLabel: "Стоимость смеси составит:",
+      bagsNeededLabel: "Вам понадобится ориентировочно:",
+      shiftsNeededLabel: "Объект будет выполнен за:",
+      incomeLabel: "Доход с объекта составит:",
+      footer: "Надёжные штукатурные станции от производителя"
     }
   })
 
@@ -98,38 +115,47 @@ export default function CalculatorPage() {
       if (response.ok) {
         const data = await response.json()
         if (data.content) {
-          // Убеждаемся, что все необходимые поля существуют
+          // Безопасная инициализация с дефолтными значениями
           const safeContent = {
             header: {
-              title: data.content.header?.title || "Рассчитайте стоимость штукатурки",
-              subtitle: data.content.header?.subtitle || "Получите точную смету за 5 минут"
+              badge: data.content.header?.badge || "Калькулятор стоимости работ",
+              title: data.content.header?.title || "Стоимость работ"
             },
-            form: {
-              name: data.content.form?.name || "Ваше имя",
-              phone: data.content.form?.phone || "Номер телефона",
-              email: data.content.form?.email || "Email",
-              area: data.content.form?.area || "Площадь помещения (м²)",
-              message: data.content.form?.message || "Дополнительная информация",
-              button: data.content.form?.button || "РАССЧИТАТЬ СТОИМОСТЬ",
-              consent: data.content.form?.consent || "Нажимая кнопку, вы соглашаетесь с обработкой персональных данных"
+            priceSection: {
+              title: data.content.priceSection?.title || "Укажите цены:",
+              priceLabel: data.content.priceSection?.priceLabel || "Сколько ₽ за м²",
+              pricePlaceholder: data.content.priceSection?.pricePlaceholder || "450"
             },
-            features: {
-              warranty: {
-                title: data.content.features?.warranty?.title || "Гарантия",
-                value: data.content.features?.warranty?.value || "до 7 лет"
-              },
-              visit: {
-                title: data.content.features?.visit?.title || "Выезд",
-                value: data.content.features?.visit?.value || "в день обращения"
-              },
-              quality: {
-                title: data.content.features?.quality?.title || "Качество",
-                value: data.content.features?.quality?.value || "по ГОСТ"
-              }
+            objectSection: {
+              title: data.content.objectSection?.title || "Укажите данные объекта:",
+              areaLabel: data.content.objectSection?.areaLabel || "Сколько м² нужно отштукатурить:",
+              areaPlaceholder: data.content.objectSection?.areaPlaceholder || "100",
+              thicknessLabel: data.content.objectSection?.thicknessLabel || "Укажите толщину наносимого слоя: см",
+              thicknessPlaceholder: data.content.objectSection?.thicknessPlaceholder || "2.0",
+              shiftLabel: data.content.objectSection?.shiftLabel || "Сколько м² отштукатуриваете в смену:",
+              shiftPlaceholder: data.content.objectSection?.shiftPlaceholder || "40"
             },
-            rating: {
-              value: data.content.rating?.value || "4.9 из 5",
-              reviews: data.content.rating?.reviews || "157 отзывов на Яндекс.Карты"
+            mixtureSection: {
+              title: data.content.mixtureSection?.title || "Укажите данные по смеси:",
+              mixtureLabel: data.content.mixtureSection?.mixtureLabel || "Выберите, какой смесью работать:",
+              bagWeightLabel: data.content.mixtureSection?.bagWeightLabel || "Укажите сколько кг в 1 мешке:",
+              bagWeightPlaceholder: data.content.mixtureSection?.bagWeightPlaceholder || "30",
+              bagPriceLabel: data.content.mixtureSection?.bagPriceLabel || "Сколько стоит 1 мешок смеси: ₽ / мешок",
+              bagPricePlaceholder: data.content.mixtureSection?.bagPricePlaceholder || "350",
+              mixtures: data.content.mixtureSection?.mixtures || [
+                { value: "knauf", label: "Knauf MP 75" },
+                { value: "volma", label: "Волма Гипс-Актив Экстра" },
+                { value: "kreisel", label: "Kreisel 501" }
+              ]
+            },
+            resultsSection: {
+              title: data.content.resultsSection?.title || "Результаты",
+              workCostLabel: data.content.resultsSection?.workCostLabel || "Общая стоимость работ на объекте:",
+              mixtureCostLabel: data.content.resultsSection?.mixtureCostLabel || "Стоимость смеси составит:",
+              bagsNeededLabel: data.content.resultsSection?.bagsNeededLabel || "Вам понадобится ориентировочно:",
+              shiftsNeededLabel: data.content.resultsSection?.shiftsNeededLabel || "Объект будет выполнен за:",
+              incomeLabel: data.content.resultsSection?.incomeLabel || "Доход с объекта составит:",
+              footer: data.content.resultsSection?.footer || "Надёжные штукатурные станции от производителя"
             }
           }
           setContent(safeContent)
@@ -179,7 +205,7 @@ export default function CalculatorPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Редактирование калькулятора</h1>
-          <p className="text-gray-600 mt-2">Настройка текстового контента калькулятора</p>
+          <p className="text-gray-600 mt-2">Настройка калькулятора стоимости работ</p>
         </div>
         <Button 
           onClick={saveContent} 
@@ -200,27 +226,74 @@ export default function CalculatorPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Заголовок</Label>
+            <Label htmlFor="header-badge">Бейдж</Label>
             <Input
-              id="title"
+              id="header-badge"
+              value={content.header.badge}
+              onChange={(e) => setContent({
+                ...content,
+                header: { ...content.header, badge: e.target.value }
+              })}
+              placeholder="Калькулятор стоимости работ"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="header-title">Заголовок</Label>
+            <Input
+              id="header-title"
               value={content.header.title}
               onChange={(e) => setContent({
                 ...content,
                 header: { ...content.header, title: e.target.value }
               })}
-              placeholder="Рассчитайте стоимость штукатурки"
+              placeholder="Стоимость работ"
             />
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <DollarSign className="w-5 h-5" />
+            Секция цен
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="subtitle">Подзаголовок</Label>
+            <Label htmlFor="price-title">Заголовок секции</Label>
             <Input
-              id="subtitle"
-              value={content.header.subtitle}
+              id="price-title"
+              value={content.priceSection.title}
               onChange={(e) => setContent({
                 ...content,
-                header: { ...content.header, subtitle: e.target.value }
+                priceSection: { ...content.priceSection, title: e.target.value }
               })}
-              placeholder="Получите точную смету за 5 минут"
+              placeholder="Укажите цены:"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="price-label">Подпись поля цены</Label>
+            <Input
+              id="price-label"
+              value={content.priceSection.priceLabel}
+              onChange={(e) => setContent({
+                ...content,
+                priceSection: { ...content.priceSection, priceLabel: e.target.value }
+              })}
+              placeholder="Сколько ₽ за м²"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="price-placeholder">Placeholder поля цены</Label>
+            <Input
+              id="price-placeholder"
+              value={content.priceSection.pricePlaceholder}
+              onChange={(e) => setContent({
+                ...content,
+                priceSection: { ...content.priceSection, pricePlaceholder: e.target.value }
+              })}
+              placeholder="450"
             />
           </div>
         </CardContent>
@@ -229,263 +302,286 @@ export default function CalculatorPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <MessageSquare className="w-5 h-5" />
-            Поля формы
+            <Ruler className="w-5 h-5" />
+            Секция данных объекта
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="object-title">Заголовок секции</Label>
+            <Input
+              id="object-title"
+              value={content.objectSection.title}
+              onChange={(e) => setContent({
+                ...content,
+                objectSection: { ...content.objectSection, title: e.target.value }
+              })}
+              placeholder="Укажите данные объекта:"
+            />
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="form-name">Поле "Имя"</Label>
+              <Label htmlFor="area-label">Подпись поля площади</Label>
               <Input
-                id="form-name"
-                value={content.form.name}
+                id="area-label"
+                value={content.objectSection.areaLabel}
                 onChange={(e) => setContent({
                   ...content,
-                  form: { ...content.form, name: e.target.value }
+                  objectSection: { ...content.objectSection, areaLabel: e.target.value }
                 })}
-                placeholder="Ваше имя"
+                placeholder="Сколько м² нужно отштукатурить:"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="form-phone">Поле "Телефон"</Label>
+              <Label htmlFor="area-placeholder">Placeholder площади</Label>
               <Input
-                id="form-phone"
-                value={content.form.phone}
+                id="area-placeholder"
+                value={content.objectSection.areaPlaceholder}
                 onChange={(e) => setContent({
                   ...content,
-                  form: { ...content.form, phone: e.target.value }
+                  objectSection: { ...content.objectSection, areaPlaceholder: e.target.value }
                 })}
-                placeholder="Номер телефона"
+                placeholder="100"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="thickness-label">Подпись поля толщины</Label>
+              <Input
+                id="thickness-label"
+                value={content.objectSection.thicknessLabel}
+                onChange={(e) => setContent({
+                  ...content,
+                  objectSection: { ...content.objectSection, thicknessLabel: e.target.value }
+                })}
+                placeholder="Укажите толщину наносимого слоя: см"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="form-email">Поле "Email"</Label>
+              <Label htmlFor="thickness-placeholder">Placeholder толщины</Label>
               <Input
-                id="form-email"
-                value={content.form.email}
+                id="thickness-placeholder"
+                value={content.objectSection.thicknessPlaceholder}
                 onChange={(e) => setContent({
                   ...content,
-                  form: { ...content.form, email: e.target.value }
+                  objectSection: { ...content.objectSection, thicknessPlaceholder: e.target.value }
                 })}
-                placeholder="Email"
+                placeholder="2.0"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="shift-label">Подпись поля смены</Label>
+              <Input
+                id="shift-label"
+                value={content.objectSection.shiftLabel}
+                onChange={(e) => setContent({
+                  ...content,
+                  objectSection: { ...content.objectSection, shiftLabel: e.target.value }
+                })}
+                placeholder="Сколько м² отштукатуриваете в смену:"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="form-area">Поле "Площадь"</Label>
+              <Label htmlFor="shift-placeholder">Placeholder смены</Label>
               <Input
-                id="form-area"
-                value={content.form.area}
+                id="shift-placeholder"
+                value={content.objectSection.shiftPlaceholder}
                 onChange={(e) => setContent({
                   ...content,
-                  form: { ...content.form, area: e.target.value }
+                  objectSection: { ...content.objectSection, shiftPlaceholder: e.target.value }
                 })}
-                placeholder="Площадь помещения (м²)"
+                placeholder="40"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Package className="w-5 h-5" />
+            Секция смеси
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="mixture-title">Заголовок секции</Label>
+            <Input
+              id="mixture-title"
+              value={content.mixtureSection.title}
+              onChange={(e) => setContent({
+                ...content,
+                mixtureSection: { ...content.mixtureSection, title: e.target.value }
+              })}
+              placeholder="Укажите данные по смеси:"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="mixture-label">Подпись выбора смеси</Label>
+            <Input
+              id="mixture-label"
+              value={content.mixtureSection.mixtureLabel}
+              onChange={(e) => setContent({
+                ...content,
+                mixtureSection: { ...content.mixtureSection, mixtureLabel: e.target.value }
+              })}
+              placeholder="Выберите, какой смесью работать:"
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="bag-weight-label">Подпись веса мешка</Label>
+              <Input
+                id="bag-weight-label"
+                value={content.mixtureSection.bagWeightLabel}
+                onChange={(e) => setContent({
+                  ...content,
+                  mixtureSection: { ...content.mixtureSection, bagWeightLabel: e.target.value }
+                })}
+                placeholder="Укажите сколько кг в 1 мешке:"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="form-message">Поле "Сообщение"</Label>
+              <Label htmlFor="bag-weight-placeholder">Placeholder веса мешка</Label>
               <Input
-                id="form-message"
-                value={content.form.message}
+                id="bag-weight-placeholder"
+                value={content.mixtureSection.bagWeightPlaceholder}
                 onChange={(e) => setContent({
                   ...content,
-                  form: { ...content.form, message: e.target.value }
+                  mixtureSection: { ...content.mixtureSection, bagWeightPlaceholder: e.target.value }
                 })}
-                placeholder="Дополнительная информация"
+                placeholder="30"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="bag-price-label">Подпись цены мешка</Label>
+              <Input
+                id="bag-price-label"
+                value={content.mixtureSection.bagPriceLabel}
+                onChange={(e) => setContent({
+                  ...content,
+                  mixtureSection: { ...content.mixtureSection, bagPriceLabel: e.target.value }
+                })}
+                placeholder="Сколько стоит 1 мешок смеси: ₽ / мешок"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="form-button">Текст кнопки</Label>
+              <Label htmlFor="bag-price-placeholder">Placeholder цены мешка</Label>
               <Input
-                id="form-button"
-                value={content.form.button}
+                id="bag-price-placeholder"
+                value={content.mixtureSection.bagPricePlaceholder}
                 onChange={(e) => setContent({
                   ...content,
-                  form: { ...content.form, button: e.target.value }
+                  mixtureSection: { ...content.mixtureSection, bagPricePlaceholder: e.target.value }
                 })}
-                placeholder="РАССЧИТАТЬ СТОИМОСТЬ"
+                placeholder="350"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Settings className="w-5 h-5" />
+            Секция результатов
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="results-title">Заголовок результатов</Label>
+            <Input
+              id="results-title"
+              value={content.resultsSection.title}
+              onChange={(e) => setContent({
+                ...content,
+                resultsSection: { ...content.resultsSection, title: e.target.value }
+              })}
+              placeholder="Результаты"
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="work-cost-label">Подпись стоимости работ</Label>
+              <Input
+                id="work-cost-label"
+                value={content.resultsSection.workCostLabel}
+                onChange={(e) => setContent({
+                  ...content,
+                  resultsSection: { ...content.resultsSection, workCostLabel: e.target.value }
+                })}
+                placeholder="Общая стоимость работ на объекте:"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="mixture-cost-label">Подпись стоимости смеси</Label>
+              <Input
+                id="mixture-cost-label"
+                value={content.resultsSection.mixtureCostLabel}
+                onChange={(e) => setContent({
+                  ...content,
+                  resultsSection: { ...content.resultsSection, mixtureCostLabel: e.target.value }
+                })}
+                placeholder="Стоимость смеси составит:"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="bags-needed-label">Подпись количества мешков</Label>
+              <Input
+                id="bags-needed-label"
+                value={content.resultsSection.bagsNeededLabel}
+                onChange={(e) => setContent({
+                  ...content,
+                  resultsSection: { ...content.resultsSection, bagsNeededLabel: e.target.value }
+                })}
+                placeholder="Вам понадобится ориентировочно:"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="shifts-needed-label">Подпись количества смен</Label>
+              <Input
+                id="shifts-needed-label"
+                value={content.resultsSection.shiftsNeededLabel}
+                onChange={(e) => setContent({
+                  ...content,
+                  resultsSection: { ...content.resultsSection, shiftsNeededLabel: e.target.value }
+                })}
+                placeholder="Объект будет выполнен за:"
               />
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="form-consent">Согласие</Label>
-            <Textarea
-              id="form-consent"
-              value={content.form.consent}
+            <Label htmlFor="income-label">Подпись дохода</Label>
+            <Input
+              id="income-label"
+              value={content.resultsSection.incomeLabel}
               onChange={(e) => setContent({
                 ...content,
-                form: { ...content.form, consent: e.target.value }
+                resultsSection: { ...content.resultsSection, incomeLabel: e.target.value }
               })}
-              placeholder="Нажимая кнопку, вы соглашаетесь с обработкой персональных данных"
-              rows={2}
+              placeholder="Доход с объекта составит:"
             />
           </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Shield className="w-5 h-5" />
-            Особенности
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-3">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-sm">
-                  <Shield className="w-4 h-4" />
-                  Гарантия
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="warranty-title">Заголовок</Label>
-                  <Input
-                    id="warranty-title"
-                    value={content.features.warranty.title}
-                    onChange={(e) => setContent({
-                      ...content,
-                      features: {
-                        ...content.features,
-                        warranty: { ...content.features.warranty, title: e.target.value }
-                      }
-                    })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="warranty-value">Значение</Label>
-                  <Input
-                    id="warranty-value"
-                    value={content.features.warranty.value}
-                    onChange={(e) => setContent({
-                      ...content,
-                      features: {
-                        ...content.features,
-                        warranty: { ...content.features.warranty, value: e.target.value }
-                      }
-                    })}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-sm">
-                  <Clock className="w-4 h-4" />
-                  Выезд
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="visit-title">Заголовок</Label>
-                  <Input
-                    id="visit-title"
-                    value={content.features.visit.title}
-                    onChange={(e) => setContent({
-                      ...content,
-                      features: {
-                        ...content.features,
-                        visit: { ...content.features.visit, title: e.target.value }
-                      }
-                    })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="visit-value">Значение</Label>
-                  <Input
-                    id="visit-value"
-                    value={content.features.visit.value}
-                    onChange={(e) => setContent({
-                      ...content,
-                      features: {
-                        ...content.features,
-                        visit: { ...content.features.visit, value: e.target.value }
-                      }
-                    })}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-sm">
-                  <Award className="w-4 h-4" />
-                  Качество
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="quality-title">Заголовок</Label>
-                  <Input
-                    id="quality-title"
-                    value={content.features.quality.title}
-                    onChange={(e) => setContent({
-                      ...content,
-                      features: {
-                        ...content.features,
-                        quality: { ...content.features.quality, title: e.target.value }
-                      }
-                    })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="quality-value">Значение</Label>
-                  <Input
-                    id="quality-value"
-                    value={content.features.quality.value}
-                    onChange={(e) => setContent({
-                      ...content,
-                      features: {
-                        ...content.features,
-                        quality: { ...content.features.quality, value: e.target.value }
-                      }
-                    })}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Award className="w-5 h-5" />
-            Рейтинг
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="rating-value">Значение рейтинга</Label>
-              <Input
-                id="rating-value"
-                value={content.rating.value}
-                onChange={(e) => setContent({
-                  ...content,
-                  rating: { ...content.rating, value: e.target.value }
-                })}
-                placeholder="4.9 из 5"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="rating-reviews">Количество отзывов</Label>
-              <Input
-                id="rating-reviews"
-                value={content.rating.reviews}
-                onChange={(e) => setContent({
-                  ...content,
-                  rating: { ...content.rating, reviews: e.target.value }
-                })}
-                placeholder="157 отзывов на Яндекс.Карты"
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="results-footer">Подпись внизу</Label>
+            <Input
+              id="results-footer"
+              value={content.resultsSection.footer}
+              onChange={(e) => setContent({
+                ...content,
+                resultsSection: { ...content.resultsSection, footer: e.target.value }
+              })}
+              placeholder="Надёжные штукатурные станции от производителя"
+            />
           </div>
         </CardContent>
       </Card>

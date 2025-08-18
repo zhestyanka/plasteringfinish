@@ -50,17 +50,33 @@ export default function ContentPage() {
       const response = await fetch('/api/data/content')
       if (response.ok) {
         const data = await response.json()
-        const heroData = data.hero || {}
-        // Убеждаемся, что stats существует
-        if (!heroData.stats) {
-          heroData.stats = [
+        
+        // Безопасная инициализация hero с дефолтными значениями
+        const heroData = {
+          title: data.hero?.title || "Механизированная штукатурка стен",
+          subtitle: data.hero?.subtitle || "в Санкт-Петербурге",
+          description: data.hero?.description || "Профессиональная механизированная штукатурка стен и потолков с использованием современного оборудования. Быстро, качественно, с гарантией 5 лет. Работаем по всему Санкт-Петербургу и Ленинградской области.",
+          stats: data.hero?.stats || [
             { icon: "Ruble", label: "Стоимость", value: "от 350₽" },
             { icon: "Clock", label: "Скорость работы", value: "100 м²/день" },
             { icon: "Shield", label: "Гарантия", value: "5 лет" }
-          ]
+          ],
+          calculator: data.hero?.calculator || { mixTypes: [] }
         }
+        
+        // Безопасная инициализация company с дефолтными значениями
+        const companyData = {
+          name: data.company?.name || "Штукатур СПб",
+          subtitle: data.company?.subtitle || "Профессиональная механизированная штукатурка",
+          rating: data.company?.rating || 4.9,
+          reviewsCount: data.company?.reviewsCount || 157,
+          clientsCount: data.company?.clientsCount || 1250,
+          experienceYears: data.company?.experienceYears || 8,
+          warrantyYears: data.company?.warrantyYears || 5
+        }
+        
         setHeroContent(heroData)
-        setCompany(data.company || {})
+        setCompany(companyData)
       } else {
         throw new Error('Failed to load content')
       }

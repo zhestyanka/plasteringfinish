@@ -1,69 +1,22 @@
 {
-  "header": {
-    "companyName": "Штукатур СПб",
-    "companySubtitle": "Механизированная отделка",
-    "phone": "+7 (812) 986-98-01",
-    "rating": 4.9,
-    "reviewsCount": 157,
-    "warrantyYears": 5,
-    "city": "Санкт-Петербург",
-    "menuItems": [
+  "hero": {
+    "stats": [
       {
-        "name": "Главная",
-        "href": "#hero"
+        "icon": "Ruble",
+        "label": "Стоимость",
+        "value": "от 350₽"
       },
       {
-        "name": "Услуги",
-        "href": "#services"
+        "icon": "Clock",
+        "label": "Скорость работы",
+        "value": "100 м²/день"
       },
       {
-        "name": "Работы",
-        "href": "#works"
-      },
-      {
-        "name": "Цены",
-        "href": "#pricing"
-      },
-      {
-        "name": "Видео",
-        "href": "#video"
-      },
-      {
-        "name": "Отзывы",
-        "href": "#reviews"
-      },
-      {
-        "name": "Команда",
-        "href": "#team"
-      },
-      {
-        "name": "Оборудование",
-        "href": "#equipment"
-      },
-      {
-        "name": "Контакты",
-        "href": "#contacts"
+        "icon": "Shield",
+        "label": "Гарантия",
+        "value": "5 лет"
       }
     ]
   },
-  "hero": {
-    "title": "Механизированная штукатурка стен",
-    "subtitle": "в Санкт-Петербурге",
-    "description": "Профессиональная механизированная штукатурка стен и потолков с использованием современного оборудования. Быстро, качественно, с гарантией 5 лет. Работаем по всему Санкт-Петербургу и Ленинградской области.",
-    "stats": [
-      { "icon": "Ruble", "label": "Стоимость", "value": "от 350₽" },
-      { "icon": "Clock", "label": "Скорость работы", "value": "100 м²/день" },
-      { "icon": "Shield", "label": "Гарантия", "value": "5 лет" }
-    ],
-    "calculator": { "mixTypes": [] }
-  },
-  "company": {
-    "name": "Штукатур СПб",
-    "subtitle": "Профессиональная механизированная штукатурка",
-    "rating": 4.9,
-    "reviewsCount": 157,
-    "clientsCount": 1250,
-    "experienceYears": 8,
-    "warrantyYears": 5
-  }
+  "company": {}
 }
