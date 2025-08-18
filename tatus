@@ -1,0 +1,3 @@
+[33me6705ee[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Исправлена интеграция с Telegram и добавлена конфигурация для VPS
+[33mf477abe[m Fix Telegram API route and update all form submission handlers to send data to Telegram
+[33md17bbf0[m Add Telegram bot testing script and complete setup

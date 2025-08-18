@@ -138,14 +138,7 @@ export default function AdminLoginPage() {
               </Button>
             </form>
 
-            {/* Демо данные */}
-            <div className="mt-6 p-4 bg-coffee-50 rounded-lg border border-coffee-200">
-              <p className="text-sm text-coffee-700 font-medium mb-2">Демо доступ:</p>
-              <div className="text-xs text-coffee-600 space-y-1">
-                <p><span className="font-medium">Логин:</span> admin</p>
-                <p><span className="font-medium">Пароль:</span> admin123</p>
-              </div>
-            </div>
+
           </CardContent>
         </Card>
 

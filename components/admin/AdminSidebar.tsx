@@ -19,28 +19,39 @@ import {
   Wrench,
   X,
   Video,
-  Contact
+  Contact,
+  Calculator
 } from "lucide-react"
 
 const menuItems = [
   { title: "Главная", href: "/admin", icon: LayoutDashboard },
+  { title: "Хедер", href: "/admin/header", icon: FileText },
+  { title: "Главная страница", href: "/admin/content", icon: Home },
+  { title: "Калькулятор", href: "/admin/calculator", icon: Calculator },
   { 
-    title: "Контент", 
-    icon: FileText,
+    title: "Услуги", 
+    icon: Briefcase,
     subItems: [
-      { title: "Главная страница", href: "/admin/content", icon: Home },
-      { title: "Контакты", href: "/admin/contacts", icon: Contact },
-      { title: "Футер", href: "/admin/footer", icon: FileText }
+      { title: "Управление услугами", href: "/admin/services", icon: Briefcase },
+      { title: "Редактирование текста", href: "/admin/services/content", icon: FileText }
     ]
   },
-  { title: "Тарифы", href: "/admin/pricing", icon: DollarSign },
   { title: "Портфолио", href: "/admin/works", icon: Camera },
+  { 
+    title: "Тарифы", 
+    icon: DollarSign,
+    subItems: [
+      { title: "Управление тарифами", href: "/admin/pricing", icon: DollarSign },
+      { title: "Редактирование текста", href: "/admin/pricing/content", icon: FileText }
+    ]
+  },
   { title: "Видео", href: "/admin/video", icon: Video },
   { title: "Отзывы", href: "/admin/reviews", icon: Star },
   { title: "Команда", href: "/admin/team", icon: Users },
   { title: "Оборудование", href: "/admin/equipment", icon: Wrench },
-  { title: "Услуги", href: "/admin/services", icon: Briefcase },
-  { title: "Пароль", href: "/admin/settings", icon: Settings },
+  { title: "Контакты", href: "/admin/contacts", icon: Contact },
+  { title: "Футер", href: "/admin/footer", icon: FileText },
+  { title: "Учетная Запись", href: "/admin/settings", icon: Settings },
 ]
 
 interface AdminSidebarProps {
