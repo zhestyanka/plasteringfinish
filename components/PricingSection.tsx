@@ -38,10 +38,34 @@ export default function PricingSection() {
   const [selectedPlan, setSelectedPlan] = useState("standard")
   const [area, setArea] = useState(70)
   const [rooms, setRooms] = useState(2)
+  
+  // Данные контента тарифов из API
+  const [pricingContent, setPricingContent] = useState({
+    header: {
+      badge: "Прозрачные цены",
+      title: "Тарифы на механизированную штукатурку",
+      subtitle: "Выберите подходящий тариф для вашего проекта"
+    },
+    benefits: {
+      warranty: {
+        title: "Гарантия качества",
+        description: "До 5 лет гарантии на все виды работ"
+      },
+      team: {
+        title: "Оптимная команда",
+        description: "Более 8 лет на рынке строительных услуг"
+      },
+      rating: {
+        title: "Высокий рейтинг",
+        description: "4.9/5 звоезд по отзывам клиентов"
+      }
+    }
+  })
 
   useEffect(() => {
     const loadPricing = async () => {
       try {
+        // Загружаем тарифы
         const response = await fetch('/api/data/pricing')
         if (response.ok) {
           const data: PricingData = await response.json()
@@ -59,6 +83,37 @@ export default function PricingSection() {
           }
         } else {
           console.error('Failed to load pricing')
+        }
+
+        // Загружаем контент тарифов
+        const contentResponse = await fetch('/api/data/pricing-content')
+        if (contentResponse.ok) {
+          const contentData = await contentResponse.json()
+          if (contentData.content) {
+            // Безопасная инициализация с дефолтными значениями
+            const safePricingContent = {
+              header: {
+                badge: contentData.content.header?.badge || "Прозрачные цены",
+                title: contentData.content.header?.title || "Тарифы на механизированную штукатурку",
+                subtitle: contentData.content.header?.subtitle || "Выберите подходящий тариф для вашего проекта"
+              },
+              benefits: {
+                warranty: {
+                  title: contentData.content.benefits?.warranty?.title || "Гарантия качества",
+                  description: contentData.content.benefits?.warranty?.description || "До 5 лет гарантии на все виды работ"
+                },
+                team: {
+                  title: contentData.content.benefits?.team?.title || "Оптимная команда",
+                  description: contentData.content.benefits?.team?.description || "Более 8 лет на рынке строительных услуг"
+                },
+                rating: {
+                  title: contentData.content.benefits?.rating?.title || "Высокий рейтинг",
+                  description: contentData.content.benefits?.rating?.description || "4.9/5 звоезд по отзывам клиентов"
+                }
+              }
+            }
+            setPricingContent(safePricingContent)
+          }
         }
       } catch (error) {
         console.error('Error loading pricing:', error)
@@ -166,13 +221,13 @@ export default function PricingSection() {
         <div className="text-center mb-12 md:mb-16">
           <div className="inline-flex items-center space-x-2 bg-coffee-100 text-coffee-800 px-3 md:px-4 py-2 rounded-full font-medium mb-4 text-sm">
             <Target className="w-3 h-3 md:w-4 md:h-4" />
-            <span>Прозрачные цены</span>
+            <span>{pricingContent.header.badge}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Тарифы на механизированную штукатурку
+            {pricingContent.header.title}
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto px-4">
-            Выберите подходящий тариф для вашего проекта
+            {pricingContent.header.subtitle}
           </p>
         </div>
 
@@ -262,24 +317,24 @@ export default function PricingSection() {
               <div className="w-12 h-12 md:w-16 md:h-16 bg-coffee-100 rounded-xl md:rounded-2xl flex items-center justify-center mb-3 md:mb-4">
                 <Shield className="w-6 h-6 md:w-8 md:h-8 text-coffee-600" />
               </div>
-              <h4 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Гарантия качества</h4>
-              <p className="text-gray-600 text-sm md:text-base">До 5 лет гарантии на все виды работ</p>
+              <h4 className="text-lg md:text-xl font-bold text-gray-900 mb-2">{pricingContent.benefits.warranty.title}</h4>
+              <p className="text-gray-600 text-sm md:text-base">{pricingContent.benefits.warranty.description}</p>
             </div>
             
             <div className="flex flex-col items-center">
               <div className="w-12 h-12 md:w-16 md:h-16 bg-coffee-100 rounded-xl md:rounded-2xl flex items-center justify-center mb-3 md:mb-4">
                 <CheckCircle className="w-6 h-6 md:w-8 md:h-8 text-coffee-600" />
               </div>
-              <h4 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Оптимная команда</h4>
-              <p className="text-gray-600 text-sm md:text-base">Более 8 лет на рынке строительных услуг</p>
+              <h4 className="text-lg md:text-xl font-bold text-gray-900 mb-2">{pricingContent.benefits.team.title}</h4>
+              <p className="text-gray-600 text-sm md:text-base">{pricingContent.benefits.team.description}</p>
             </div>
             
             <div className="flex flex-col items-center">
               <div className="w-12 h-12 md:w-16 md:h-16 bg-coffee-100 rounded-xl md:rounded-2xl flex items-center justify-center mb-3 md:mb-4">
                 <Star className="w-6 h-6 md:w-8 md:h-8 text-coffee-600" />
               </div>
-              <h4 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Высокий рейтинг</h4>
-              <p className="text-gray-600 text-sm md:text-base">4.9/5 звоезд по отзывам клиентов</p>
+              <h4 className="text-lg md:text-xl font-bold text-gray-900 mb-2">{pricingContent.benefits.rating.title}</h4>
+              <p className="text-gray-600 text-sm md:text-base">{pricingContent.benefits.rating.description}</p>
             </div>
           </div>
         </div>

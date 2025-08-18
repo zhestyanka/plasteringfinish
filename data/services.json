@@ -12,7 +12,10 @@
       "Идеально ровные поверхности",
       "Гарантия качества"
     ],
-    "isActive": true
+    "isActive": true,
+    "title": "Финишная отделка",
+    "active": true,
+    "popular": true
   },
   {
     "id": "2",

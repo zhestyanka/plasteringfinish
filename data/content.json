@@ -32,5 +32,17 @@
     "clientsCount": 1250,
     "experienceYears": 8,
     "warrantyYears": 5
+  },
+  "contacts": {
+    "phone": "+7 (812) 986-98-03",
+    "email": "9110163777@rambler.ru",
+    "address": "Санкт-Петербург, ул. Примерная, д. 12",
+    "workingHours": "Пн-Вс: 8:00-20:00",
+    "socialMedia": {
+      "telegram": "@plasteringfinish",
+      "whatsapp": "+7 (812) 986-98-03",
+      "vk": "https://vk.com/plasteringfinish"
+    },
+    "description": "Профессиональная механизированная штукатурка в Санкт-Петербурге. Работаем с объектами любой сложности. Используем современное оборудование и качественные материалы. Гарантия на все виды работ до 5 лет."
   }
 }

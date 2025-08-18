@@ -15,11 +15,6 @@ interface ContactsData {
     email: string
     address: string
     workingHours: string
-    socialMedia: {
-      telegram: string
-      whatsapp: string
-      vk: string
-    }
     description: string
   }
 }
@@ -30,11 +25,6 @@ export default function ContactsPage() {
     email: '9110163777@rambler.ru',
     address: 'Санкт-Петербург, ул. Примерная, д. 123',
     workingHours: 'Пн-Вс: 8:00-20:00',
-    socialMedia: {
-      telegram: '@plasteringfinish',
-      whatsapp: '+7 (812) 986-98-03',
-      vk: 'https://vk.com/plasteringfinish'
-    },
     description: 'Профессиональная механизированная штукатурка в Санкт-Петербурге. Работаем с объектами любой сложности. Используем современное оборудование и качественные материалы. Гарантия на все виды работ до 5 лет.'
   })
   const [isLoading, setIsLoading] = useState(true)
@@ -56,11 +46,6 @@ export default function ContactsPage() {
             email: data.contacts.email || '',
             address: data.contacts.address || '',
             workingHours: data.contacts.workingHours || '',
-            socialMedia: {
-              telegram: data.contacts.socialMedia?.telegram || '',
-              whatsapp: data.contacts.socialMedia?.whatsapp || '',
-              vk: data.contacts.socialMedia?.vk || ''
-            },
             description: data.contacts.description || ''
           })
         }
@@ -209,65 +194,7 @@ export default function ContactsPage() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Социальные сети</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="telegram">Telegram</Label>
-              <Input
-                id="telegram"
-                value={contactsData.socialMedia?.telegram || ''}
-                onChange={(e) => setContactsData(prev => ({
-                  ...prev,
-                  socialMedia: { 
-                    ...prev.socialMedia, 
-                    telegram: e.target.value,
-                    whatsapp: prev.socialMedia?.whatsapp || '',
-                    vk: prev.socialMedia?.vk || ''
-                  }
-                }))}
-              />
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="whatsapp">WhatsApp</Label>
-              <Input
-                id="whatsapp"
-                value={contactsData.socialMedia?.whatsapp || ''}
-                onChange={(e) => setContactsData(prev => ({
-                  ...prev,
-                  socialMedia: { 
-                    ...prev.socialMedia, 
-                    whatsapp: e.target.value,
-                    telegram: prev.socialMedia?.telegram || '',
-                    vk: prev.socialMedia?.vk || ''
-                  }
-                }))}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="vk">ВКонтакте</Label>
-              <Input
-                id="vk"
-                value={contactsData.socialMedia?.vk || ''}
-                onChange={(e) => setContactsData(prev => ({
-                  ...prev,
-                  socialMedia: { 
-                    ...prev.socialMedia, 
-                    vk: e.target.value,
-                    telegram: prev.socialMedia?.telegram || '',
-                    whatsapp: prev.socialMedia?.whatsapp || ''
-                  }
-                }))}
-              />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
       <div className="flex justify-end">
         <Button 
