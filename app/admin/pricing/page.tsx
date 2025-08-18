@@ -503,19 +503,7 @@ export default function PricingPage() {
 
 
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="w-5 h-5" />
-                Преимущества
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid gap-6 md:grid-cols-3">
 
-              </div>
-            </CardContent>
-          </Card>
 
 
         </TabsContent>
