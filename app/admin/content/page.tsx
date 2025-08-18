@@ -50,7 +50,16 @@ export default function ContentPage() {
       const response = await fetch('/api/data/content')
       if (response.ok) {
         const data = await response.json()
-        setHeroContent(data.hero || {})
+        const heroData = data.hero || {}
+        // Убеждаемся, что stats существует
+        if (!heroData.stats) {
+          heroData.stats = [
+            { icon: "Ruble", label: "Стоимость", value: "от 350₽" },
+            { icon: "Clock", label: "Скорость работы", value: "100 м²/день" },
+            { icon: "Shield", label: "Гарантия", value: "5 лет" }
+          ]
+        }
+        setHeroContent(heroData)
         setCompany(data.company || {})
       } else {
         throw new Error('Failed to load content')
@@ -165,22 +174,22 @@ export default function ContentPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {heroContent.stats.map((stat, index) => (
+                {heroContent.stats && heroContent.stats.map((stat, index) => (
                   <div key={index} className="space-y-2">
                     <Label>Статистика {index + 1}</Label>
                     <div className="grid grid-cols-2 gap-2">
                       <Input
-                        value={stat.label}
+                        value={stat.label || ''}
                         onChange={(e) => {
-                          const newStats = [...heroContent.stats]
+                          const newStats = [...(heroContent.stats || [])]
                           newStats[index] = { ...stat, label: e.target.value }
                           setHeroContent(prev => ({ ...prev, stats: newStats }))
                         }}
                       />
                       <Input
-                        value={stat.value}
+                        value={stat.value || ''}
                         onChange={(e) => {
-                          const newStats = [...heroContent.stats]
+                          const newStats = [...(heroContent.stats || [])]
                           newStats[index] = { ...stat, value: e.target.value }
                           setHeroContent(prev => ({ ...prev, stats: newStats }))
                         }}
