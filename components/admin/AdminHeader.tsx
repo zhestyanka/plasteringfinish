@@ -56,10 +56,9 @@ export default function AdminHeader({
     if (title) return title
 
     const pathMap: Record<string, string> = {
-      '/admin': 'Главная',
-      '/admin/content': 'Главная страница',
+      '/admin': 'Панель управления',
+      '/admin/content': 'Основной контент',
       '/admin/contacts': 'Контакты',
-      '/admin/footer': 'Футер',
       '/admin/pricing': 'Тарифы',
       '/admin/works': 'Портфолио',
       '/admin/video': 'Видео',

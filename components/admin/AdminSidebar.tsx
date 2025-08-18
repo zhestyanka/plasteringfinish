@@ -20,7 +20,6 @@ import {
   X,
   Video,
   Contact,
-  Calculator,
   Building2,
   MessageSquare
 } from "lucide-react"
