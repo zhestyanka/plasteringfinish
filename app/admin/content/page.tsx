@@ -32,6 +32,16 @@ export default function ContentPage() {
     calculator: { mixTypes: [] }
   })
   
+  const [company, setCompany] = useState<Company>({
+    name: "Штукатур СПб",
+    subtitle: "Профессиональная механизированная штукатурка",
+    rating: 4.9,
+    reviewsCount: 157,
+    clientsCount: 1250,
+    experienceYears: 8,
+    warrantyYears: 5
+  })
+
   const [headerData, setHeaderData] = useState({
     companyName: "Штукатур СПб",
     companySubtitle: "Механизированная отделка",
@@ -46,16 +56,6 @@ export default function ContentPage() {
       { name: "Работы", href: "#works" },
       { name: "Цены", href: "#pricing" }
     ]
-  })
-  
-  const [company, setCompany] = useState<Company>({
-    name: "Штукатур СПб",
-    subtitle: "Профессиональная механизированная штукатурка",
-    rating: 4.9,
-    reviewsCount: 157,
-    clientsCount: 1250,
-    experienceYears: 8,
-    warrantyYears: 5
   })
 
   const [footerData, setFooterData] = useState({
@@ -80,9 +80,8 @@ export default function ContentPage() {
       const response = await fetch('/api/data/content')
       if (response.ok) {
         const data = await response.json()
-        
-        // Загружаем hero данные
         const heroData = data.hero || {}
+        // Убеждаемся, что stats существует
         if (!heroData.stats) {
           heroData.stats = [
             { icon: "Ruble", label: "Стоимость", value: "от 350₽" },
@@ -91,14 +90,8 @@ export default function ContentPage() {
           ]
         }
         setHeroContent(heroData)
-        
-        // Загружаем header данные
-        setHeaderData(data.header || {})
-        
-        // Загружаем company данные
         setCompany(data.company || {})
-        
-        // Загружаем footer данные
+        setHeaderData(data.header || {})
         setFooterData(data.footer || {})
       } else {
         throw new Error('Failed to load content')
@@ -121,8 +114,8 @@ export default function ContentPage() {
         },
         body: JSON.stringify({
           hero: heroContent,
-          header: headerData,
           company: company,
+          header: headerData,
           footer: footerData
         })
       })
@@ -140,20 +133,6 @@ export default function ContentPage() {
     }
   }
 
-  const addMenuItem = () => {
-    setHeaderData(prev => ({
-      ...prev,
-      menuItems: [...prev.menuItems, { name: "Новый пункт", href: "#" }]
-    }))
-  }
-
-  const removeMenuItem = (index: number) => {
-    setHeaderData(prev => ({
-      ...prev,
-      menuItems: prev.menuItems.filter((_, i) => i !== index)
-    }))
-  }
-
   const addPhone = () => {
     setFooterData(prev => ({
       ...prev,
@@ -165,6 +144,13 @@ export default function ContentPage() {
     setFooterData(prev => ({
       ...prev,
       phones: prev.phones.filter((_, i) => i !== index)
+    }))
+  }
+
+  const updatePhone = (index: number, value: string) => {
+    setFooterData(prev => ({
+      ...prev,
+      phones: prev.phones.map((phone, i) => i === index ? value : phone)
     }))
   }
 
@@ -193,7 +179,7 @@ export default function ContentPage() {
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="hero" className="flex items-center space-x-2">
             <Home className="w-4 h-4" />
-            <span>Главная секция</span>
+            <span>Главная</span>
           </TabsTrigger>
           <TabsTrigger value="header" className="flex items-center space-x-2">
             <FileText className="w-4 h-4" />
@@ -364,17 +350,11 @@ export default function ContentPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                Меню навигации
-                <Button onClick={addMenuItem} size="sm">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Добавить пункт
-                </Button>
-              </CardTitle>
+              <CardTitle>Меню навигации</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {headerData.menuItems?.map((item, index) => (
-                <div key={index} className="grid grid-cols-3 gap-4 items-end">
+                <div key={index} className="grid grid-cols-2 gap-4">
                   <div>
                     <Label>Название пункта меню {index + 1}</Label>
                     <Input
@@ -397,16 +377,6 @@ export default function ContentPage() {
                         setHeaderData(prev => ({ ...prev, menuItems: newMenuItems }))
                       }}
                     />
-                  </div>
-                  <div>
-                    <Button 
-                      onClick={() => removeMenuItem(index)} 
-                      variant="outline" 
-                      size="sm"
-                      className="text-red-600 hover:text-red-700"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
                   </div>
                 </div>
               ))}
@@ -546,7 +516,7 @@ export default function ContentPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="footer-development">Разработка</Label>
+                  <Label htmlFor="footer-development">Разработка сайта</Label>
                   <Input
                     id="footer-development"
                     value={footerData.development}
@@ -564,37 +534,32 @@ export default function ContentPage() {
                 </div>
               </div>
 
-              <div>
-                <div className="flex items-center justify-between mb-2">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
                   <Label>Телефоны</Label>
-                  <Button onClick={addPhone} size="sm">
+                  <Button onClick={addPhone} size="sm" variant="outline">
                     <Plus className="w-4 h-4 mr-2" />
                     Добавить телефон
                   </Button>
                 </div>
-                <div className="space-y-2">
-                  {footerData.phones.map((phone, index) => (
-                    <div key={index} className="flex gap-2">
-                      <Input
-                        value={phone}
-                        onChange={(e) => {
-                          const newPhones = [...footerData.phones]
-                          newPhones[index] = e.target.value
-                          setFooterData(prev => ({ ...prev, phones: newPhones }))
-                        }}
-                        placeholder="+7 (999) 123-45-67"
-                      />
-                      <Button 
-                        onClick={() => removePhone(index)} 
-                        variant="outline" 
-                        size="sm"
-                        className="text-red-600 hover:text-red-700"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
+                
+                {footerData.phones.map((phone, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <Input
+                      value={phone}
+                      onChange={(e) => updatePhone(index, e.target.value)}
+                      placeholder="+7 (999) 123-45-67"
+                    />
+                    <Button 
+                      onClick={() => removePhone(index)} 
+                      size="sm" 
+                      variant="outline"
+                      className="text-red-600 hover:text-red-700"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>

@@ -8,8 +8,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { 
   Save, 
   Plus, 
@@ -29,36 +29,6 @@ import { toast } from "sonner"
 import { Pricing } from "@/lib/admin/types"
 import { cn } from "@/lib/utils"
 
-interface PricingContent {
-  header: {
-    badge: string
-    title: string
-    subtitle: string
-  }
-  paymentMethods: {
-    title: string
-    description: string
-    methods: string[]
-  }
-  benefits: {
-    title: string
-    items: {
-      title: string
-      description: string
-    }[]
-  }
-  calculator: {
-    title: string
-    subtitle: string
-    description: string
-  }
-  contact: {
-    title: string
-    subtitle: string
-    description: string
-  }
-}
-
 const PRICING_COLORS = [
   { value: "blue", label: "Синий", className: "bg-blue-500" },
   { value: "green", label: "Зеленый", className: "bg-green-500" },
@@ -75,38 +45,6 @@ export default function PricingPage() {
   const [editingPlan, setEditingPlan] = useState<Pricing | null>(null)
   const [isAddingNew, setIsAddingNew] = useState(false)
 
-  // Состояние для текстового контента
-  const [content, setContent] = useState<PricingContent>({
-    header: {
-      badge: "Наши тарифы",
-      title: "Прозрачные цены на штукатурку",
-      subtitle: "Выберите подходящий тариф для вашего проекта"
-    },
-    paymentMethods: {
-      title: "Способы оплаты",
-      description: "Удобные варианты оплаты для наших клиентов",
-      methods: ["Наличные", "Банковская карта", "Безналичный расчет"]
-    },
-    benefits: {
-      title: "Преимущества работы с нами",
-      items: [
-        { title: "Гарантия качества", description: "5 лет гарантии на все работы" },
-        { title: "Быстрое выполнение", description: "Сроки от 1 дня" },
-        { title: "Опытные мастера", description: "Более 8 лет опыта" }
-      ]
-    },
-    calculator: {
-      title: "Калькулятор стоимости",
-      subtitle: "Рассчитайте стоимость онлайн",
-      description: "Быстрый расчет стоимости штукатурных работ"
-    },
-    contact: {
-      title: "Получить консультацию",
-      subtitle: "Бесплатная консультация",
-      description: "Наш специалист свяжется с вами в течение 15 минут"
-    }
-  })
-
   const [formData, setFormData] = useState({
     name: "Стандарт",
     price: "450",
@@ -118,6 +56,33 @@ export default function PricingPage() {
   })
 
   const [newFeature, setNewFeature] = useState("")
+
+  // Состояние для текстового контента
+  const [contentData, setContentData] = useState({
+    header: {
+      badge: "Наши тарифы",
+      title: "Прозрачное ценообразование",
+      subtitle: "Выберите подходящий тариф для вашего проекта"
+    },
+    payment: {
+      title: "Способы оплаты",
+      description: "Удобные способы оплаты для наших клиентов",
+      methods: [
+        { name: "Наличные", description: "Оплата наличными при выполнении работ" },
+        { name: "Банковская карта", description: "Оплата картой через терминал" },
+        { name: "Безналичный расчет", description: "Оплата по счету для юридических лиц" }
+      ]
+    },
+    benefits: {
+      title: "Преимущества работы с нами",
+      description: "Почему клиенты выбирают нашу компанию",
+      items: [
+        { title: "Гарантия качества", description: "5 лет гарантии на все виды работ" },
+        { title: "Опытные мастера", description: "Команда профессионалов с опытом от 5 лет" },
+        { title: "Современное оборудование", description: "Используем только качественное оборудование" }
+      ]
+    }
+  })
 
   useEffect(() => {
     loadPricing()
@@ -154,69 +119,38 @@ export default function PricingPage() {
 
   const loadContent = async () => {
     try {
-      const response = await fetch('/api/data/pricing-content')
+      const response = await fetch('/api/data/content')
       if (response.ok) {
         const data = await response.json()
-        if (data.content) {
-          const safeContent = {
-            header: {
-              badge: data.content.header?.badge || "Наши тарифы",
-              title: data.content.header?.title || "Прозрачные цены на штукатурку",
-              subtitle: data.content.header?.subtitle || "Выберите подходящий тариф для вашего проекта"
-            },
-            paymentMethods: {
-              title: data.content.paymentMethods?.title || "Способы оплаты",
-              description: data.content.paymentMethods?.description || "Удобные варианты оплаты для наших клиентов",
-              methods: data.content.paymentMethods?.methods || ["Наличные", "Банковская карта", "Безналичный расчет"]
-            },
-            benefits: {
-              title: data.content.benefits?.title || "Преимущества работы с нами",
-              items: data.content.benefits?.items || [
-                { title: "Гарантия качества", description: "5 лет гарантии на все работы" },
-                { title: "Быстрое выполнение", description: "Сроки от 1 дня" },
-                { title: "Опытные мастера", description: "Более 8 лет опыта" }
-              ]
-            },
-            calculator: {
-              title: data.content.calculator?.title || "Калькулятор стоимости",
-              subtitle: data.content.calculator?.subtitle || "Рассчитайте стоимость онлайн",
-              description: data.content.calculator?.description || "Быстрый расчет стоимости штукатурных работ"
-            },
-            contact: {
-              title: data.content.contact?.title || "Получить консультацию",
-              subtitle: data.content.contact?.subtitle || "Бесплатная консультация",
-              description: data.content.contact?.description || "Наш специалист свяжется с вами в течение 15 минут"
-            }
-          }
-          setContent(safeContent)
+        if (data.pricing) {
+          setContentData(data.pricing)
         }
       }
     } catch (error) {
-      console.error('Ошибка загрузки контента:', error)
+      console.error('Ошибка загрузки контента тарифов:', error)
     }
   }
 
   const saveContent = async () => {
-    setIsSaving(true)
     try {
-      const response = await fetch('/api/data/pricing-content', {
+      const response = await fetch('/api/data/content', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content })
+        body: JSON.stringify({
+          pricing: contentData
+        })
       })
 
       if (response.ok) {
-        toast.success('Контент успешно сохранен')
+        toast.success('Контент тарифов успешно сохранен')
       } else {
         throw new Error('Failed to save content')
       }
     } catch (error) {
-      console.error('Ошибка сохранения:', error)
+      console.error('Ошибка сохранения контента:', error)
       toast.error('Ошибка сохранения')
-    } finally {
-      setIsSaving(false)
     }
   }
 
@@ -252,7 +186,7 @@ export default function PricingPage() {
         throw new Error('Failed to save pricing')
       }
     } catch (error) {
-      console.error('Ошибка сохранения:', error)
+      console.error('Ошибка сохранения тарифов:', error)
       toast.error('Ошибка сохранения')
     } finally {
       setIsSaving(false)
@@ -271,64 +205,52 @@ export default function PricingPage() {
       color: "coffee",
       active: true
     })
+    setNewFeature("")
   }
 
   const handleEditPlan = (plan: Pricing) => {
-    setEditingPlan(plan)
     setIsAddingNew(false)
+    setEditingPlan(plan)
     setFormData({
       name: plan.name,
       price: plan.price.toString(),
       description: plan.description,
-      features: plan.features,
+      features: plan.features || [],
       popular: plan.popular,
-      color: plan.color,
+      color: plan.color || "coffee",
       active: plan.active
     })
+    setNewFeature("")
   }
 
   const handleSavePlan = () => {
-    if (!formData.name || !formData.price) {
-      toast.error('Заполните обязательные поля')
+    if (!formData.name || !formData.price || !formData.description) {
+      toast.error('Заполните все обязательные поля')
       return
     }
 
-    let updatedPlans: Pricing[]
+    const planData = {
+      id: editingPlan?.id || Date.now().toString(),
+      name: formData.name,
+      price: parseInt(formData.price),
+      description: formData.description,
+      features: formData.features,
+      popular: formData.popular,
+      color: formData.color,
+      active: formData.active
+    }
 
     if (editingPlan) {
       // Обновляем существующий план
-      updatedPlans = pricingPlans.map(plan => 
-        plan.id === editingPlan.id 
-          ? {
-              ...plan,
-              name: formData.name,
-              price: parseInt(formData.price),
-              description: formData.description,
-              features: formData.features,
-              popular: formData.popular,
-              color: formData.color,
-              active: formData.active
-            }
-          : plan
-      )
+      setPricingPlans(prev => prev.map(plan => 
+        plan.id === editingPlan.id ? planData : plan
+      ))
     } else {
       // Добавляем новый план
-      const newPlan: Pricing = {
-        id: Date.now().toString(),
-        name: formData.name,
-        price: parseInt(formData.price),
-        description: formData.description,
-        features: formData.features,
-        popular: formData.popular,
-        color: formData.color,
-        active: formData.active
-      }
-      updatedPlans = [...pricingPlans, newPlan]
+      setPricingPlans(prev => [...prev, planData])
     }
 
-    setPricingPlans(updatedPlans)
-    setEditingPlan(null)
-    setIsAddingNew(false)
+    // Сбрасываем форму
     setFormData({
       name: "",
       price: "",
@@ -338,10 +260,19 @@ export default function PricingPage() {
       color: "coffee",
       active: true
     })
+    setEditingPlan(null)
+    setIsAddingNew(false)
+    setNewFeature("")
   }
 
   const handleDeletePlan = (id: string) => {
-    setPricingPlans(pricingPlans.filter(plan => plan.id !== id))
+    setPricingPlans(prev => prev.filter(plan => plan.id !== id))
+  }
+
+  const toggleActive = (id: string) => {
+    setPricingPlans(prev => prev.map(plan => 
+      plan.id === id ? { ...plan, active: !plan.active } : plan
+    ))
   }
 
   const addFeature = () => {
@@ -374,12 +305,8 @@ export default function PricingPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Управление тарифами</h1>
-          <p className="text-gray-600 mt-2">Добавление и редактирование тарифных планов</p>
+          <p className="text-gray-600 mt-2">Настройка тарифных планов и цен</p>
         </div>
-        <Button onClick={savePricing} disabled={isSaving}>
-          <Save className="w-4 h-4 mr-2" />
-          {isSaving ? 'Сохранение...' : 'Сохранить тарифы'}
-        </Button>
       </div>
 
       <Tabs defaultValue="pricing" className="space-y-6">
@@ -395,59 +322,67 @@ export default function PricingPage() {
         </TabsList>
 
         <TabsContent value="pricing" className="space-y-6">
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">Тарифные планы</h2>
-            <Button onClick={handleAddPlan}>
-              <Plus className="w-4 h-4 mr-2" />
-              Добавить тариф
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={handleAddPlan} className="bg-coffee-600 hover:bg-coffee-700">
+                <Plus className="w-4 h-4 mr-2" />
+                Добавить тариф
+              </Button>
+              <Button onClick={savePricing} disabled={isSaving} variant="outline">
+                <Save className="w-4 h-4 mr-2" />
+                {isSaving ? 'Сохранение...' : 'Сохранить все'}
+              </Button>
+            </div>
           </div>
 
-          <div className="grid gap-4">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {pricingPlans.map((plan) => (
-              <Card key={plan.id} className={cn(
-                "transition-all",
-                !plan.active && "opacity-60"
-              )}>
-                <CardContent className="p-6">
+              <Card key={plan.id} className={cn("relative", !plan.active && "opacity-60")}>
+                <CardHeader>
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex-shrink-0">
-                        <Badge variant={plan.popular ? "default" : "secondary"}>
-                          {plan.popular ? "Популярный" : "Обычный"}
-                        </Badge>
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-semibold">{plan.name}</h3>
-                        <p className="text-gray-600">{plan.description}</p>
-                        <p className="text-coffee-600 font-medium">{plan.price}₽/м²</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
+                    <CardTitle className="text-lg">{plan.name}</CardTitle>
+                    <div className="flex items-center gap-2">
                       <Switch
                         checked={plan.active}
-                        onCheckedChange={() => {
-                          setPricingPlans(plans => plans.map(p => 
-                            p.id === plan.id ? { ...p, active: !p.active } : p
-                          ))
-                        }}
+                        onCheckedChange={() => toggleActive(plan.id)}
                       />
                       <Button
-                        variant="outline"
-                        size="sm"
                         onClick={() => handleEditPlan(plan)}
+                        size="sm"
+                        variant="outline"
                       >
                         <Edit className="w-4 h-4" />
                       </Button>
                       <Button
-                        variant="outline"
-                        size="sm"
                         onClick={() => handleDeletePlan(plan.id)}
+                        size="sm"
+                        variant="outline"
                         className="text-red-600 hover:text-red-700"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
+                  </div>
+                  {plan.popular && (
+                    <Badge className="absolute top-2 right-2 bg-yellow-500">
+                      <Star className="w-3 h-3 mr-1" />
+                      Популярный
+                    </Badge>
+                  )}
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-coffee-600 mb-3">
+                    {plan.price}₽/м²
+                  </div>
+                  <p className="text-gray-600 mb-3">{plan.description}</p>
+                  <div className="space-y-1">
+                    {plan.features?.map((feature, index) => (
+                      <div key={index} className="flex items-center text-sm text-gray-600">
+                        <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                        {feature}
+                      </div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -463,23 +398,23 @@ export default function PricingPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="name">Название тарифа</Label>
                     <Input
                       id="name"
                       value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                       placeholder="Стандарт"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="price">Цена (₽/м²)</Label>
+                    <Label htmlFor="price">Цена за м²</Label>
                     <Input
                       id="price"
                       type="number"
                       value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                      onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
                       placeholder="450"
                     />
                   </div>
@@ -490,55 +425,49 @@ export default function PricingPage() {
                   <Textarea
                     id="description"
                     value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                     rows={3}
-                    placeholder="Описание тарифного плана"
+                    placeholder="Описание тарифного плана..."
                   />
                 </div>
 
-                <div>
+                <div className="space-y-2">
                   <Label>Особенности тарифа</Label>
-                  <div className="space-y-2">
+                  <div className="flex gap-2">
+                    <Input
+                      value={newFeature}
+                      onChange={(e) => setNewFeature(e.target.value)}
+                      placeholder="Добавить особенность..."
+                      onKeyPress={(e) => e.key === 'Enter' && addFeature()}
+                    />
+                    <Button onClick={addFeature} type="button" variant="outline">
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  <div className="space-y-1">
                     {formData.features.map((feature, index) => (
-                      <div key={index} className="flex items-center space-x-2">
-                        <Input
-                          value={feature}
-                          onChange={(e) => {
-                            const newFeatures = [...formData.features]
-                            newFeatures[index] = e.target.value
-                            setFormData({ ...formData, features: newFeatures })
-                          }}
-                        />
+                      <div key={index} className="flex items-center gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-500" />
+                        <span className="flex-1">{feature}</span>
                         <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
                           onClick={() => removeFeature(index)}
+                          size="sm"
+                          variant="outline"
+                          className="text-red-600 hover:text-red-700"
                         >
                           <X className="w-4 h-4" />
                         </Button>
                       </div>
                     ))}
-                    <div className="flex items-center space-x-2">
-                      <Input
-                        value={newFeature}
-                        onChange={(e) => setNewFeature(e.target.value)}
-                        placeholder="Добавить особенность"
-                        onKeyPress={(e) => e.key === 'Enter' && addFeature()}
-                      />
-                      <Button type="button" variant="outline" onClick={addFeature}>
-                        <Plus className="w-4 h-4" />
-                      </Button>
-                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center gap-4">
                   <div className="flex items-center space-x-2">
                     <Switch
                       id="popular"
                       checked={formData.popular}
-                      onCheckedChange={(checked) => setFormData({ ...formData, popular: checked })}
+                      onCheckedChange={(checked) => setFormData(prev => ({ ...prev, popular: checked }))}
                     />
                     <Label htmlFor="popular">Популярный тариф</Label>
                   </div>
@@ -546,24 +475,33 @@ export default function PricingPage() {
                     <Switch
                       id="active"
                       checked={formData.active}
-                      onCheckedChange={(checked) => setFormData({ ...formData, active: checked })}
+                      onCheckedChange={(checked) => setFormData(prev => ({ ...prev, active: checked }))}
                     />
-                    <Label htmlFor="active">Активный</Label>
+                    <Label htmlFor="active">Активен</Label>
                   </div>
                 </div>
 
                 <div className="flex justify-end space-x-2">
                   <Button
-                    variant="outline"
                     onClick={() => {
                       setEditingPlan(null)
                       setIsAddingNew(false)
+                      setFormData({
+                        name: "",
+                        price: "",
+                        description: "",
+                        features: [],
+                        popular: false,
+                        color: "coffee",
+                        active: true
+                      })
                     }}
+                    variant="outline"
                   >
                     Отмена
                   </Button>
-                  <Button onClick={handleSavePlan}>
-                    {editingPlan ? 'Сохранить' : 'Добавить'}
+                  <Button onClick={handleSavePlan} className="bg-coffee-600 hover:bg-coffee-700">
+                    {editingPlan ? 'Обновить' : 'Добавить'}
                   </Button>
                 </div>
               </CardContent>
@@ -573,63 +511,53 @@ export default function PricingPage() {
 
         <TabsContent value="content" className="space-y-6">
           <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-semibold">Редактирование текста тарифов</h2>
-              <p className="text-gray-600 mt-2">Настройка текстового контента страницы тарифов</p>
-            </div>
-            <Button 
-              onClick={saveContent} 
-              disabled={isSaving}
-              className="bg-gradient-to-r from-coffee-600 to-coffee-500 hover:from-coffee-700 hover:to-coffee-600"
-            >
+            <h2 className="text-xl font-semibold">Текстовый контент</h2>
+            <Button onClick={saveContent} className="bg-coffee-600 hover:bg-coffee-700">
               <Save className="w-4 h-4 mr-2" />
-              {isSaving ? 'Сохранение...' : 'Сохранить контент'}
+              Сохранить контент
             </Button>
           </div>
 
-          <div className="grid gap-6">
+          <div className="grid gap-6 md:grid-cols-2">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <DollarSign className="w-5 h-5" />
-                  Заголовок страницы
+                  <FileText className="w-5 h-5" />
+                  Заголовок секции
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="badge">Бейдж</Label>
+                  <Label htmlFor="pricing-badge">Бейдж</Label>
                   <Input
-                    id="badge"
-                    value={content.header.badge}
-                    onChange={(e) => setContent({
-                      ...content,
-                      header: { ...content.header, badge: e.target.value }
-                    })}
-                    placeholder="Наши тарифы"
+                    id="pricing-badge"
+                    value={contentData.header.badge}
+                    onChange={(e) => setContentData(prev => ({
+                      ...prev,
+                      header: { ...prev.header, badge: e.target.value }
+                    }))}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="title">Заголовок</Label>
+                  <Label htmlFor="pricing-title">Заголовок</Label>
                   <Input
-                    id="title"
-                    value={content.header.title}
-                    onChange={(e) => setContent({
-                      ...content,
-                      header: { ...content.header, title: e.target.value }
-                    })}
-                    placeholder="Прозрачные цены на штукатурку"
+                    id="pricing-title"
+                    value={contentData.header.title}
+                    onChange={(e) => setContentData(prev => ({
+                      ...prev,
+                      header: { ...prev.header, title: e.target.value }
+                    }))}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="subtitle">Подзаголовок</Label>
+                  <Label htmlFor="pricing-subtitle">Подзаголовок</Label>
                   <Textarea
-                    id="subtitle"
-                    value={content.header.subtitle}
-                    onChange={(e) => setContent({
-                      ...content,
-                      header: { ...content.header, subtitle: e.target.value }
-                    })}
-                    placeholder="Выберите подходящий тариф для вашего проекта"
+                    id="pricing-subtitle"
+                    value={contentData.header.subtitle}
+                    onChange={(e) => setContentData(prev => ({
+                      ...prev,
+                      header: { ...prev.header, subtitle: e.target.value }
+                    }))}
                     rows={2}
                   />
                 </div>
@@ -648,136 +576,104 @@ export default function PricingPage() {
                   <Label htmlFor="payment-title">Заголовок</Label>
                   <Input
                     id="payment-title"
-                    value={content.paymentMethods.title}
-                    onChange={(e) => setContent({
-                      ...content,
-                      paymentMethods: { ...content.paymentMethods, title: e.target.value }
-                    })}
-                    placeholder="Способы оплаты"
+                    value={contentData.payment.title}
+                    onChange={(e) => setContentData(prev => ({
+                      ...prev,
+                      payment: { ...prev.payment, title: e.target.value }
+                    }))}
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="payment-description">Описание</Label>
                   <Textarea
                     id="payment-description"
-                    value={content.paymentMethods.description}
-                    onChange={(e) => setContent({
-                      ...content,
-                      paymentMethods: { ...content.paymentMethods, description: e.target.value }
-                    })}
-                    placeholder="Удобные варианты оплаты для наших клиентов"
-                    rows={2}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Star className="w-5 h-5" />
-                  Преимущества
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="benefits-title">Заголовок</Label>
-                  <Input
-                    id="benefits-title"
-                    value={content.benefits.title}
-                    onChange={(e) => setContent({
-                      ...content,
-                      benefits: { ...content.benefits, title: e.target.value }
-                    })}
-                    placeholder="Преимущества работы с нами"
-                  />
-                </div>
-                <div className="space-y-4">
-                  <Label>Пункты преимуществ</Label>
-                  {content.benefits.items.map((item, index) => (
-                    <div key={index} className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label>Заголовок {index + 1}</Label>
-                        <Input
-                          value={item.title}
-                          onChange={(e) => {
-                            const newItems = [...content.benefits.items]
-                            newItems[index] = { ...item, title: e.target.value }
-                            setContent({
-                              ...content,
-                              benefits: { ...content.benefits, items: newItems }
-                            })
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <Label>Описание {index + 1}</Label>
-                        <Input
-                          value={item.description}
-                          onChange={(e) => {
-                            const newItems = [...content.benefits.items]
-                            newItems[index] = { ...item, description: e.target.value }
-                            setContent({
-                              ...content,
-                              benefits: { ...content.benefits, items: newItems }
-                            })
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MessageCircle className="w-5 h-5" />
-                  Контактная форма
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="contact-title">Заголовок</Label>
-                  <Input
-                    id="contact-title"
-                    value={content.contact.title}
-                    onChange={(e) => setContent({
-                      ...content,
-                      contact: { ...content.contact, title: e.target.value }
-                    })}
-                    placeholder="Получить консультацию"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="contact-subtitle">Подзаголовок</Label>
-                  <Input
-                    id="contact-subtitle"
-                    value={content.contact.subtitle}
-                    onChange={(e) => setContent({
-                      ...content,
-                      contact: { ...content.contact, subtitle: e.target.value }
-                    })}
-                    placeholder="Бесплатная консультация"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="contact-description">Описание</Label>
-                  <Textarea
-                    id="contact-description"
-                    value={content.contact.description}
-                    onChange={(e) => setContent({
-                      ...content,
-                      contact: { ...content.contact, description: e.target.value }
-                    })}
-                    placeholder="Наш специалист свяжется с вами в течение 15 минут"
-                    rows={2}
+                    value={contentData.payment.description}
+                    onChange={(e) => setContentData(prev => ({
+                      ...prev,
+                      payment: { ...prev.payment, description: e.target.value }
+                    }))}
+                    rows={3}
                   />
                 </div>
               </CardContent>
             </Card>
           </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Методы оплаты</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-3">
+                {contentData.payment.methods.map((method, index) => (
+                  <div key={index} className="space-y-2">
+                    <Label>Метод {index + 1}</Label>
+                    <Input
+                      value={method.name}
+                      onChange={(e) => {
+                        const newMethods = [...contentData.payment.methods]
+                        newMethods[index] = { ...method, name: e.target.value }
+                        setContentData(prev => ({
+                          ...prev,
+                          payment: { ...prev.payment, methods: newMethods }
+                        }))
+                      }}
+                    />
+                    <Textarea
+                      value={method.description}
+                      onChange={(e) => {
+                        const newMethods = [...contentData.payment.methods]
+                        newMethods[index] = { ...method, description: e.target.value }
+                        setContentData(prev => ({
+                          ...prev,
+                          payment: { ...prev.payment, methods: newMethods }
+                        }))
+                      }}
+                      rows={2}
+                    />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Преимущества</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-3">
+                {contentData.benefits.items.map((item, index) => (
+                  <div key={index} className="space-y-2">
+                    <Label>Преимущество {index + 1}</Label>
+                    <Input
+                      value={item.title}
+                      onChange={(e) => {
+                        const newItems = [...contentData.benefits.items]
+                        newItems[index] = { ...item, title: e.target.value }
+                        setContentData(prev => ({
+                          ...prev,
+                          benefits: { ...prev.benefits, items: newItems }
+                        }))
+                      }}
+                    />
+                    <Textarea
+                      value={item.description}
+                      onChange={(e) => {
+                        const newItems = [...contentData.benefits.items]
+                        newItems[index] = { ...item, description: e.target.value }
+                        setContentData(prev => ({
+                          ...prev,
+                          benefits: { ...prev.benefits, items: newItems }
+                        }))
+                      }}
+                      rows={2}
+                    />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>

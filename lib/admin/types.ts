@@ -18,15 +18,17 @@ export interface HeroContent {
   subtitle: string
   description: string
   stats: StatItem[]
-  calculator?: {
-    mixTypes: MixType[]
-  }
+  calculator: Calculator
 }
 
 export interface StatItem {
   icon: string
   label: string
   value: string
+}
+
+export interface Calculator {
+  mixTypes: MixType[]
 }
 
 export interface MixType {

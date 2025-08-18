@@ -8,8 +8,8 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { 
   Plus, 
   Edit, 
@@ -26,78 +26,11 @@ import {
 } from "lucide-react"
 import { Service } from "@/lib/admin/types"
 import { toast } from "sonner"
-import { cn } from "@/lib/utils"
-
-interface ServicesContent {
-  header: {
-    badge: string
-    title: string
-    subtitle: string
-  }
-  consultation: {
-    badge: string
-    title: string
-    description: string
-    features: {
-      fast: {
-        title: string
-        description: string
-      }
-      free: {
-        title: string
-        description: string
-      }
-      convenient: {
-        title: string
-        description: string
-      }
-      professional: {
-        title: string
-        description: string
-      }
-    }
-  }
-}
 
 export default function ServicesPage() {
   const [services, setServices] = useState<Service[]>([])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingService, setEditingService] = useState<Service | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [isSaving, setIsSaving] = useState(false)
-  
-  // Состояние для текстового контента
-  const [content, setContent] = useState<ServicesContent>({
-    header: {
-      badge: "Наши услуги",
-      title: "Механизированная штукатурка стен",
-      subtitle: "Профессиональная отделка помещений любой сложности"
-    },
-    consultation: {
-      badge: "Бесплатная консультация",
-      title: "Получите бесплатную консультацию",
-      description: "Наши специалисты помогут подобрать оптимальное решение для вашего проекта",
-      features: {
-        fast: {
-          title: "Быстро",
-          description: "Выезд в день обращения"
-        },
-        free: {
-          title: "Бесплатно",
-          description: "Оценка и консультация"
-        },
-        convenient: {
-          title: "Удобно",
-          description: "В любое время"
-        },
-        professional: {
-          title: "Профессионально",
-          description: "Опытный инженер"
-        }
-      }
-    }
-  })
-
   const [formData, setFormData] = useState<Partial<Service>>({
     title: "Механизированная штукатурка стен",
     description: "Профессиональная штукатурка стен с использованием современного оборудования. Быстро, качественно, с гарантией.",
@@ -109,7 +42,26 @@ export default function ServicesPage() {
     icon: "Hammer"
   })
 
-  // Загрузка данных при монтировании компонента
+  // Состояние для текстового контента
+  const [contentData, setContentData] = useState({
+    header: {
+      badge: "Наши услуги",
+      title: "Механизированная штукатурка стен",
+      subtitle: "Профессиональная отделка помещений любой сложности"
+    },
+    consultation: {
+      title: "Получите бесплатную консультацию",
+      description: "Наши специалисты помогут подобрать оптимальное решение для вашего проекта",
+      features: {
+        fast: { title: "Быстро", description: "Выезд в день обращения" },
+        free: { title: "Бесплатно", description: "Оценка и консультация" },
+        convenient: { title: "Удобно", description: "В любое время" },
+        professional: { title: "Профессионально", description: "Опытный инженер" }
+      }
+    }
+  })
+
+  // Загрузка услуг при монтировании компонента
   useEffect(() => {
     loadServices()
     loadContent()
@@ -126,76 +78,43 @@ export default function ServicesPage() {
       }
     } catch (error) {
       console.error('Ошибка загрузки услуг:', error)
-    } finally {
-      setIsLoading(false)
     }
   }
 
   const loadContent = async () => {
     try {
-      const response = await fetch('/api/data/services-content')
+      const response = await fetch('/api/data/content')
       if (response.ok) {
         const data = await response.json()
-        if (data.content) {
-          const safeContent = {
-            header: {
-              badge: data.content.header?.badge || "Наши услуги",
-              title: data.content.header?.title || "Механизированная штукатурка стен",
-              subtitle: data.content.header?.subtitle || "Профессиональная отделка помещений любой сложности"
-            },
-            consultation: {
-              badge: data.content.consultation?.badge || "Бесплатная консультация",
-              title: data.content.consultation?.title || "Получите бесплатную консультацию",
-              description: data.content.consultation?.description || "Наши специалисты помогут подобрать оптимальное решение для вашего проекта",
-              features: {
-                fast: {
-                  title: data.content.consultation?.features?.fast?.title || "Быстро",
-                  description: data.content.consultation?.features?.fast?.description || "Выезд в день обращения"
-                },
-                free: {
-                  title: data.content.consultation?.features?.free?.title || "Бесплатно",
-                  description: data.content.consultation?.features?.free?.description || "Оценка и консультация"
-                },
-                convenient: {
-                  title: data.content.consultation?.features?.convenient?.title || "Удобно",
-                  description: data.content.consultation?.features?.convenient?.description || "В любое время"
-                },
-                professional: {
-                  title: data.content.consultation?.features?.professional?.title || "Профессионально",
-                  description: data.content.consultation?.features?.professional?.description || "Опытный инженер"
-                }
-              }
-            }
-          }
-          setContent(safeContent)
+        if (data.services) {
+          setContentData(data.services)
         }
       }
     } catch (error) {
-      console.error('Ошибка загрузки контента:', error)
+      console.error('Ошибка загрузки контента услуг:', error)
     }
   }
 
   const saveContent = async () => {
-    setIsSaving(true)
     try {
-      const response = await fetch('/api/data/services-content', {
+      const response = await fetch('/api/data/content', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content })
+        body: JSON.stringify({
+          services: contentData
+        })
       })
 
       if (response.ok) {
-        toast.success('Контент успешно сохранен')
+        toast.success('Контент услуг успешно сохранен')
       } else {
         throw new Error('Failed to save content')
       }
     } catch (error) {
-      console.error('Ошибка сохранения:', error)
+      console.error('Ошибка сохранения контента:', error)
       toast.error('Ошибка сохранения')
-    } finally {
-      setIsSaving(false)
     }
   }
 
@@ -248,10 +167,10 @@ export default function ServicesPage() {
       )
     } else {
       // Добавляем новую услугу
-              const newService: Service = {
-          ...formData as Service,
-          id: Date.now().toString()
-        }
+      const newService: Service = {
+        ...formData as Service,
+        id: Date.now().toString()
+      }
       updatedServices = [...services, newService]
     }
     
@@ -271,8 +190,7 @@ export default function ServicesPage() {
     ))
   }
 
-  const saveServices = async () => {
-    setIsSaving(true)
+  const handleSaveServices = async () => {
     try {
       const response = await fetch('/api/data/services', {
         method: 'POST',
@@ -288,19 +206,9 @@ export default function ServicesPage() {
         throw new Error('Failed to save services')
       }
     } catch (error) {
-      console.error('Ошибка сохранения:', error)
+      console.error('Ошибка сохранения услуг:', error)
       toast.error('Ошибка сохранения')
-    } finally {
-      setIsSaving(false)
     }
-  }
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-coffee-600"></div>
-      </div>
-    )
   }
 
   return (
@@ -310,10 +218,6 @@ export default function ServicesPage() {
           <h1 className="text-3xl font-bold text-gray-900">Управление услугами</h1>
           <p className="text-gray-600 mt-2">Добавление и редактирование услуг компании</p>
         </div>
-        <Button onClick={saveServices} disabled={isSaving}>
-          <Save className="w-4 h-4 mr-2" />
-          {isSaving ? 'Сохранение...' : 'Сохранить услуги'}
-        </Button>
       </div>
 
       <Tabs defaultValue="services" className="space-y-6">
@@ -329,55 +233,67 @@ export default function ServicesPage() {
         </TabsList>
 
         <TabsContent value="services" className="space-y-6">
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">Список услуг</h2>
-            <Button onClick={() => handleOpenDialog()}>
-              <Plus className="w-4 h-4 mr-2" />
-              Добавить услугу
-            </Button>
+            <div className="flex gap-2">
+                             <Button onClick={() => handleOpenDialog()} className="bg-coffee-600 hover:bg-coffee-700">
+                 <Plus className="w-4 h-4 mr-2" />
+                 Добавить услугу
+               </Button>
+              <Button onClick={handleSaveServices} variant="outline">
+                <Save className="w-4 h-4 mr-2" />
+                Сохранить все
+              </Button>
+            </div>
           </div>
 
-          <div className="grid gap-4">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {services.map((service) => (
-              <Card key={service.id} className={cn(
-                "transition-all",
-                !service.active && "opacity-60"
-              )}>
-                <CardContent className="p-6">
+              <Card key={service.id} className="relative">
+                <CardHeader>
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex-shrink-0">
-                        <Badge variant={service.popular ? "default" : "secondary"}>
-                          {service.popular ? "Популярная" : "Обычная"}
-                        </Badge>
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-semibold">{service.title}</h3>
-                        <p className="text-gray-600">{service.description}</p>
-                        <p className="text-coffee-600 font-medium">{service.price}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
+                    <CardTitle className="text-lg">{service.title}</CardTitle>
+                    <div className="flex items-center gap-2">
                       <Switch
                         checked={service.active}
                         onCheckedChange={() => toggleActive(service.id)}
                       />
                       <Button
-                        variant="outline"
-                        size="sm"
                         onClick={() => handleOpenDialog(service)}
+                        size="sm"
+                        variant="outline"
                       >
                         <Edit className="w-4 h-4" />
                       </Button>
                       <Button
-                        variant="outline"
-                        size="sm"
                         onClick={() => handleDelete(service.id)}
+                        size="sm"
+                        variant="outline"
                         className="text-red-600 hover:text-red-700"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
+                  </div>
+                  {service.popular && (
+                    <Badge className="absolute top-2 right-2 bg-yellow-500">
+                      <Star className="w-3 h-3 mr-1" />
+                      Популярная
+                    </Badge>
+                  )}
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 mb-3">{service.description}</p>
+                  <div className="text-lg font-bold text-coffee-600 mb-3">
+                    {service.price}
+                  </div>
+                  <div className="space-y-1">
+                    {service.features?.map((feature, index) => (
+                      <div key={index} className="flex items-center text-sm text-gray-600">
+                        <div className="w-1 h-1 bg-coffee-500 rounded-full mr-2"></div>
+                        {feature}
+                      </div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -387,17 +303,10 @@ export default function ServicesPage() {
 
         <TabsContent value="content" className="space-y-6">
           <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-semibold">Редактирование текста услуг</h2>
-              <p className="text-gray-600 mt-2">Настройка текстового контента страницы услуг</p>
-            </div>
-            <Button 
-              onClick={saveContent} 
-              disabled={isSaving}
-              className="bg-gradient-to-r from-coffee-600 to-coffee-500 hover:from-coffee-700 hover:to-coffee-600"
-            >
+            <h2 className="text-xl font-semibold">Текстовый контент</h2>
+            <Button onClick={saveContent} className="bg-coffee-600 hover:bg-coffee-700">
               <Save className="w-4 h-4 mr-2" />
-              {isSaving ? 'Сохранение...' : 'Сохранить контент'}
+              Сохранить контент
             </Button>
           </div>
 
@@ -405,45 +314,42 @@ export default function ServicesPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Hammer className="w-5 h-5" />
-                  Заголовок страницы
+                  <FileText className="w-5 h-5" />
+                  Заголовок секции
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="badge">Бейдж</Label>
+                  <Label htmlFor="services-badge">Бейдж</Label>
                   <Input
-                    id="badge"
-                    value={content.header.badge}
-                    onChange={(e) => setContent({
-                      ...content,
-                      header: { ...content.header, badge: e.target.value }
-                    })}
-                    placeholder="Наши услуги"
+                    id="services-badge"
+                    value={contentData.header.badge}
+                    onChange={(e) => setContentData(prev => ({
+                      ...prev,
+                      header: { ...prev.header, badge: e.target.value }
+                    }))}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="title">Заголовок</Label>
+                  <Label htmlFor="services-title">Заголовок</Label>
                   <Input
-                    id="title"
-                    value={content.header.title}
-                    onChange={(e) => setContent({
-                      ...content,
-                      header: { ...content.header, title: e.target.value }
-                    })}
-                    placeholder="Механизированная штукатурка стен"
+                    id="services-title"
+                    value={contentData.header.title}
+                    onChange={(e) => setContentData(prev => ({
+                      ...prev,
+                      header: { ...prev.header, title: e.target.value }
+                    }))}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="subtitle">Подзаголовок</Label>
+                  <Label htmlFor="services-subtitle">Подзаголовок</Label>
                   <Textarea
-                    id="subtitle"
-                    value={content.header.subtitle}
-                    onChange={(e) => setContent({
-                      ...content,
-                      header: { ...content.header, subtitle: e.target.value }
-                    })}
-                    placeholder="Профессиональная отделка помещений любой сложности"
+                    id="services-subtitle"
+                    value={contentData.header.subtitle}
+                    onChange={(e) => setContentData(prev => ({
+                      ...prev,
+                      header: { ...prev.header, subtitle: e.target.value }
+                    }))}
                     rows={2}
                   />
                 </div>
@@ -457,94 +363,75 @@ export default function ServicesPage() {
                   Секция консультации
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="consultation-badge">Бейдж</Label>
-                    <Input
-                      id="consultation-badge"
-                      value={content.consultation.badge}
-                      onChange={(e) => setContent({
-                        ...content,
-                        consultation: { ...content.consultation, badge: e.target.value }
-                      })}
-                      placeholder="Бесплатная консультация"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="consultation-title">Заголовок</Label>
-                    <Input
-                      id="consultation-title"
-                      value={content.consultation.title}
-                      onChange={(e) => setContent({
-                        ...content,
-                        consultation: { ...content.consultation, title: e.target.value }
-                      })}
-                      placeholder="Получите бесплатную консультацию"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="consultation-description">Описание</Label>
-                    <Textarea
-                      id="consultation-description"
-                      value={content.consultation.description}
-                      onChange={(e) => setContent({
-                        ...content,
-                        consultation: { ...content.consultation, description: e.target.value }
-                      })}
-                      placeholder="Наши специалисты помогут подобрать оптимальное решение для вашего проекта"
-                      rows={3}
-                    />
-                  </div>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="consultation-title">Заголовок</Label>
+                  <Input
+                    id="consultation-title"
+                    value={contentData.consultation.title}
+                    onChange={(e) => setContentData(prev => ({
+                      ...prev,
+                      consultation: { ...prev.consultation, title: e.target.value }
+                    }))}
+                  />
                 </div>
-
-                <div className="grid gap-6 md:grid-cols-2">
-                  {Object.entries(content.consultation.features).map(([key, feature]) => (
-                    <Card key={key}>
-                      <CardHeader>
-                        <CardTitle className="text-sm capitalize">{key}</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="space-y-2">
-                          <Label>Заголовок</Label>
-                          <Input
-                            value={feature.title}
-                            onChange={(e) => setContent({
-                              ...content,
-                              consultation: {
-                                ...content.consultation,
-                                features: {
-                                  ...content.consultation.features,
-                                  [key]: { ...feature, title: e.target.value }
-                                }
-                              }
-                            })}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label>Описание</Label>
-                          <Textarea
-                            value={feature.description}
-                            onChange={(e) => setContent({
-                              ...content,
-                              consultation: {
-                                ...content.consultation,
-                                features: {
-                                  ...content.consultation.features,
-                                  [key]: { ...feature, description: e.target.value }
-                                }
-                              }
-                            })}
-                            rows={2}
-                          />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                <div className="space-y-2">
+                  <Label htmlFor="consultation-description">Описание</Label>
+                  <Textarea
+                    id="consultation-description"
+                    value={contentData.consultation.description}
+                    onChange={(e) => setContentData(prev => ({
+                      ...prev,
+                      consultation: { ...prev.consultation, description: e.target.value }
+                    }))}
+                    rows={3}
+                  />
                 </div>
               </CardContent>
             </Card>
           </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Особенности консультации</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-2">
+                {Object.entries(contentData.consultation.features).map(([key, feature]) => (
+                  <div key={key} className="space-y-2">
+                    <Label>{feature.title}</Label>
+                    <Input
+                      value={feature.title}
+                      onChange={(e) => setContentData(prev => ({
+                        ...prev,
+                        consultation: {
+                          ...prev.consultation,
+                          features: {
+                            ...prev.consultation.features,
+                            [key]: { ...feature, title: e.target.value }
+                          }
+                        }
+                      }))}
+                    />
+                    <Textarea
+                      value={feature.description}
+                      onChange={(e) => setContentData(prev => ({
+                        ...prev,
+                        consultation: {
+                          ...prev.consultation,
+                          features: {
+                            ...prev.consultation.features,
+                            [key]: { ...feature, description: e.target.value }
+                          }
+                        }
+                      }))}
+                      rows={2}
+                    />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
 
@@ -557,13 +444,13 @@ export default function ServicesPage() {
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="title">Название услуги</Label>
                 <Input
                   id="title"
                   value={formData.title || ''}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                   required
                 />
               </div>
@@ -572,7 +459,7 @@ export default function ServicesPage() {
                 <Input
                   id="price"
                   value={formData.price || ''}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
                   placeholder="от 350₽/м²"
                 />
               </div>
@@ -583,28 +470,28 @@ export default function ServicesPage() {
               <Textarea
                 id="description"
                 value={formData.description || ''}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                 rows={3}
                 required
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="active"
+                  checked={formData.active || false}
+                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, active: checked }))}
+                />
+                <Label htmlFor="active">Активна</Label>
+              </div>
               <div className="flex items-center space-x-2">
                 <Switch
                   id="popular"
                   checked={formData.popular || false}
-                  onCheckedChange={(checked) => setFormData({ ...formData, popular: checked })}
+                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, popular: checked }))}
                 />
-                <Label htmlFor="popular">Популярная услуга</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="active"
-                  checked={formData.active !== false}
-                  onCheckedChange={(checked) => setFormData({ ...formData, active: checked })}
-                />
-                <Label htmlFor="active">Активная</Label>
+                <Label htmlFor="popular">Популярная</Label>
               </div>
             </div>
 
@@ -612,8 +499,8 @@ export default function ServicesPage() {
               <Button type="button" variant="outline" onClick={handleCloseDialog}>
                 Отмена
               </Button>
-              <Button type="submit">
-                {editingService ? 'Сохранить' : 'Добавить'}
+              <Button type="submit" className="bg-coffee-600 hover:bg-coffee-700">
+                {editingService ? 'Обновить' : 'Добавить'}
               </Button>
             </div>
           </form>
