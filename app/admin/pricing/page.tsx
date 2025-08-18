@@ -22,8 +22,11 @@ import {
   Star,
   X,
   CreditCard,
-  FileText,
-  MessageCircle
+  Target,
+  Shield,
+  Award,
+  Calculator,
+  MessageSquare
 } from "lucide-react"
 import { toast } from "sonner"
 import { Pricing } from "@/lib/admin/types"
@@ -37,6 +40,73 @@ const PRICING_COLORS = [
   { value: "red", label: "Красный", className: "bg-red-500" },
   { value: "coffee", label: "Кофейный", className: "bg-coffee-500" }
 ]
+
+interface PricingContent {
+  header: {
+    badge: string
+    title: string
+    subtitle: string
+  }
+  paymentMethods: {
+    cash: {
+      title: string
+      description: string
+    }
+    card: {
+      title: string
+      description: string
+    }
+    transfer: {
+      title: string
+      description: string
+      discount: string
+    }
+  }
+  benefits: {
+    warranty: {
+      title: string
+      description: string
+    }
+    team: {
+      title: string
+      description: string
+    }
+    rating: {
+      title: string
+      description: string
+    }
+  }
+  calculator: {
+    title: string
+    description: string
+    form: {
+      name: string
+      phone: string
+      area: string
+      message: string
+      button: string
+      consent: string
+    }
+    features: {
+      warranty: {
+        title: string
+        value: string
+      }
+      visit: {
+        title: string
+        value: string
+      }
+      quality: {
+        title: string
+        value: string
+      }
+    }
+    rating: {
+      value: string
+      reviews: string
+    }
+  }
+}
 
 export default function PricingPage() {
   const [pricingPlans, setPricingPlans] = useState<Pricing[]>([])
@@ -55,34 +125,75 @@ export default function PricingPage() {
     active: true
   })
 
-  const [newFeature, setNewFeature] = useState("")
-
-  // Состояние для текстового контента
-  const [contentData, setContentData] = useState({
+  // Состояние для контента
+  const [content, setContent] = useState<PricingContent>({
     header: {
-      badge: "Наши тарифы",
-      title: "Прозрачное ценообразование",
+      badge: "Прозрачные цены",
+      title: "Тарифы на механизированную штукатурку",
       subtitle: "Выберите подходящий тариф для вашего проекта"
     },
-    payment: {
-      title: "Способы оплаты",
-      description: "Удобные способы оплаты для наших клиентов",
-      methods: [
-        { name: "Наличные", description: "Оплата наличными при выполнении работ" },
-        { name: "Банковская карта", description: "Оплата картой через терминал" },
-        { name: "Безналичный расчет", description: "Оплата по счету для юридических лиц" }
-      ]
+    paymentMethods: {
+      cash: {
+        title: "Наличные",
+        description: "Оплата наличными при завершении работ"
+      },
+      card: {
+        title: "Банковская карта",
+        description: "Безналичная оплата картой, возможна рассрочка"
+      },
+      transfer: {
+        title: "Банковский перевод",
+        description: "Оплата по счету для юридических лиц",
+        discount: "Скидка 5%"
+      }
     },
     benefits: {
-      title: "Преимущества работы с нами",
-      description: "Почему клиенты выбирают нашу компанию",
-      items: [
-        { title: "Гарантия качества", description: "5 лет гарантии на все виды работ" },
-        { title: "Опытные мастера", description: "Команда профессионалов с опытом от 5 лет" },
-        { title: "Современное оборудование", description: "Используем только качественное оборудование" }
-      ]
+      warranty: {
+        title: "Гарантия качества",
+        description: "До 5 лет гарантии на все виды работ"
+      },
+      team: {
+        title: "Оптимная команда",
+        description: "Более 8 лет на рынке строительных услуг"
+      },
+      rating: {
+        title: "Высокий рейтинг",
+        description: "4.9/5 звоезд по отзывам клиентов"
+      }
+    },
+    calculator: {
+      title: "Получите точную смету",
+      description: "Наш инженер предложит бесплатно, проведет замеры и рассчитает точную стоимость с учетом всех особенностей вашего объекта",
+      form: {
+        name: "Ваше имя",
+        phone: "Номер телефона",
+        area: "Площадь помещения (м²)",
+        message: "Дополнительная информация о проекте",
+        button: "ПОЛУЧИТЬ РАСЧЕТ",
+        consent: "Нажимая кнопку, вы соглашаетесь с обработкой персональных данных"
+      },
+      features: {
+        warranty: {
+          title: "Гарантия",
+          value: "до 7 лет"
+        },
+        visit: {
+          title: "Выезд",
+          value: "в день обращения"
+        },
+        quality: {
+          title: "Качество",
+          value: "по ГОСТ"
+        }
+      },
+      rating: {
+        value: "4.9 из 5",
+        reviews: "157 отзывов на Яндекс.Карты"
+      }
     }
   })
+
+  const [newFeature, setNewFeature] = useState("")
 
   useEffect(() => {
     loadPricing()
@@ -119,38 +230,39 @@ export default function PricingPage() {
 
   const loadContent = async () => {
     try {
-      const response = await fetch('/api/data/content')
+      const response = await fetch('/api/data/pricing-content')
       if (response.ok) {
         const data = await response.json()
-        if (data.pricing) {
-          setContentData(data.pricing)
+        if (data.content) {
+          setContent(data.content)
         }
       }
     } catch (error) {
-      console.error('Ошибка загрузки контента тарифов:', error)
+      console.error('Ошибка загрузки контента:', error)
     }
   }
 
   const saveContent = async () => {
+    setIsSaving(true)
     try {
-      const response = await fetch('/api/data/content', {
+      const response = await fetch('/api/data/pricing-content', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          pricing: contentData
-        })
+        body: JSON.stringify({ content })
       })
 
       if (response.ok) {
-        toast.success('Контент тарифов успешно сохранен')
+        toast.success('Контент успешно сохранен')
       } else {
         throw new Error('Failed to save content')
       }
     } catch (error) {
-      console.error('Ошибка сохранения контента:', error)
+      console.error('Ошибка сохранения:', error)
       toast.error('Ошибка сохранения')
+    } finally {
+      setIsSaving(false)
     }
   }
 
@@ -168,7 +280,7 @@ export default function PricingPage() {
           features: plan.features,
           popular: plan.popular,
           active: plan.active,
-          order: 1
+          order: (plan as any).order || 0
         }))
       }
 
@@ -179,7 +291,7 @@ export default function PricingPage() {
         },
         body: JSON.stringify(apiData)
       })
-      
+
       if (response.ok) {
         toast.success('Тарифы успешно сохранены')
       } else {
@@ -205,52 +317,64 @@ export default function PricingPage() {
       color: "coffee",
       active: true
     })
-    setNewFeature("")
   }
 
   const handleEditPlan = (plan: Pricing) => {
-    setIsAddingNew(false)
     setEditingPlan(plan)
+    setIsAddingNew(false)
     setFormData({
       name: plan.name,
       price: plan.price.toString(),
       description: plan.description,
-      features: plan.features || [],
+      features: plan.features,
       popular: plan.popular,
-      color: plan.color || "coffee",
+      color: plan.color,
       active: plan.active
     })
-    setNewFeature("")
   }
 
-  const handleSavePlan = () => {
-    if (!formData.name || !formData.price || !formData.description) {
-      toast.error('Заполните все обязательные поля')
+  const handleSavePlan = async () => {
+    if (!formData.name || !formData.price) {
+      toast.error('Заполните обязательные поля')
       return
     }
 
-    const planData = {
-      id: editingPlan?.id || Date.now().toString(),
-      name: formData.name,
-      price: parseInt(formData.price),
-      description: formData.description,
-      features: formData.features,
-      popular: formData.popular,
-      color: formData.color,
-      active: formData.active
-    }
+    let updatedPlans: Pricing[]
 
     if (editingPlan) {
-      // Обновляем существующий план
-      setPricingPlans(prev => prev.map(plan => 
-        plan.id === editingPlan.id ? planData : plan
-      ))
+      // Обновление существующего тарифа
+      updatedPlans = pricingPlans.map(plan => 
+        plan.id === editingPlan.id 
+          ? {
+              ...plan,
+              name: formData.name,
+              price: parseInt(formData.price),
+              description: formData.description,
+              features: formData.features,
+              popular: formData.popular,
+              color: formData.color,
+              active: formData.active
+            }
+          : plan
+      )
     } else {
-      // Добавляем новый план
-      setPricingPlans(prev => [...prev, planData])
+      // Добавление нового тарифа
+      const newPlan: Pricing = {
+        id: Date.now().toString(),
+        name: formData.name,
+        price: parseInt(formData.price),
+        description: formData.description,
+        features: formData.features,
+        popular: formData.popular,
+        color: formData.color,
+        active: formData.active
+      }
+      updatedPlans = [...pricingPlans, newPlan]
     }
 
-    // Сбрасываем форму
+    setPricingPlans(updatedPlans)
+    setEditingPlan(null)
+    setIsAddingNew(false)
     setFormData({
       name: "",
       price: "",
@@ -260,19 +384,16 @@ export default function PricingPage() {
       color: "coffee",
       active: true
     })
-    setEditingPlan(null)
-    setIsAddingNew(false)
-    setNewFeature("")
+
+    toast.success(editingPlan ? 'Тариф обновлен' : 'Тариф добавлен')
   }
 
-  const handleDeletePlan = (id: string) => {
-    setPricingPlans(prev => prev.filter(plan => plan.id !== id))
-  }
+  const handleDeletePlan = async (id: string) => {
+    if (!confirm('Вы уверены, что хотите удалить этот тариф?')) return
 
-  const toggleActive = (id: string) => {
-    setPricingPlans(prev => prev.map(plan => 
-      plan.id === id ? { ...plan, active: !plan.active } : plan
-    ))
+    const updatedPlans = pricingPlans.filter(plan => plan.id !== id)
+    setPricingPlans(updatedPlans)
+    toast.success('Тариф удален')
   }
 
   const addFeature = () => {
@@ -305,7 +426,25 @@ export default function PricingPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Управление тарифами</h1>
-          <p className="text-gray-600 mt-2">Настройка тарифных планов и цен</p>
+          <p className="text-gray-600 mt-2">Редактирование тарифов и текстового контента</p>
+        </div>
+        <div className="flex gap-2">
+          <Button 
+            onClick={saveContent} 
+            disabled={isSaving}
+            className="bg-gradient-to-r from-coffee-600 to-coffee-500 hover:from-coffee-700 hover:to-coffee-600"
+          >
+            <Save className="w-4 h-4 mr-2" />
+            {isSaving ? 'Сохранение...' : 'Сохранить контент'}
+          </Button>
+          <Button 
+            onClick={savePricing} 
+            disabled={isSaving}
+            className="bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600"
+          >
+            <Save className="w-4 h-4 mr-2" />
+            {isSaving ? 'Сохранение...' : 'Сохранить тарифы'}
+          </Button>
         </div>
       </div>
 
@@ -316,366 +455,835 @@ export default function PricingPage() {
             Управление тарифами
           </TabsTrigger>
           <TabsTrigger value="content" className="flex items-center gap-2">
-            <FileText className="w-4 h-4" />
+            <MessageSquare className="w-4 h-4" />
             Редактирование текста
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="pricing" className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">Тарифные планы</h2>
-            <div className="flex gap-2">
-              <Button onClick={handleAddPlan} className="bg-coffee-600 hover:bg-coffee-700">
-                <Plus className="w-4 h-4 mr-2" />
-                Добавить тариф
-              </Button>
-              <Button onClick={savePricing} disabled={isSaving} variant="outline">
-                <Save className="w-4 h-4 mr-2" />
-                {isSaving ? 'Сохранение...' : 'Сохранить все'}
-              </Button>
-            </div>
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold text-gray-900">Список тарифов</h2>
+            <Button onClick={handleAddPlan} className="bg-coffee-600 hover:bg-coffee-700">
+              <Plus className="w-4 h-4 mr-2" />
+              Добавить тариф
+            </Button>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {pricingPlans.map((plan) => (
-              <Card key={plan.id} className={cn("relative", !plan.active && "opacity-60")}>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg">{plan.name}</CardTitle>
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={plan.active}
-                        onCheckedChange={() => toggleActive(plan.id)}
-                      />
-                      <Button
-                        onClick={() => handleEditPlan(plan)}
-                        size="sm"
-                        variant="outline"
-                      >
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        onClick={() => handleDeletePlan(plan.id)}
-                        size="sm"
-                        variant="outline"
-                        className="text-red-600 hover:text-red-700"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
+              <Card key={plan.id} className="overflow-hidden">
+                <div className="relative h-48">
+                  <div className={cn(
+                    "w-full h-full flex items-center justify-center",
+                    plan.color === "coffee" ? "bg-gradient-to-br from-coffee-100 to-coffee-200" :
+                    plan.color === "blue" ? "bg-gradient-to-br from-blue-100 to-blue-200" :
+                    plan.color === "green" ? "bg-gradient-to-br from-green-100 to-green-200" :
+                    plan.color === "purple" ? "bg-gradient-to-br from-purple-100 to-purple-200" :
+                    plan.color === "orange" ? "bg-gradient-to-br from-orange-100 to-orange-200" :
+                    "bg-gradient-to-br from-red-100 to-red-200"
+                  )}>
+                    <DollarSign className="w-12 h-12 text-coffee-600" />
                   </div>
                   {plan.popular && (
-                    <Badge className="absolute top-2 right-2 bg-yellow-500">
-                      <Star className="w-3 h-3 mr-1" />
-                      Популярный
+                    <Badge className="absolute top-2 right-2 bg-coffee-600 text-white">
+                      Популярно
                     </Badge>
                   )}
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-coffee-600 mb-3">
-                    {plan.price}₽/м²
+                  <div className="absolute top-2 left-2">
+                    <Switch
+                      checked={plan.active}
+                      onCheckedChange={(checked) => {
+                        const updatedPlans = pricingPlans.map(p => 
+                          p.id === plan.id ? { ...p, active: checked } : p
+                        )
+                        setPricingPlans(updatedPlans)
+                      }}
+                    />
                   </div>
-                  <p className="text-gray-600 mb-3">{plan.description}</p>
-                  <div className="space-y-1">
-                    {plan.features?.map((feature, index) => (
-                      <div key={index} className="flex items-center text-sm text-gray-600">
-                        <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                        {feature}
-                      </div>
-                    ))}
+                </div>
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-semibold text-gray-900">{plan.name}</h3>
+                    <span className="text-coffee-600 font-bold">{plan.price}₽/м²</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">{plan.description}</p>
+                  
+                  {plan.features && plan.features.length > 0 && (
+                    <div className="mb-3">
+                      <h4 className="text-sm font-medium text-gray-900 mb-1">Включено:</h4>
+                      <ul className="text-xs text-gray-600 space-y-1">
+                        {plan.features.slice(0, 3).map((feature, index) => (
+                          <li key={index} className="flex items-center">
+                            <CheckCircle className="w-3 h-3 text-green-500 mr-2" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-end space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEditPlan(plan)}
+                    >
+                      <Edit className="w-4 h-4 mr-1" />
+                      Редактировать
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDeletePlan(plan.id)}
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                    >
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      Удалить
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
             ))}
           </div>
 
-          {/* Форма добавления/редактирования тарифа */}
-          {(isAddingNew || editingPlan) && (
-            <Card>
-              <CardHeader>
-                <CardTitle>
-                  {editingPlan ? 'Редактировать тариф' : 'Добавить новый тариф'}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="name">Название тарифа</Label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                      placeholder="Стандарт"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="price">Цена за м²</Label>
-                    <Input
-                      id="price"
-                      type="number"
-                      value={formData.price}
-                      onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
-                      placeholder="450"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="description">Описание</Label>
-                  <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                    rows={3}
-                    placeholder="Описание тарифного плана..."
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Особенности тарифа</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      value={newFeature}
-                      onChange={(e) => setNewFeature(e.target.value)}
-                      placeholder="Добавить особенность..."
-                      onKeyPress={(e) => e.key === 'Enter' && addFeature()}
-                    />
-                    <Button onClick={addFeature} type="button" variant="outline">
-                      <Plus className="w-4 h-4" />
-                    </Button>
-                  </div>
-                  <div className="space-y-1">
-                    {formData.features.map((feature, index) => (
-                      <div key={index} className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-500" />
-                        <span className="flex-1">{feature}</span>
-                        <Button
-                          onClick={() => removeFeature(index)}
-                          size="sm"
-                          variant="outline"
-                          className="text-red-600 hover:text-red-700"
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      id="popular"
-                      checked={formData.popular}
-                      onCheckedChange={(checked) => setFormData(prev => ({ ...prev, popular: checked }))}
-                    />
-                    <Label htmlFor="popular">Популярный тариф</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      id="active"
-                      checked={formData.active}
-                      onCheckedChange={(checked) => setFormData(prev => ({ ...prev, active: checked }))}
-                    />
-                    <Label htmlFor="active">Активен</Label>
-                  </div>
-                </div>
-
-                <div className="flex justify-end space-x-2">
-                  <Button
-                    onClick={() => {
-                      setEditingPlan(null)
-                      setIsAddingNew(false)
-                      setFormData({
-                        name: "",
-                        price: "",
-                        description: "",
-                        features: [],
-                        popular: false,
-                        color: "coffee",
-                        active: true
-                      })
-                    }}
-                    variant="outline"
-                  >
-                    Отмена
-                  </Button>
-                  <Button onClick={handleSavePlan} className="bg-coffee-600 hover:bg-coffee-700">
-                    {editingPlan ? 'Обновить' : 'Добавить'}
-                  </Button>
-                </div>
+          {pricingPlans.length === 0 && (
+            <Card className="text-center py-12">
+              <CardContent>
+                <DollarSign className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Тарифы не найдены</h3>
+                <p className="text-gray-600 mb-4">Начните с добавления первого тарифа</p>
+                <Button onClick={handleAddPlan}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Добавить тариф
+                </Button>
               </CardContent>
             </Card>
           )}
         </TabsContent>
 
         <TabsContent value="content" className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">Текстовый контент</h2>
-            <Button onClick={saveContent} className="bg-coffee-600 hover:bg-coffee-700">
-              <Save className="w-4 h-4 mr-2" />
-              Сохранить контент
-            </Button>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileText className="w-5 h-5" />
-                  Заголовок секции
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="pricing-badge">Бейдж</Label>
-                  <Input
-                    id="pricing-badge"
-                    value={contentData.header.badge}
-                    onChange={(e) => setContentData(prev => ({
-                      ...prev,
-                      header: { ...prev.header, badge: e.target.value }
-                    }))}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="pricing-title">Заголовок</Label>
-                  <Input
-                    id="pricing-title"
-                    value={contentData.header.title}
-                    onChange={(e) => setContentData(prev => ({
-                      ...prev,
-                      header: { ...prev.header, title: e.target.value }
-                    }))}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="pricing-subtitle">Подзаголовок</Label>
-                  <Textarea
-                    id="pricing-subtitle"
-                    value={contentData.header.subtitle}
-                    onChange={(e) => setContentData(prev => ({
-                      ...prev,
-                      header: { ...prev.header, subtitle: e.target.value }
-                    }))}
-                    rows={2}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <CreditCard className="w-5 h-5" />
-                  Способы оплаты
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="payment-title">Заголовок</Label>
-                  <Input
-                    id="payment-title"
-                    value={contentData.payment.title}
-                    onChange={(e) => setContentData(prev => ({
-                      ...prev,
-                      payment: { ...prev.payment, title: e.target.value }
-                    }))}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="payment-description">Описание</Label>
-                  <Textarea
-                    id="payment-description"
-                    value={contentData.payment.description}
-                    onChange={(e) => setContentData(prev => ({
-                      ...prev,
-                      payment: { ...prev.payment, description: e.target.value }
-                    }))}
-                    rows={3}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
           <Card>
             <CardHeader>
-              <CardTitle>Методы оплаты</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="w-5 h-5" />
+                Заголовок страницы
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="grid gap-4 md:grid-cols-3">
-                {contentData.payment.methods.map((method, index) => (
-                  <div key={index} className="space-y-2">
-                    <Label>Метод {index + 1}</Label>
-                    <Input
-                      value={method.name}
-                      onChange={(e) => {
-                        const newMethods = [...contentData.payment.methods]
-                        newMethods[index] = { ...method, name: e.target.value }
-                        setContentData(prev => ({
-                          ...prev,
-                          payment: { ...prev.payment, methods: newMethods }
-                        }))
-                      }}
-                    />
-                    <Textarea
-                      value={method.description}
-                      onChange={(e) => {
-                        const newMethods = [...contentData.payment.methods]
-                        newMethods[index] = { ...method, description: e.target.value }
-                        setContentData(prev => ({
-                          ...prev,
-                          payment: { ...prev.payment, methods: newMethods }
-                        }))
-                      }}
-                      rows={2}
-                    />
-                  </div>
-                ))}
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="badge">Бейдж</Label>
+                <Input
+                  id="badge"
+                  value={content.header.badge}
+                  onChange={(e) => setContent({
+                    ...content,
+                    header: { ...content.header, badge: e.target.value }
+                  })}
+                  placeholder="Прозрачные цены"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="title">Заголовок</Label>
+                <Input
+                  id="title"
+                  value={content.header.title}
+                  onChange={(e) => setContent({
+                    ...content,
+                    header: { ...content.header, title: e.target.value }
+                  })}
+                  placeholder="Тарифы на механизированную штукатурку"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="subtitle">Подзаголовок</Label>
+                <Textarea
+                  id="subtitle"
+                  value={content.header.subtitle}
+                  onChange={(e) => setContent({
+                    ...content,
+                    header: { ...content.header, subtitle: e.target.value }
+                  })}
+                  placeholder="Выберите подходящий тариф для вашего проекта"
+                  rows={2}
+                />
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Преимущества</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <CreditCard className="w-5 h-5" />
+                Способы оплаты
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="grid gap-4 md:grid-cols-3">
-                {contentData.benefits.items.map((item, index) => (
-                  <div key={index} className="space-y-2">
-                    <Label>Преимущество {index + 1}</Label>
-                    <Input
-                      value={item.title}
-                      onChange={(e) => {
-                        const newItems = [...contentData.benefits.items]
-                        newItems[index] = { ...item, title: e.target.value }
-                        setContentData(prev => ({
-                          ...prev,
-                          benefits: { ...prev.benefits, items: newItems }
-                        }))
-                      }}
-                    />
-                    <Textarea
-                      value={item.description}
-                      onChange={(e) => {
-                        const newItems = [...contentData.benefits.items]
-                        newItems[index] = { ...item, description: e.target.value }
-                        setContentData(prev => ({
-                          ...prev,
-                          benefits: { ...prev.benefits, items: newItems }
-                        }))
-                      }}
-                      rows={2}
-                    />
-                  </div>
-                ))}
+            <CardContent className="space-y-6">
+              <div className="grid gap-6 md:grid-cols-3">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm">Наличные</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="cash-title">Заголовок</Label>
+                      <Input
+                        id="cash-title"
+                        value={content.paymentMethods.cash.title}
+                        onChange={(e) => setContent({
+                          ...content,
+                          paymentMethods: {
+                            ...content.paymentMethods,
+                            cash: { ...content.paymentMethods.cash, title: e.target.value }
+                          }
+                        })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="cash-desc">Описание</Label>
+                      <Textarea
+                        id="cash-desc"
+                        value={content.paymentMethods.cash.description}
+                        onChange={(e) => setContent({
+                          ...content,
+                          paymentMethods: {
+                            ...content.paymentMethods,
+                            cash: { ...content.paymentMethods.cash, description: e.target.value }
+                          }
+                        })}
+                        rows={2}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm">Банковская карта</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="card-title">Заголовок</Label>
+                      <Input
+                        id="card-title"
+                        value={content.paymentMethods.card.title}
+                        onChange={(e) => setContent({
+                          ...content,
+                          paymentMethods: {
+                            ...content.paymentMethods,
+                            card: { ...content.paymentMethods.card, title: e.target.value }
+                          }
+                        })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="card-desc">Описание</Label>
+                      <Textarea
+                        id="card-desc"
+                        value={content.paymentMethods.card.description}
+                        onChange={(e) => setContent({
+                          ...content,
+                          paymentMethods: {
+                            ...content.paymentMethods,
+                            card: { ...content.paymentMethods.card, description: e.target.value }
+                          }
+                        })}
+                        rows={2}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm">Банковский перевод</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="transfer-title">Заголовок</Label>
+                      <Input
+                        id="transfer-title"
+                        value={content.paymentMethods.transfer.title}
+                        onChange={(e) => setContent({
+                          ...content,
+                          paymentMethods: {
+                            ...content.paymentMethods,
+                            transfer: { ...content.paymentMethods.transfer, title: e.target.value }
+                          }
+                        })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="transfer-desc">Описание</Label>
+                      <Textarea
+                        id="transfer-desc"
+                        value={content.paymentMethods.transfer.description}
+                        onChange={(e) => setContent({
+                          ...content,
+                          paymentMethods: {
+                            ...content.paymentMethods,
+                            transfer: { ...content.paymentMethods.transfer, description: e.target.value }
+                          }
+                        })}
+                        rows={2}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="transfer-discount">Скидка</Label>
+                      <Input
+                        id="transfer-discount"
+                        value={content.paymentMethods.transfer.discount}
+                        onChange={(e) => setContent({
+                          ...content,
+                          paymentMethods: {
+                            ...content.paymentMethods,
+                            transfer: { ...content.paymentMethods.transfer, discount: e.target.value }
+                          }
+                        })}
+                        placeholder="Скидка 5%"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="w-5 h-5" />
+                Преимущества
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid gap-6 md:grid-cols-3">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm">Гарантия качества</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="warranty-title">Заголовок</Label>
+                      <Input
+                        id="warranty-title"
+                        value={content.benefits.warranty.title}
+                        onChange={(e) => setContent({
+                          ...content,
+                          benefits: {
+                            ...content.benefits,
+                            warranty: { ...content.benefits.warranty, title: e.target.value }
+                          }
+                        })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="warranty-desc">Описание</Label>
+                      <Textarea
+                        id="warranty-desc"
+                        value={content.benefits.warranty.description}
+                        onChange={(e) => setContent({
+                          ...content,
+                          benefits: {
+                            ...content.benefits,
+                            warranty: { ...content.benefits.warranty, description: e.target.value }
+                          }
+                        })}
+                        rows={2}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm">Оптимная команда</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="team-title">Заголовок</Label>
+                      <Input
+                        id="team-title"
+                        value={content.benefits.team.title}
+                        onChange={(e) => setContent({
+                          ...content,
+                          benefits: {
+                            ...content.benefits,
+                            team: { ...content.benefits.team, title: e.target.value }
+                          }
+                        })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="team-desc">Описание</Label>
+                      <Textarea
+                        id="team-desc"
+                        value={content.benefits.team.description}
+                        onChange={(e) => setContent({
+                          ...content,
+                          benefits: {
+                            ...content.benefits,
+                            team: { ...content.benefits.team, description: e.target.value }
+                          }
+                        })}
+                        rows={2}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm">Высокий рейтинг</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="rating-title">Заголовок</Label>
+                      <Input
+                        id="rating-title"
+                        value={content.benefits.rating.title}
+                        onChange={(e) => setContent({
+                          ...content,
+                          benefits: {
+                            ...content.benefits,
+                            rating: { ...content.benefits.rating, title: e.target.value }
+                          }
+                        })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="rating-desc">Описание</Label>
+                      <Textarea
+                        id="rating-desc"
+                        value={content.benefits.rating.description}
+                        onChange={(e) => setContent({
+                          ...content,
+                          benefits: {
+                            ...content.benefits,
+                            rating: { ...content.benefits.rating, description: e.target.value }
+                          }
+                        })}
+                        rows={2}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Calculator className="w-5 h-5" />
+                Калькулятор
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="calc-title">Заголовок</Label>
+                  <Input
+                    id="calc-title"
+                    value={content.calculator.title}
+                    onChange={(e) => setContent({
+                      ...content,
+                      calculator: { ...content.calculator, title: e.target.value }
+                    })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="calc-desc">Описание</Label>
+                  <Textarea
+                    id="calc-desc"
+                    value={content.calculator.description}
+                    onChange={(e) => setContent({
+                      ...content,
+                      calculator: { ...content.calculator, description: e.target.value }
+                    })}
+                    rows={3}
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-6 md:grid-cols-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm">Форма</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="form-name">Поле "Имя"</Label>
+                      <Input
+                        id="form-name"
+                        value={content.calculator.form.name}
+                        onChange={(e) => setContent({
+                          ...content,
+                          calculator: {
+                            ...content.calculator,
+                            form: { ...content.calculator.form, name: e.target.value }
+                          }
+                        })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="form-phone">Поле "Телефон"</Label>
+                      <Input
+                        id="form-phone"
+                        value={content.calculator.form.phone}
+                        onChange={(e) => setContent({
+                          ...content,
+                          calculator: {
+                            ...content.calculator,
+                            form: { ...content.calculator.form, phone: e.target.value }
+                          }
+                        })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="form-area">Поле "Площадь"</Label>
+                      <Input
+                        id="form-area"
+                        value={content.calculator.form.area}
+                        onChange={(e) => setContent({
+                          ...content,
+                          calculator: {
+                            ...content.calculator,
+                            form: { ...content.calculator.form, area: e.target.value }
+                          }
+                        })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="form-message">Поле "Сообщение"</Label>
+                      <Input
+                        id="form-message"
+                        value={content.calculator.form.message}
+                        onChange={(e) => setContent({
+                          ...content,
+                          calculator: {
+                            ...content.calculator,
+                            form: { ...content.calculator.form, message: e.target.value }
+                          }
+                        })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="form-button">Текст кнопки</Label>
+                      <Input
+                        id="form-button"
+                        value={content.calculator.form.button}
+                        onChange={(e) => setContent({
+                          ...content,
+                          calculator: {
+                            ...content.calculator,
+                            form: { ...content.calculator.form, button: e.target.value }
+                          }
+                        })}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="form-consent">Согласие</Label>
+                      <Textarea
+                        id="form-consent"
+                        value={content.calculator.form.consent}
+                        onChange={(e) => setContent({
+                          ...content,
+                          calculator: {
+                            ...content.calculator,
+                            form: { ...content.calculator.form, consent: e.target.value }
+                          }
+                        })}
+                        rows={2}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm">Особенности</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="feature-warranty">Гарантия</Label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Input
+                            id="feature-warranty-title"
+                            value={content.calculator.features.warranty.title}
+                            onChange={(e) => setContent({
+                              ...content,
+                              calculator: {
+                                ...content.calculator,
+                                features: {
+                                  ...content.calculator.features,
+                                  warranty: { ...content.calculator.features.warranty, title: e.target.value }
+                                }
+                              }
+                            })}
+                            placeholder="Заголовок"
+                          />
+                          <Input
+                            id="feature-warranty-value"
+                            value={content.calculator.features.warranty.value}
+                            onChange={(e) => setContent({
+                              ...content,
+                              calculator: {
+                                ...content.calculator,
+                                features: {
+                                  ...content.calculator.features,
+                                  warranty: { ...content.calculator.features.warranty, value: e.target.value }
+                                }
+                              }
+                            })}
+                            placeholder="Значение"
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="feature-visit">Выезд</Label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Input
+                            id="feature-visit-title"
+                            value={content.calculator.features.visit.title}
+                            onChange={(e) => setContent({
+                              ...content,
+                              calculator: {
+                                ...content.calculator,
+                                features: {
+                                  ...content.calculator.features,
+                                  visit: { ...content.calculator.features.visit, title: e.target.value }
+                                }
+                              }
+                            })}
+                            placeholder="Заголовок"
+                          />
+                          <Input
+                            id="feature-visit-value"
+                            value={content.calculator.features.visit.value}
+                            onChange={(e) => setContent({
+                              ...content,
+                              calculator: {
+                                ...content.calculator,
+                                features: {
+                                  ...content.calculator.features,
+                                  visit: { ...content.calculator.features.visit, value: e.target.value }
+                                }
+                              }
+                            })}
+                            placeholder="Значение"
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="feature-quality">Качество</Label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Input
+                            id="feature-quality-title"
+                            value={content.calculator.features.quality.title}
+                            onChange={(e) => setContent({
+                              ...content,
+                              calculator: {
+                                ...content.calculator,
+                                features: {
+                                  ...content.calculator.features,
+                                  quality: { ...content.calculator.features.quality, title: e.target.value }
+                                }
+                              }
+                            })}
+                            placeholder="Заголовок"
+                          />
+                          <Input
+                            id="feature-quality-value"
+                            value={content.calculator.features.quality.value}
+                            onChange={(e) => setContent({
+                              ...content,
+                              calculator: {
+                                ...content.calculator,
+                                features: {
+                                  ...content.calculator.features,
+                                  quality: { ...content.calculator.features.quality, value: e.target.value }
+                                }
+                              }
+                            })}
+                            placeholder="Значение"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm">Рейтинг</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="rating-value">Значение</Label>
+                      <Input
+                        id="rating-value"
+                        value={content.calculator.rating.value}
+                        onChange={(e) => setContent({
+                          ...content,
+                          calculator: {
+                            ...content.calculator,
+                            rating: { ...content.calculator.rating, value: e.target.value }
+                          }
+                        })}
+                        placeholder="4.9 из 5"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="rating-reviews">Отзывы</Label>
+                      <Input
+                        id="rating-reviews"
+                        value={content.calculator.rating.reviews}
+                        onChange={(e) => setContent({
+                          ...content,
+                          calculator: {
+                            ...content.calculator,
+                            rating: { ...content.calculator.rating, reviews: e.target.value }
+                          }
+                        })}
+                        placeholder="157 отзывов на Яндекс.Карты"
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Диалог добавления/редактирования тарифа */}
+      {(isAddingNew || editingPlan) && (
+        <Card className="fixed inset-4 bg-white border-2 border-coffee-200 rounded-lg shadow-2xl z-50 overflow-y-auto">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              {editingPlan ? 'Редактировать тариф' : 'Добавить новый тариф'}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setEditingPlan(null)
+                  setIsAddingNew(false)
+                }}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="plan-name">Название тарифа</Label>
+                <Input
+                  id="plan-name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="plan-price">Цена (₽/м²)</Label>
+                <Input
+                  id="plan-price"
+                  type="number"
+                  value={formData.price}
+                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="plan-description">Описание</Label>
+              <Textarea
+                id="plan-description"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                rows={3}
+                required
+              />
+            </div>
+
+            <div>
+              <Label>Включенные услуги</Label>
+              <div className="space-y-2">
+                {formData.features.map((feature, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <Input
+                      value={feature}
+                      onChange={(e) => {
+                        const newFeatures = [...formData.features]
+                        newFeatures[index] = e.target.value
+                        setFormData({ ...formData, features: newFeatures })
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => removeFeature(index)}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+                <div className="flex items-center space-x-2">
+                  <Input
+                    value={newFeature}
+                    onChange={(e) => setNewFeature(e.target.value)}
+                    placeholder="Добавить услугу"
+                    onKeyPress={(e) => e.key === 'Enter' && addFeature()}
+                  />
+                  <Button type="button" variant="outline" onClick={addFeature}>
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="plan-active"
+                  checked={formData.active}
+                  onCheckedChange={(checked) => setFormData({ ...formData, active: checked })}
+                />
+                <Label htmlFor="plan-active">Активен</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="plan-popular"
+                  checked={formData.popular}
+                  onCheckedChange={(checked) => setFormData({ ...formData, popular: checked })}
+                />
+                <Label htmlFor="plan-popular">Популярный</Label>
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-2 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setEditingPlan(null)
+                  setIsAddingNew(false)
+                }}
+              >
+                Отмена
+              </Button>
+              <Button onClick={handleSavePlan} className="bg-coffee-600 hover:bg-coffee-700">
+                {editingPlan ? 'Обновить' : 'Добавить'}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 } 

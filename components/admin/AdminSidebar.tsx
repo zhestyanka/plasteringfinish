@@ -20,12 +20,17 @@ import {
   X,
   Video,
   Contact,
-  Calculator
+  Calculator,
+  Building2,
+  MessageSquare,
+  Award
 } from "lucide-react"
 
 const menuItems = [
   { title: "Главная", href: "/admin", icon: LayoutDashboard },
-  { title: "Основной контент", href: "/admin/content", icon: Home },
+  { title: "Хедер", href: "/admin/header", icon: FileText },
+  { title: "Главная страница", href: "/admin/content", icon: Home },
+  { title: "Калькулятор", href: "/admin/calculator", icon: Calculator },
   { title: "Услуги", href: "/admin/services", icon: Briefcase },
   { title: "Портфолио", href: "/admin/works", icon: Camera },
   { title: "Тарифы", href: "/admin/pricing", icon: DollarSign },
@@ -34,6 +39,7 @@ const menuItems = [
   { title: "Команда", href: "/admin/team", icon: Users },
   { title: "Оборудование", href: "/admin/equipment", icon: Wrench },
   { title: "Контакты", href: "/admin/contacts", icon: Contact },
+  { title: "Футер", href: "/admin/footer", icon: FileText },
   { title: "Учетная Запись", href: "/admin/settings", icon: Settings },
 ]
 
@@ -44,16 +50,7 @@ interface AdminSidebarProps {
 }
 
 export default function AdminSidebar({ className, isMobileOpen = false, onMobileClose }: AdminSidebarProps) {
-  const [expandedItems, setExpandedItems] = useState<string[]>([])
   const pathname = usePathname()
-
-  const toggleExpanded = (title: string) => {
-    setExpandedItems(prev => 
-      prev.includes(title) 
-        ? prev.filter(item => item !== title)
-        : [...prev, title]
-    )
-  }
 
   const isActive = (href: string) => {
     if (href === '/admin') {
@@ -94,69 +91,22 @@ export default function AdminSidebar({ className, isMobileOpen = false, onMobile
 
       <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
         {menuItems.map((item) => {
-          const hasSubItems = 'subItems' in item && item.subItems
-          const isExpanded = expandedItems.includes(item.title)
           const Icon = item.icon
-
           return (
-            <div key={item.title}>
-              {hasSubItems ? (
-                <button
-                  onClick={() => toggleExpanded(item.title)}
-                  className={cn(
-                    "w-full flex items-center justify-between px-3 py-2 text-sm rounded-lg transition-colors",
-                    "hover:bg-coffee-100 text-coffee-700 hover:text-coffee-900"
-                  )}
-                >
-                  <div className="flex items-center space-x-3">
-                    <Icon className="w-4 h-4" />
-                    <span>{item.title}</span>
-                  </div>
-                  <ChevronDown className={cn(
-                    "w-4 h-4 transition-transform",
-                    isExpanded ? "rotate-180" : ""
-                  )} />
-                </button>
-              ) : (
-                <Link
-                  href={item.href}
-                  className={cn(
-                    "flex items-center space-x-3 px-3 py-2 text-sm rounded-lg transition-colors",
-                    isActive(item.href)
-                      ? "bg-coffee-600 text-white"
-                      : "text-coffee-700 hover:bg-coffee-100 hover:text-coffee-900"
-                  )}
-                  onClick={handleLinkClick}
-                >
-                  <Icon className="w-4 h-4" />
-                  <span>{item.title}</span>
-                </Link>
+            <Link
+              key={item.title}
+              href={item.href}
+              className={cn(
+                "flex items-center space-x-3 px-3 py-2 text-sm rounded-lg transition-colors",
+                isActive(item.href)
+                  ? "bg-coffee-600 text-white"
+                  : "text-coffee-700 hover:bg-coffee-100 hover:text-coffee-900"
               )}
-
-              {hasSubItems && isExpanded && item.subItems && (
-                <div className="ml-4 mt-1 space-y-1">
-                  {(item.subItems as any[]).map((subItem: any) => {
-                    const SubIcon = subItem.icon
-                    return (
-                      <Link
-                        key={subItem.href}
-                        href={subItem.href}
-                        className={cn(
-                          "flex items-center space-x-3 px-3 py-2 text-sm rounded-lg transition-colors",
-                          isActive(subItem.href)
-                            ? "bg-coffee-600 text-white"
-                            : "text-coffee-600 hover:bg-coffee-50 hover:text-coffee-800"
-                        )}
-                        onClick={handleLinkClick}
-                      >
-                        <SubIcon className="w-4 h-4" />
-                        <span>{subItem.title}</span>
-                      </Link>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
+              onClick={handleLinkClick}
+            >
+              <Icon className="w-4 h-4" />
+              <span>{item.title}</span>
+            </Link>
           )
         })}
       </nav>
