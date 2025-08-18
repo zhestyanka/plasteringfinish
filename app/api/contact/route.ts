@@ -54,6 +54,23 @@ Email: ${formData.email || 'Не указан'}
       console.log('🔍 Начинаем отправку в Telegram...')
       console.log('📋 Данные формы:', formData)
       
+      // Загружаем настройки Telegram
+      const telegramSettingsPath = path.join(process.cwd(), 'data', 'telegram-settings.json')
+      let telegramSettings = null
+      
+      try {
+        const settingsData = await fs.readFile(telegramSettingsPath, 'utf8')
+        telegramSettings = JSON.parse(settingsData)
+        console.log('📋 Настройки Telegram загружены:', telegramSettings)
+      } catch (error) {
+        console.log('⚠️ Настройки Telegram не найдены, используем дефолтные')
+        telegramSettings = {
+          botToken: "8441134609:AAEE2nxXaxsh1BAkTH5QABBMCg5F4zq4RmY",
+          chatId: "123456789",
+          botUsername: "plasteringspb_bot"
+        }
+      }
+      
       const telegramData = {
         name: formData.name,
         phone: formData.phone,
@@ -72,31 +89,51 @@ Email: ${formData.email || 'Не указан'}
       }
 
       console.log('📤 Данные для Telegram:', telegramData)
-      console.log('🌐 URL для отправки:', `http://localhost:3000/api/telegram`)
 
-      const telegramResponse = await fetch(`http://localhost:3000/api/telegram`, {
+      // Отправляем сообщение в Telegram
+      const telegramMessage = `
+🆕 <b>Новая заявка с сайта Штукатур СПб</b>
+
+👤 <b>Имя:</b> ${telegramData.name}
+📞 <b>Телефон:</b> ${telegramData.phone}
+📧 <b>Email:</b> ${telegramData.email}
+📐 <b>Площадь:</b> ${telegramData.area} м²
+💬 <b>Сообщение:</b> ${telegramData.message}
+
+${formData.type === 'calculator' ? `
+🧮 <b>Данные калькулятора:</b>
+💰 <b>Цена клиента:</b> ${telegramData.clientPrice} ₽/м²
+📏 <b>Площадь для штукатурки:</b> ${telegramData.areaToPlaster} м²
+📐 <b>Толщина слоя:</b> ${telegramData.layerThickness} мм
+⚡ <b>Площадь за смену:</b> ${telegramData.areaPerShift} м²
+📦 <b>Вес мешка:</b> ${telegramData.bagWeight} кг
+💵 <b>Цена мешка:</b> ${telegramData.bagPrice} ₽
+💸 <b>Общая стоимость:</b> ${telegramData.totalCost} ₽
+` : ''}
+
+📅 <b>Дата:</b> ${new Date().toLocaleString('ru-RU')}
+🌐 <b>Источник:</b> ${telegramData.source}
+      `.trim()
+
+      const telegramResponse = await fetch(`https://api.telegram.org/bot${telegramSettings.botToken}/sendMessage`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: telegramData,
-          type: formData.type || 'contact'
+          chat_id: telegramSettings.chatId,
+          text: telegramMessage,
+          parse_mode: 'HTML'
         })
       })
 
       console.log('📡 Статус ответа Telegram:', telegramResponse.status)
-      console.log('📡 Заголовки ответа:', Object.fromEntries(telegramResponse.headers.entries()))
 
       const telegramResult = await telegramResponse.json()
       console.log('📨 Результат Telegram:', telegramResult)
       
-      if (telegramResponse.ok) {
-        if (telegramResult.telegramConfigured === false) {
-          console.log('⚠️ Telegram не настроен, но заявка сохранена')
-        } else {
-          console.log('✅ Сообщение отправлено в Telegram')
-        }
+      if (telegramResponse.ok && telegramResult.ok) {
+        console.log('✅ Сообщение отправлено в Telegram')
       } else {
         console.log('⚠️ Ошибка отправки в Telegram:', telegramResult.error)
       }
