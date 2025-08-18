@@ -214,7 +214,8 @@ export default function PricingPage() {
           features: plan.features || [],
           popular: plan.popular || false,
           color: "coffee", // устанавливаем цвет по умолчанию
-          active: plan.active !== false
+          active: plan.active !== false,
+          order: plan.order || 0
         })) || []
         setPricingPlans(pricingPlans)
       } else {
