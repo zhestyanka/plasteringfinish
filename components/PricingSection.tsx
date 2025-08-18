@@ -125,26 +125,7 @@ export default function PricingSection() {
     loadPricing()
   }, [])
 
-  const paymentMethods = [
-    {
-      name: "Наличные",
-      description: "Оплата наличными при завершении работ",
-      icon: Wallet,
-      discount: 0
-    },
-    {
-      name: "Банковская карта",
-      description: "Безналичная оплата картой, возможна рассрочка",
-      icon: Wallet,
-      discount: 0
-    },
-    {
-      name: "Банковский перевод",
-      description: "Оплата по счету для юридических лиц",
-      icon: Shield,
-      discount: 5
-    }
-  ]
+
 
   const selectedPlanData = plans.find(plan => plan.id === selectedPlan)
   const totalCost = area * (selectedPlanData?.price ? parseInt(selectedPlanData.price) : 450)
@@ -290,25 +271,7 @@ export default function PricingSection() {
           ))}
         </div>
 
-        {/* Payment Methods */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16">
-          {paymentMethods.map((method, index) => (
-            <Card key={index} className="bg-white border border-gray-200 hover:border-coffee-300 hover:shadow-lg transition-all duration-300">
-              <CardContent className="p-6 md:p-8 text-center">
-                <div className="w-12 h-12 md:w-16 md:h-16 bg-coffee-100 rounded-xl md:rounded-2xl flex items-center justify-center mx-auto mb-4 md:mb-6">
-                  <method.icon className="w-6 h-6 md:w-8 md:h-8 text-coffee-600" />
-                </div>
-                <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3">{method.name}</h3>
-                <p className="text-gray-600 text-sm md:text-base mb-3 md:mb-4">{method.description}</p>
-                {method.discount > 0 && (
-                  <Badge className="bg-coffee-100 text-coffee-800 text-xs">
-                    Скидка {method.discount}%
-                  </Badge>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+
 
         {/* Trust Indicators */}
         <div className="bg-white rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-lg border border-gray-100">
