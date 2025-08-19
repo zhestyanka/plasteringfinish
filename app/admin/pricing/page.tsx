@@ -637,3 +637,252 @@ export default function PricingPage() {
     </div>
   )
 } 
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                rows={3}
+                required
+              />
+            </div>
+
+            <div>
+              <Label>Включенные услуги</Label>
+              <div className="space-y-2">
+                {formData.features.map((feature, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <Input
+                      value={feature}
+                      onChange={(e) => {
+                        const newFeatures = [...formData.features]
+                        newFeatures[index] = e.target.value
+                        setFormData({ ...formData, features: newFeatures })
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => removeFeature(index)}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+                <div className="flex items-center space-x-2">
+                  <Input
+                    value={newFeature}
+                    onChange={(e) => setNewFeature(e.target.value)}
+                    placeholder="Добавить услугу"
+                    onKeyPress={(e) => e.key === 'Enter' && addFeature()}
+                  />
+                  <Button type="button" variant="outline" onClick={addFeature}>
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="plan-active"
+                  checked={formData.active}
+                  onCheckedChange={(checked) => setFormData({ ...formData, active: checked })}
+                />
+                <Label htmlFor="plan-active">Активен</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="plan-popular"
+                  checked={formData.popular}
+                  onCheckedChange={(checked) => setFormData({ ...formData, popular: checked })}
+                />
+                <Label htmlFor="plan-popular">Популярный</Label>
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-2 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setEditingPlan(null)
+                  setIsAddingNew(false)
+                }}
+              >
+                Отмена
+              </Button>
+              <Button onClick={handleSavePlan} className="bg-coffee-600 hover:bg-coffee-700">
+                {editingPlan ? 'Обновить' : 'Добавить'}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  )
+} 
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                rows={3}
+                required
+              />
+            </div>
+
+            <div>
+              <Label>Включенные услуги</Label>
+              <div className="space-y-2">
+                {formData.features.map((feature, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <Input
+                      value={feature}
+                      onChange={(e) => {
+                        const newFeatures = [...formData.features]
+                        newFeatures[index] = e.target.value
+                        setFormData({ ...formData, features: newFeatures })
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => removeFeature(index)}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+                <div className="flex items-center space-x-2">
+                  <Input
+                    value={newFeature}
+                    onChange={(e) => setNewFeature(e.target.value)}
+                    placeholder="Добавить услугу"
+                    onKeyPress={(e) => e.key === 'Enter' && addFeature()}
+                  />
+                  <Button type="button" variant="outline" onClick={addFeature}>
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="plan-active"
+                  checked={formData.active}
+                  onCheckedChange={(checked) => setFormData({ ...formData, active: checked })}
+                />
+                <Label htmlFor="plan-active">Активен</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="plan-popular"
+                  checked={formData.popular}
+                  onCheckedChange={(checked) => setFormData({ ...formData, popular: checked })}
+                />
+                <Label htmlFor="plan-popular">Популярный</Label>
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-2 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setEditingPlan(null)
+                  setIsAddingNew(false)
+                }}
+              >
+                Отмена
+              </Button>
+              <Button onClick={handleSavePlan} className="bg-coffee-600 hover:bg-coffee-700">
+                {editingPlan ? 'Обновить' : 'Добавить'}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  )
+} 
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                rows={3}
+                required
+              />
+            </div>
+
+            <div>
+              <Label>Включенные услуги</Label>
+              <div className="space-y-2">
+                {formData.features.map((feature, index) => (
+                  <div key={index} className="flex items-center space-x-2">
+                    <Input
+                      value={feature}
+                      onChange={(e) => {
+                        const newFeatures = [...formData.features]
+                        newFeatures[index] = e.target.value
+                        setFormData({ ...formData, features: newFeatures })
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => removeFeature(index)}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+                <div className="flex items-center space-x-2">
+                  <Input
+                    value={newFeature}
+                    onChange={(e) => setNewFeature(e.target.value)}
+                    placeholder="Добавить услугу"
+                    onKeyPress={(e) => e.key === 'Enter' && addFeature()}
+                  />
+                  <Button type="button" variant="outline" onClick={addFeature}>
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="plan-active"
+                  checked={formData.active}
+                  onCheckedChange={(checked) => setFormData({ ...formData, active: checked })}
+                />
+                <Label htmlFor="plan-active">Активен</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="plan-popular"
+                  checked={formData.popular}
+                  onCheckedChange={(checked) => setFormData({ ...formData, popular: checked })}
+                />
+                <Label htmlFor="plan-popular">Популярный</Label>
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-2 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setEditingPlan(null)
+                  setIsAddingNew(false)
+                }}
+              >
+                Отмена
+              </Button>
+              <Button onClick={handleSavePlan} className="bg-coffee-600 hover:bg-coffee-700">
+                {editingPlan ? 'Обновить' : 'Добавить'}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  )
+} 

@@ -17,12 +17,7 @@ export default function HeaderPage() {
     reviewsCount: 157,
     warrantyYears: 5,
     city: "Санкт-Петербург",
-    menuItems: [
-      { name: "Главная", href: "#hero" },
-      { name: "Услуги", href: "#services" },
-      { name: "Работы", href: "#works" },
-      { name: "Цены", href: "#pricing" }
-    ]
+    warrantyText: "5 лет"
   })
 
   const [isLoading, setIsLoading] = useState(true)
@@ -37,7 +32,11 @@ export default function HeaderPage() {
       const response = await fetch('/api/data/content')
       if (response.ok) {
         const data = await response.json()
-        setHeaderData(data.header || {})
+        if (data.header) {
+          // Убираем menuItems из данных, так как они больше не редактируются
+          const { menuItems, ...headerDataWithoutMenu } = data.header
+          setHeaderData(headerDataWithoutMenu)
+        }
       } else {
         throw new Error('Failed to load header data')
       }
@@ -108,6 +107,7 @@ export default function HeaderPage() {
                 id="company-name"
                 value={headerData.companyName || ''}
                 onChange={(e) => setHeaderData(prev => ({ ...prev, companyName: e.target.value }))}
+                placeholder="Название компании"
               />
             </div>
 
@@ -117,6 +117,7 @@ export default function HeaderPage() {
                 id="company-subtitle"
                 value={headerData.companySubtitle || ''}
                 onChange={(e) => setHeaderData(prev => ({ ...prev, companySubtitle: e.target.value }))}
+                placeholder="Подзаголовок компании"
               />
             </div>
           </div>
@@ -132,6 +133,7 @@ export default function HeaderPage() {
                 step="0.1"
                 value={headerData.rating || 4.9}
                 onChange={(e) => setHeaderData(prev => ({ ...prev, rating: Number(e.target.value) }))}
+                placeholder="4.9"
               />
             </div>
 
@@ -145,41 +147,6 @@ export default function HeaderPage() {
               />
             </div>
           </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Меню навигации</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {headerData.menuItems?.map((item, index) => (
-            <div key={index} className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Название пункта меню {index + 1}</Label>
-                <Input
-                  value={item.name || ''}
-                  onChange={(e) => {
-                    const newMenuItems = [...(headerData.menuItems || [])]
-                    newMenuItems[index] = { ...item, name: e.target.value }
-                    setHeaderData(prev => ({ ...prev, menuItems: newMenuItems }))
-                  }}
-                  placeholder="Главная"
-                />
-              </div>
-              <div>
-                <Label>Ссылка (якорь)</Label>
-                <Input
-                  value={item.href || ''}
-                  onChange={(e) => {
-                    const newMenuItems = [...(headerData.menuItems || [])]
-                    newMenuItems[index] = { ...item, href: e.target.value }
-                    setHeaderData(prev => ({ ...prev, menuItems: newMenuItems }))
-                  }}
-                />
-              </div>
-            </div>
-          ))}
         </CardContent>
       </Card>
     </div>

@@ -217,3 +217,66 @@ export default function Header() {
     </header>
   )
 }
+
+                  <span className="text-sm text-gray-600">Гарантия {headerData.warrantyYears} лет</span>
+                </div>
+              </div>
+              
+              <Button
+                asChild
+                className="w-full mx-4 bg-gradient-to-r from-coffee-600 to-coffee-700 hover:from-coffee-700 hover:to-coffee-800 text-white"
+              >
+                <a href={`tel:${headerData.phone.replace(/\D/g, '')}`}>
+                  <Phone className="w-4 h-4 mr-2" />
+                  {headerData.phone}
+                </a>
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    </header>
+  )
+}
+
+                  <span className="text-sm text-gray-600">Гарантия {headerData.warrantyYears} лет</span>
+                </div>
+              </div>
+              
+              <Button
+                asChild
+                className="w-full mx-4 bg-gradient-to-r from-coffee-600 to-coffee-700 hover:from-coffee-700 hover:to-coffee-800 text-white"
+              >
+                <a href={`tel:${headerData.phone.replace(/\D/g, '')}`}>
+                  <Phone className="w-4 h-4 mr-2" />
+                  {headerData.phone}
+                </a>
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    </header>
+  )
+}
+
+                  <span className="text-sm text-gray-600">Гарантия {headerData.warrantyYears} лет</span>
+                </div>
+              </div>
+              
+              <Button
+                asChild
+                className="w-full mx-4 bg-gradient-to-r from-coffee-600 to-coffee-700 hover:from-coffee-700 hover:to-coffee-800 text-white"
+              >
+                <a href={`tel:${headerData.phone.replace(/\D/g, '')}`}>
+                  <Phone className="w-4 h-4 mr-2" />
+                  {headerData.phone}
+                </a>
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    </header>
+  )
+}
