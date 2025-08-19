@@ -12,7 +12,6 @@ interface HeaderData {
   reviewsCount: number
   warrantyYears: number
   city: string
-  menuItems: Array<{ name: string; href: string }>
 }
 
 export default function Header() {
@@ -24,20 +23,22 @@ export default function Header() {
     rating: 4.9,
     reviewsCount: 157,
     warrantyYears: 5,
-    city: "Санкт-Петербург",
-    menuItems: [
-      { name: "Главная", href: "#hero" },
-      { name: "Цены", href: "#pricing" },
-      { name: "Работы", href: "#works" },
-      { name: "Видео", href: "#video" },
-      { name: "Отзывы", href: "#reviews" },
-      { name: "Команда", href: "#team" },
-      { name: "Оборудование", href: "#equipment" },
-      { name: "Услуги", href: "#services" },
-      { name: "Контакты", href: "#contacts" }
-    ]
+    city: "Санкт-Петербург"
   })
   const [isLoading, setIsLoading] = useState(true)
+
+  // Фиксированное меню навигации согласно требованиям
+  const menuItems = [
+    { name: "Главная", href: "#hero" },
+    { name: "Услуги", href: "#services" },
+    { name: "Работы", href: "#works" },
+    { name: "Цены", href: "#pricing" },
+    { name: "Видео", href: "#video" },
+    { name: "Отзывы", href: "#reviews" },
+    { name: "Команда", href: "#team" },
+    { name: "Оборудование", href: "#equipment" },
+    { name: "Контакты", href: "#contacts" }
+  ]
 
   useEffect(() => {
     const loadHeaderData = async () => {
@@ -54,18 +55,7 @@ export default function Header() {
               rating: data.header.rating || 4.9,
               reviewsCount: data.header.reviewsCount || 157,
               warrantyYears: data.header.warrantyYears || 5,
-              city: data.header.city || "Санкт-Петербург",
-              menuItems: data.header.menuItems || [
-                { name: "Главная", href: "#hero" },
-                { name: "Цены", href: "#pricing" },
-                { name: "Работы", href: "#works" },
-                { name: "Видео", href: "#video" },
-                { name: "Отзывы", href: "#reviews" },
-                { name: "Команда", href: "#team" },
-                { name: "Оборудование", href: "#equipment" },
-                { name: "Услуги", href: "#services" },
-                { name: "Контакты", href: "#contacts" }
-              ]
+              city: data.header.city || "Санкт-Петербург"
             }
             setHeaderData(safeHeaderData)
           }
@@ -79,8 +69,6 @@ export default function Header() {
 
     loadHeaderData()
   }, [])
-
-  const menuItems = headerData.menuItems
 
   const handleMenuClick = (href: string) => {
     setIsMenuOpen(false)
@@ -119,7 +107,7 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-6">
-            {headerData.menuItems?.map((item) => (
+            {menuItems.map((item) => (
               <button
                 key={item.name}
                 onClick={() => handleMenuClick(item.href)}
@@ -173,7 +161,7 @@ export default function Header() {
         {isMenuOpen && (
           <div className="lg:hidden border-t border-gray-200 py-4">
             <nav className="flex flex-col space-y-2">
-              {headerData.menuItems?.map((item) => (
+              {menuItems.map((item) => (
                 <button
                   key={item.name}
                   onClick={() => handleMenuClick(item.href)}
@@ -197,69 +185,6 @@ export default function Header() {
                 </div>
                 <div className="flex items-center space-x-2">
                   <Shield className="w-4 h-4 text-coffee-600" />
-                  <span className="text-sm text-gray-600">Гарантия {headerData.warrantyYears} лет</span>
-                </div>
-              </div>
-              
-              <Button
-                asChild
-                className="w-full mx-4 bg-gradient-to-r from-coffee-600 to-coffee-700 hover:from-coffee-700 hover:to-coffee-800 text-white"
-              >
-                <a href={`tel:${headerData.phone.replace(/\D/g, '')}`}>
-                  <Phone className="w-4 h-4 mr-2" />
-                  {headerData.phone}
-                </a>
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
-    </header>
-  )
-}
-
-                  <span className="text-sm text-gray-600">Гарантия {headerData.warrantyYears} лет</span>
-                </div>
-              </div>
-              
-              <Button
-                asChild
-                className="w-full mx-4 bg-gradient-to-r from-coffee-600 to-coffee-700 hover:from-coffee-700 hover:to-coffee-800 text-white"
-              >
-                <a href={`tel:${headerData.phone.replace(/\D/g, '')}`}>
-                  <Phone className="w-4 h-4 mr-2" />
-                  {headerData.phone}
-                </a>
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
-    </header>
-  )
-}
-
-                  <span className="text-sm text-gray-600">Гарантия {headerData.warrantyYears} лет</span>
-                </div>
-              </div>
-              
-              <Button
-                asChild
-                className="w-full mx-4 bg-gradient-to-r from-coffee-600 to-coffee-700 hover:from-coffee-700 hover:to-coffee-800 text-white"
-              >
-                <a href={`tel:${headerData.phone.replace(/\D/g, '')}`}>
-                  <Phone className="w-4 h-4 mr-2" />
-                  {headerData.phone}
-                </a>
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
-    </header>
-  )
-}
-
                   <span className="text-sm text-gray-600">Гарантия {headerData.warrantyYears} лет</span>
                 </div>
               </div>
