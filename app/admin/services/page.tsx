@@ -251,11 +251,11 @@ export default function ServicesPage() {
           : service
       )
     } else {
-      // Добавление новой услуги
-      const newService: Service = {
-        ...formData as Service,
-        id: Date.now().toString()
-      }
+              // Добавление новой услуги
+        const newService: Service = {
+          ...formData as Service,
+          id: Date.now().toString()
+        }
       updatedServices = [...services, newService]
     }
     
