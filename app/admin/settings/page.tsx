@@ -497,15 +497,15 @@ export default function SettingsPage() {
               
               <Separator />
               
-                                <div className="text-sm text-gray-600">
-                    <p><strong>Как получить Chat ID:</strong></p>
-                    <ol className="list-decimal list-inside mt-2 space-y-1">
+              <div className="text-sm text-gray-600">
+                <p><strong>Как получить Chat ID:</strong></p>
+                <ol className="list-decimal list-inside mt-2 space-y-1">
                       <li>Напишите какое-нибудь сообщение созданному боту</li>
-                      <li>Отправьте любое сообщение в чат</li>
-                      <li>Перейдите по ссылке: https://api.telegram.org/bot[TOKEN]/getUpdates</li>
-                      <li>Найдите "chat":{'{'}"id": число{'}'} в ответе</li>
-                    </ol>
-                  </div>
+                  <li>Отправьте любое сообщение в чат</li>
+                  <li>Перейдите по ссылке: https://api.telegram.org/bot[TOKEN]/getUpdates</li>
+                  <li>Найдите "chat":{'{'}"id": число{'}'} в ответе</li>
+                </ol>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
